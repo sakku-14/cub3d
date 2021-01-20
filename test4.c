@@ -40,9 +40,9 @@ int	main(void)
 		count_w = -1;
 		while (++count_w < IMG_WIDTH)
 		{
-//			if (count_w % 2)
-//				img.data[count_h * IMG_WIDTH + count_w] = 0xFFFFFF;
-//			else
+			if (count_w % 2)
+				img.data[count_h * IMG_WIDTH + count_w] = 0xFFFFFF;
+			else
 				img.data[count_h * IMG_WIDTH + count_w] = 0x00FF00;
 		}
 	}

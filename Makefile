@@ -1,3 +1,3 @@
 all:
-	gcc -Lmlx -lmlx -framework OpenGL -framework AppKit test4.c
+	gcc -Lmlx -lmlx -framework OpenGL -framework AppKit test6.c
 	./a.out
