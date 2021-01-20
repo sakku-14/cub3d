@@ -1,8 +1,12 @@
 #include <stdio.h>
 
+void initializeWindow()
+{
+
+}
+
 int main()
 {
-	puts("Program is running.\n");
-
+	initializeWindow();
 	return (0);
 }
