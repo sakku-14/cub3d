@@ -19,6 +19,18 @@ int	key_press(int keycode, t_param *param)
 	return (TRUE);
 }
 
+/*
+int	setup(void *mlx, void *win, t_param *param)
+{
+	param_init(param);
+	if (!(mlx = mlx_init()))
+		return (FALSE);
+	if (!(win = mlx_new_window(mlx, WIN_WIDTH, WIN_HEIGHT, "cub3d_window")))
+		return (FALSE);
+	return (TRUE);
+}
+*/
+
 int		main()
 {
 	void *mlx;

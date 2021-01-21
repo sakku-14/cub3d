@@ -1,5 +1,5 @@
 build:
-	gcc -L../mlx -lmlx -framework OpenGL -framework AppKit ./src/*.c -o raycast;
+	gcc -g -L../mlx -lmlx -framework OpenGL -framework AppKit ./src/*.c -o raycast;
 
 run:
 	./raycast;
