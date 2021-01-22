@@ -12,18 +12,18 @@ void	param_init(t_param *param)
 	param->str[2] = '\0';
 }
 
-int	key_press(int keycode, t_param *param)
+int	key_press(int keycode, t_mlx *mlx)
 {
 	if (keycode == KEY_ESC)
 		exit(0);
 	else if (keycode == KEY_LEFT)
-		param->x--;
+		mlx->param.x--;
 	else if (keycode == KEY_RIGHT)
-		param->x++;
+		mlx->param.x++;
 	else if (keycode == KEY_UP)
-		param->y++;
+		mlx->param.y--;
 	else if (keycode == KEY_DOWN)
-		param->y--;
+		mlx->param.y++;
 	return (TRUE);
 }
 
@@ -35,18 +35,16 @@ int rendering_loop(t_mlx *mlx)
 
 int		main()
 {
-	t_mlx	*mlx;
-//	t_param	param;
-//	t_img	img;
+	t_mlx	mlx;
 
-	param_init(&(mlx->param));
-	if (!(mlx->mlx_ptr = mlx_init()))
+	param_init(&(mlx.param));
+	if (!(mlx.mlx_ptr = mlx_init()))
 		return (FALSE);
-	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "cub3d_window")))
+	if (!(mlx.win = mlx_new_window(mlx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "cub3d_window")))
 		return (FALSE);
 
-	mlx->img.img_ptr = mlx_new_image(mlx->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
-	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.img_ptr, &(mlx->img.bpp), &(mlx->img.size_l), &(mlx->img.endian));
+	mlx.img.img_ptr = mlx_new_image(mlx.mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
+	mlx.img.data = (int *)mlx_get_data_addr(mlx.img.img_ptr, &(mlx.img.bpp), &(mlx.img.size_l), &(mlx.img.endian));
 
 	int x = -1;
 	int y = -1;
@@ -55,17 +53,18 @@ int		main()
 		x = -1;
 		while (++x < IMG_WIDTH)
 		{
-			mlx->img.data[y * IMG_WIDTH + x] = 0xFFFFFF;
+			mlx.img.data[y * IMG_WIDTH + x] = 0xFFFFFF;
 		}
 	}
 
-	mlx_loop_hook(mlx->mlx_ptr, &rendering_loop, &(mlx->param));
-	mlx_hook(mlx->win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, mlx);
-	mlx_loop(mlx->mlx_ptr);
+	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
+	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);
+	mlx_loop(mlx.mlx_ptr);
+
 /*
-	mlx_hook(mlx->win, X_EVENT_KEY_PRESS, 0, &key_press, &param);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, img.img_ptr, param.x, param.y);
-	mlx_loop(mlx->mlx_ptr);
+	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 0, &key_press, &(mlx.param));
+	mlx_put_image_to_window(mlx.mlx_ptr, mlx.win, mlx.img.img_ptr, mlx.param.x, mlx.param.y);
+	mlx_loop(mlx.mlx_ptr);
 */
 	//mlx_destroy_window(mlx, win);
 	return (TRUE);
