@@ -27,20 +27,26 @@ int	key_press(int keycode, t_param *param)
 	return (TRUE);
 }
 
+int rendering_loop(t_mlx *mlx)
+{
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->img.img_ptr, mlx->param.x, mlx->param.y);
+	return (TRUE);
+}
+
 int		main()
 {
 	t_mlx	*mlx;
-	t_param	param;
-	t_img	img;
+//	t_param	param;
+//	t_img	img;
 
-	param_init(&param);
+	param_init(&(mlx->param));
 	if (!(mlx->mlx_ptr = mlx_init()))
 		return (FALSE);
 	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "cub3d_window")))
 		return (FALSE);
 
-	img.img_ptr = mlx_new_image(mlx->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
-	img.data = (int *)mlx_get_data_addr(img.img_ptr, &img.bpp, &img.size_l, &img.endian);
+	mlx->img.img_ptr = mlx_new_image(mlx->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
+	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.img_ptr, &(mlx->img.bpp), &(mlx->img.size_l), &(mlx->img.endian));
 
 	int x = -1;
 	int y = -1;
@@ -49,13 +55,18 @@ int		main()
 		x = -1;
 		while (++x < IMG_WIDTH)
 		{
-			img.data[y * IMG_WIDTH + x] = 0xFFFFFF;
+			mlx->img.data[y * IMG_WIDTH + x] = 0xFFFFFF;
 		}
 	}
 
+	mlx_loop_hook(mlx->mlx_ptr, &rendering_loop, &(mlx->param));
+	mlx_hook(mlx->win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, mlx);
+	mlx_loop(mlx->mlx_ptr);
+/*
 	mlx_hook(mlx->win, X_EVENT_KEY_PRESS, 0, &key_press, &param);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, img.img_ptr, param.x, param.y);
 	mlx_loop(mlx->mlx_ptr);
+*/
 	//mlx_destroy_window(mlx, win);
 	return (TRUE);
 }

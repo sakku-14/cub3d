@@ -24,12 +24,6 @@ typedef struct	s_param
 	char	str[3];
 }				t_param;
 
-typedef struct	s_mlx
-{
-	void *mlx_ptr;
-	void *win;
-}				t_mlx;
-
 typedef struct	s_img
 {
 	void	*img_ptr;
@@ -38,3 +32,12 @@ typedef struct	s_img
 	int		bpp;
 	int		endian;
 }				t_img;
+
+typedef struct	s_mlx
+{
+	void	*mlx_ptr;
+	void	*win;
+	t_param	param;
+	t_img	img;
+}				t_mlx;
+
