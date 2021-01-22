@@ -21,7 +21,6 @@ typedef struct	s_param
 {
 	int		x;
 	int		y;
-	char	str[3];
 }				t_param;
 
 typedef struct	s_img
@@ -33,11 +32,21 @@ typedef struct	s_img
 	int		endian;
 }				t_img;
 
+typedef struct	s_window
+{
+	void	*img_ptr;
+	int		*data;
+	int		size_l;
+	int		bpp;
+	int		endian;
+}				t_window;
+
 typedef struct	s_mlx
 {
 	void	*mlx_ptr;
 	void	*win;
 	t_param	param;
 	t_img	img;
+	t_window	window;
 }				t_mlx;
 
