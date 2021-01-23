@@ -10,27 +10,24 @@
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_release	3
 #define X_EVENT_KEY_EXIT	17
+#define X_EVENT_BTN_PRESS	4
 
-#define KEY_ESC	53
+#define KEY_ESC		53
 #define KEY_LEFT	123
 #define KEY_RIGHT	124
 #define KEY_UP		126
 #define KEY_DOWN	125
 
-typedef struct	s_param
+typedef struct	s_player
 {
-	int		x;
-	int		y;
-}				t_param;
-
-typedef struct	s_img
-{
-	void	*img_ptr;
+	void	*player_ptr;
 	int		*data;
 	int		size_l;
 	int		bpp;
 	int		endian;
-}				t_img;
+	int		player_x;
+	int		player_y;
+}				t_player;
 
 typedef struct	s_window
 {
@@ -43,10 +40,9 @@ typedef struct	s_window
 
 typedef struct	s_mlx
 {
-	void	*mlx_ptr;
-	void	*win;
-	t_param	param;
-	t_img	img;
+	void		*mlx_ptr;
+	void		*win;
+	t_player	player;
 	t_window	window;
 }				t_mlx;
 

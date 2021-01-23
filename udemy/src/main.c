@@ -5,29 +5,39 @@
 
 void	mlx_conf(t_mlx *mlx)
 {
-	mlx->param.x = WIN_WIDTH / 2;
-	mlx->param.y = WIN_HEIGHT / 2;
+	mlx->player.player_x = WIN_WIDTH / 2;
+	mlx->player.player_y = WIN_HEIGHT / 2;
 }
 
 int	key_press(int keycode, t_mlx *mlx)
 {
 	if (keycode == KEY_ESC)
+	{
+		mlx_destroy_window(mlx->mlx_ptr, mlx->win);
 		exit(0);
+	}
 	else if (keycode == KEY_LEFT)
-		mlx->param.x -= 5;
+		mlx->player.player_x -= 5;
 	else if (keycode == KEY_RIGHT)
-		mlx->param.x += 5;
+		mlx->player.player_x += 5;
 	else if (keycode == KEY_UP)
-		mlx->param.y -= 5;
+		mlx->player.player_y -= 5;
 	else if (keycode == KEY_DOWN)
-		mlx->param.y += 5;
+		mlx->player.player_y += 5;
+	return (TRUE);
+}
+
+int close_button_press(t_mlx *mlx)
+{
+	mlx_destroy_window(mlx->mlx_ptr, mlx->win);
+	exit(0);
 	return (TRUE);
 }
 
 int rendering_loop(t_mlx *mlx)
 {
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->img.img_ptr, mlx->param.x, mlx->param.y);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.player_ptr, mlx->player.player_x, mlx->player.player_y);
 	return (TRUE);
 }
 
@@ -53,14 +63,14 @@ void setting_img(t_mlx *mlx)
 	int x = -1;
 	int y = -1;
 
-	mlx->img.img_ptr = mlx_new_image(mlx->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
-	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.img_ptr, &(mlx->img.bpp), &(mlx->img.size_l), &(mlx->img.endian));
+	mlx->player.player_ptr = mlx_new_image(mlx->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
+	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.player_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
 	while (++y < IMG_HEIGHT)
 	{
 		x = -1;
 		while (++x < IMG_WIDTH)
 		{
-			mlx->img.data[y * IMG_WIDTH + x] = 0xFFFFFF;
+			mlx->player.data[y * IMG_WIDTH + x] = 0xFFFF00;
 		}
 	}
 }
@@ -84,6 +94,7 @@ int		main()
 	setting_window(&mlx);
 	setting_img(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
+	mlx_hook(mlx.win, 17, 1<<17, &close_button_press, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);
 	mlx_loop(mlx.mlx_ptr);
 
