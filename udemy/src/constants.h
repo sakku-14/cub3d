@@ -5,6 +5,7 @@
 #define	TWO_PI	6.28318530
 
 #define TILE_SIZE		64
+#define MINIMAP_SCALE_FACTOR	1
 #define MAP_NUM_ROWS	13
 #define MAP_NUM_COLS	20
 

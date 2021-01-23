@@ -21,12 +21,12 @@ const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
 
 void	mlx_conf(t_mlx *mlx)
 {
-	mlx->player.player_x = WIN_WIDTH / 2;
-	mlx->player.player_y = WIN_HEIGHT / 2;
-	mlx->player.width = 10;
-	mlx->player.height = 10;
+	mlx->player.player_x = WIN_WIDTH / MINIMAP_SCALE_FACTOR / 2;
+	mlx->player.player_y = WIN_HEIGHT / MINIMAP_SCALE_FACTOR / 2;
+	mlx->player.width = 30 / MINIMAP_SCALE_FACTOR;
+	mlx->player.height = 30 / MINIMAP_SCALE_FACTOR;
 	mlx->player.rotation_angle = PI / 2;
-	mlx->player.walk_speed = 100;
+	mlx->player.walk_speed = 10 / MINIMAP_SCALE_FACTOR;
 	mlx->player.turn_speed = 45 * (PI / 180);
 }
 
@@ -38,13 +38,13 @@ int	key_press(int keycode, t_mlx *mlx)
 		exit(0);
 	}
 	else if (keycode == KEY_LEFT)
-		mlx->player.player_x -= 5;
+		mlx->player.player_x -= 1 * mlx->player.walk_speed;
 	else if (keycode == KEY_RIGHT)
-		mlx->player.player_x += 5;
+		mlx->player.player_x += 1 * mlx->player.walk_speed;
 	else if (keycode == KEY_UP)
-		mlx->player.player_y -= 5;
+		mlx->player.player_y -= 1 * mlx->player.walk_speed;
 	else if (keycode == KEY_DOWN)
-		mlx->player.player_y += 5;
+		mlx->player.player_y += 1 * mlx->player.walk_speed;
 	return (TRUE);
 }
 
@@ -85,7 +85,7 @@ void setting_map(t_mlx *mlx)
 	int x = -1;
 	int y = -1;
 
-	mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, WIN_WIDTH / MINIMAP_SCALE_FACTOR, WIN_HEIGHT / MINIMAP_SCALE_FACTOR);
 	mlx->map.data = (int *)mlx_get_data_addr(mlx->map.img_ptr, &(mlx->map.bpp), &(mlx->map.size_l), &(mlx->map.endian));
 	while (++y < WIN_HEIGHT)
 	{
@@ -95,9 +95,9 @@ void setting_map(t_mlx *mlx)
 			mlx->map.tile_x = x / TILE_SIZE;
 			mlx->map.tile_y = y / TILE_SIZE;
 			if (map[mlx->map.tile_y][mlx->map.tile_x] == 0)
-				mlx->map.data[y * WIN_WIDTH + x] = 0x020202;
+				mlx->map.data[y / MINIMAP_SCALE_FACTOR * WIN_WIDTH / MINIMAP_SCALE_FACTOR + x / MINIMAP_SCALE_FACTOR] = 0x020202;
 			else if (map[mlx->map.tile_y][mlx->map.tile_x] == 1)
-				mlx->map.data[y * WIN_WIDTH + x] = 0xffffff;
+				mlx->map.data[y / MINIMAP_SCALE_FACTOR * WIN_WIDTH / MINIMAP_SCALE_FACTOR + x / MINIMAP_SCALE_FACTOR] = 0xffffff;
 		}
 	}
 }
@@ -107,14 +107,14 @@ void setting_img(t_mlx *mlx)
 	int x = -1;
 	int y = -1;
 
-	mlx->player.player_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width, mlx->player.height);
+	mlx->player.player_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width / MINIMAP_SCALE_FACTOR, mlx->player.height / MINIMAP_SCALE_FACTOR);
 	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.player_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
 	while (++y < mlx->player.height)
 	{
 		x = -1;
 		while (++x < mlx->player.width)
 		{
-			mlx->player.data[y * mlx->player.width + x] = 0xFFFF00;
+			mlx->player.data[y / MINIMAP_SCALE_FACTOR * mlx->player.width / MINIMAP_SCALE_FACTOR + x / MINIMAP_SCALE_FACTOR] = 0xFFFF00;
 		}
 	}
 }
