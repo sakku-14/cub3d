@@ -3,10 +3,31 @@
 #include "../../mlx/mlx.h"
 #include "constants.h"
 
+const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
+
 void	mlx_conf(t_mlx *mlx)
 {
 	mlx->player.player_x = WIN_WIDTH / 2;
 	mlx->player.player_y = WIN_HEIGHT / 2;
+	mlx->player.width = 10;
+	mlx->player.height = 10;
+	mlx->player.rotation_angle = PI / 2;
+	mlx->player.walk_speed = 100;
+	mlx->player.turn_speed = 45 * (PI / 180);
 }
 
 int	key_press(int keycode, t_mlx *mlx)
@@ -37,6 +58,7 @@ int close_button_press(t_mlx *mlx)
 int rendering_loop(t_mlx *mlx)
 {
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.player_ptr, mlx->player.player_x, mlx->player.player_y);
 	return (TRUE);
 }
@@ -58,19 +80,41 @@ void setting_window(t_mlx *mlx)
 	}
 }
 
+void setting_map(t_mlx *mlx)
+{
+	int x = -1;
+	int y = -1;
+
+	mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	mlx->map.data = (int *)mlx_get_data_addr(mlx->map.img_ptr, &(mlx->map.bpp), &(mlx->map.size_l), &(mlx->map.endian));
+	while (++y < WIN_HEIGHT)
+	{
+		x = -1;
+		while (++x < WIN_WIDTH)
+		{
+			mlx->map.tile_x = x / TILE_SIZE;
+			mlx->map.tile_y = y / TILE_SIZE;
+			if (map[mlx->map.tile_y][mlx->map.tile_x] == 0)
+				mlx->map.data[y * WIN_WIDTH + x] = 0x020202;
+			else if (map[mlx->map.tile_y][mlx->map.tile_x] == 1)
+				mlx->map.data[y * WIN_WIDTH + x] = 0xffffff;
+		}
+	}
+}
+
 void setting_img(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
 
-	mlx->player.player_ptr = mlx_new_image(mlx->mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
+	mlx->player.player_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width, mlx->player.height);
 	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.player_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
-	while (++y < IMG_HEIGHT)
+	while (++y < mlx->player.height)
 	{
 		x = -1;
-		while (++x < IMG_WIDTH)
+		while (++x < mlx->player.width)
 		{
-			mlx->player.data[y * IMG_WIDTH + x] = 0xFFFF00;
+			mlx->player.data[y * mlx->player.width + x] = 0xFFFF00;
 		}
 	}
 }
@@ -92,6 +136,7 @@ int		main()
 	if (!(initialize_window(&mlx)))
 		return (FALSE);
 	setting_window(&mlx);
+	setting_map(&mlx);
 	setting_img(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1<<17, &close_button_press, &mlx);

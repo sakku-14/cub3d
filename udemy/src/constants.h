@@ -1,11 +1,17 @@
-#define TRUE	1
 #define FALSE	0
+#define TRUE	1
 
-#define WIN_WIDTH	800
-#define WIN_HEIGHT	600
+#define	PI	3.14159265
+#define	TWO_PI	6.28318530
 
-#define IMG_WIDTH	50
-#define IMG_HEIGHT	50
+#define TILE_SIZE		64
+#define MAP_NUM_ROWS	13
+#define MAP_NUM_COLS	20
+
+#define WIN_WIDTH	(MAP_NUM_COLS * TILE_SIZE)
+#define WIN_HEIGHT	(MAP_NUM_ROWS * TILE_SIZE)
+
+#define FOV_ANGLE	(60 * (PI / 180))
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_release	3
@@ -25,8 +31,13 @@ typedef struct	s_player
 	int		size_l;
 	int		bpp;
 	int		endian;
-	int		player_x;
-	int		player_y;
+	float	player_x;
+	float	player_y;
+	int	width;
+	int	height;
+	float	rotation_angle;
+	float	walk_speed;
+	float	turn_speed;
 }				t_player;
 
 typedef struct	s_window
@@ -38,11 +49,24 @@ typedef struct	s_window
 	int		endian;
 }				t_window;
 
+typedef struct	s_map
+{
+	void	*img_ptr;
+	int		*data;
+	int		size_l;
+	int		bpp;
+	int		endian;
+	int		tile_x;
+	int		tile_y;
+}				t_map;
+
+
 typedef struct	s_mlx
 {
 	void		*mlx_ptr;
 	void		*win;
 	t_player	player;
 	t_window	window;
+	t_map		map;
 }				t_mlx;
 
