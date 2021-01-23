@@ -1,5 +1,5 @@
-#define TRUE	0
-#define FALSE	1
+#define TRUE	1
+#define FALSE	0
 
 #define WIN_WIDTH	800
 #define WIN_HEIGHT	600
