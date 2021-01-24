@@ -24,8 +24,8 @@ void	mlx_conf(t_mlx *mlx)
 {
 	mlx->player.player_x = WIN_WIDTH / MINIMAP_SCALE_FACTOR / 2;
 	mlx->player.player_y = WIN_HEIGHT / MINIMAP_SCALE_FACTOR / 2;
-	mlx->player.width = 30 / MINIMAP_SCALE_FACTOR;
-	mlx->player.height = 30 / MINIMAP_SCALE_FACTOR;
+	mlx->player.width = 10 / MINIMAP_SCALE_FACTOR;
+	mlx->player.height = 10 / MINIMAP_SCALE_FACTOR;
 	mlx->player.rotation_angle = 270 * (M_PI / 180);
 	mlx->player.walk_speed = 10 / MINIMAP_SCALE_FACTOR;
 	mlx->player.turn_speed = 3 * (M_PI / 180);
@@ -39,17 +39,17 @@ int	key_press(int keycode, t_mlx *mlx)
 		exit(0);
 	}
 	if (keycode == KEY_A)
-		mlx->player.player_x -= 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		mlx->player.player_x -= 1 * cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_D)
-		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_W)
 		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_S)
 		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	if (keycode == KEY_A)
-		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_D)
-		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_W)
 		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_S)
@@ -163,8 +163,8 @@ int		main()
 	setting_window(&mlx);
 	setting_map(&mlx);
 	setting_player(&mlx);
-	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
-	mlx_hook(mlx.win, 17, 1<<17, &close_button_press, &mlx);
+	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L << 0, &key_press, &mlx);
+	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);
 	mlx_loop(mlx.mlx_ptr);
 
