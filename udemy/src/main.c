@@ -28,7 +28,7 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.height = 30 / MINIMAP_SCALE_FACTOR;
 	mlx->player.rotation_angle = 270 * (M_PI / 180);
 	mlx->player.walk_speed = 10 / MINIMAP_SCALE_FACTOR;
-	mlx->player.turn_speed = 10 * (M_PI / 180);
+	mlx->player.turn_speed = 3 * (M_PI / 180);
 }
 
 int	key_press(int keycode, t_mlx *mlx)
@@ -38,15 +38,24 @@ int	key_press(int keycode, t_mlx *mlx)
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win);
 		exit(0);
 	}
-	else if (keycode == KEY_A)
-		mlx->player.player_x -= 1 * mlx->player.walk_speed;
+	if (keycode == KEY_A)
+		mlx->player.player_x -= 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_D)
-		mlx->player.player_x += 1 * mlx->player.walk_speed;
+		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_W)
-		mlx->player.player_y -= 1 * mlx->player.walk_speed;
+		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_S)
-		mlx->player.player_y += 1 * mlx->player.walk_speed;
-	else if (keycode == KEY_RIGHT)
+		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	if (keycode == KEY_A)
+		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	else if (keycode == KEY_D)
+		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	else if (keycode == KEY_W)
+		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	else if (keycode == KEY_S)
+		mlx->player.player_x -= 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+
+	if (keycode == KEY_RIGHT)
 		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
 	else if (keycode == KEY_LEFT)
 		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
