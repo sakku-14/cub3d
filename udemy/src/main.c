@@ -26,7 +26,7 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.player_y = WIN_HEIGHT / MINIMAP_SCALE_FACTOR / 2;
 	mlx->player.width = 30 / MINIMAP_SCALE_FACTOR;
 	mlx->player.height = 30 / MINIMAP_SCALE_FACTOR;
-	mlx->player.rotation_angle = 90 * (M_PI / 180);
+	mlx->player.rotation_angle = 270 * (M_PI / 180);
 	mlx->player.walk_speed = 10 / MINIMAP_SCALE_FACTOR;
 	mlx->player.turn_speed = 10 * (M_PI / 180);
 }
@@ -49,7 +49,7 @@ int	key_press(int keycode, t_mlx *mlx)
 	else if (keycode == KEY_RIGHT)
 		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
 	else if (keycode == KEY_LEFT)
-		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
+		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
 	return (TRUE);
 }
 
