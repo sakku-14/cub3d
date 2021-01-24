@@ -24,41 +24,60 @@ void	mlx_conf(t_mlx *mlx)
 {
 	mlx->player.player_x = WIN_WIDTH / MINIMAP_SCALE_FACTOR / 2;
 	mlx->player.player_y = WIN_HEIGHT / MINIMAP_SCALE_FACTOR / 2;
-	mlx->player.width = 10 / MINIMAP_SCALE_FACTOR;
-	mlx->player.height = 10 / MINIMAP_SCALE_FACTOR;
+	mlx->player.width = 1 / MINIMAP_SCALE_FACTOR;
+	mlx->player.height = 1 / MINIMAP_SCALE_FACTOR;
 	mlx->player.rotation_angle = 270 * (M_PI / 180);
 	mlx->player.walk_speed = 10 / MINIMAP_SCALE_FACTOR;
 	mlx->player.turn_speed = 3 * (M_PI / 180);
 }
 
+int	map_has_wall_at(float x, float y)
+{
+	int map_grid_index_x;
+	int map_grid_index_y;
+	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+		return (TRUE);
+	map_grid_index_x = floor(x / TILE_SIZE);
+	map_grid_index_y = floor(y / TILE_SIZE);
+	return (map[map_grid_index_y][map_grid_index_x] != 0);
+}
+
 int	key_press(int keycode, t_mlx *mlx)
 {
+	float new_player_x = mlx->player.player_x;
+	float new_player_y = mlx->player.player_y;
 	if (keycode == KEY_ESC)
 	{
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win);
 		exit(0);
 	}
 	if (keycode == KEY_A)
-		mlx->player.player_x -= 1 * cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_x = mlx->player.player_x - cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_D)
-		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_W)
-		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_S)
-		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	if (keycode == KEY_A)
-		mlx->player.player_y -= 1 * sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_D)
-		mlx->player.player_y += 1 * sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
 	else if (keycode == KEY_W)
-		mlx->player.player_x += 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (keycode == KEY_S)
-		mlx->player.player_x -= 1 * cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_x = mlx->player.player_x - cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 
 	if (keycode == KEY_RIGHT)
 		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
 	else if (keycode == KEY_LEFT)
 		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
+
+	if (!map_has_wall_at(new_player_x, new_player_y))
+	{
+		mlx->player.player_x = new_player_x;
+		mlx->player.player_y = new_player_y;
+	}
 	return (TRUE);
 }
 
