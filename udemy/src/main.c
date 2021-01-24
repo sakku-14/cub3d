@@ -102,7 +102,7 @@ void setting_map(t_mlx *mlx)
 	}
 }
 
-void setting_img(t_mlx *mlx)
+void setting_player(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
@@ -137,7 +137,8 @@ int		main()
 		return (FALSE);
 	setting_window(&mlx);
 	setting_map(&mlx);
-	setting_img(&mlx);
+	setting_player(&mlx);
+	//setting_line(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1<<17, &close_button_press, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);
