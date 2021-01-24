@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "../../mlx/mlx.h"
 #include "constants.h"
 
@@ -25,9 +26,9 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.player_y = WIN_HEIGHT / MINIMAP_SCALE_FACTOR / 2;
 	mlx->player.width = 30 / MINIMAP_SCALE_FACTOR;
 	mlx->player.height = 30 / MINIMAP_SCALE_FACTOR;
-	mlx->player.rotation_angle = PI / 2;
+	mlx->player.rotation_angle = 90 * (M_PI / 180);
 	mlx->player.walk_speed = 10 / MINIMAP_SCALE_FACTOR;
-	mlx->player.turn_speed = 45 * (PI / 180);
+	mlx->player.turn_speed = 10 * (M_PI / 180);
 }
 
 int	key_press(int keycode, t_mlx *mlx)
@@ -37,14 +38,18 @@ int	key_press(int keycode, t_mlx *mlx)
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win);
 		exit(0);
 	}
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_A)
 		mlx->player.player_x -= 1 * mlx->player.walk_speed;
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_D)
 		mlx->player.player_x += 1 * mlx->player.walk_speed;
-	else if (keycode == KEY_UP)
+	else if (keycode == KEY_W)
 		mlx->player.player_y -= 1 * mlx->player.walk_speed;
-	else if (keycode == KEY_DOWN)
+	else if (keycode == KEY_S)
 		mlx->player.player_y += 1 * mlx->player.walk_speed;
+	else if (keycode == KEY_RIGHT)
+		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
+	else if (keycode == KEY_LEFT)
+		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
 	return (TRUE);
 }
 
@@ -55,11 +60,22 @@ int close_button_press(t_mlx *mlx)
 	return (TRUE);
 }
 
+void put_line(t_mlx *mlx)
+{
+	int r = 0;
+	while (r < 100)
+	{
+		mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->player.player_x + (r * cos(mlx->player.rotation_angle)), mlx->player.player_y + (r * sin(mlx->player.rotation_angle)), 0x00FF00);
+		r++;
+	}
+}
+
 int rendering_loop(t_mlx *mlx)
 {
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.player_ptr, mlx->player.player_x, mlx->player.player_y);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x, mlx->player.player_y);
+	put_line(mlx);
 	return (TRUE);
 }
 
@@ -107,8 +123,8 @@ void setting_player(t_mlx *mlx)
 	int x = -1;
 	int y = -1;
 
-	mlx->player.player_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width / MINIMAP_SCALE_FACTOR, mlx->player.height / MINIMAP_SCALE_FACTOR);
-	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.player_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
+	mlx->player.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width / MINIMAP_SCALE_FACTOR, mlx->player.height / MINIMAP_SCALE_FACTOR);
+	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.img_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
 	while (++y < mlx->player.height)
 	{
 		x = -1;
@@ -138,7 +154,6 @@ int		main()
 	setting_window(&mlx);
 	setting_map(&mlx);
 	setting_player(&mlx);
-	//setting_line(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1<<17, &close_button_press, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);

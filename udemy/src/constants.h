@@ -24,10 +24,14 @@
 #define KEY_RIGHT	124
 #define KEY_UP		126
 #define KEY_DOWN	125
+#define KEY_A	0
+#define KEY_D	2
+#define KEY_W	13
+#define KEY_S	1
 
 typedef struct	s_player
 {
-	void	*player_ptr;
+	void	*img_ptr;
 	int		*data;
 	int		size_l;
 	int		bpp;
@@ -40,6 +44,16 @@ typedef struct	s_player
 	float	walk_speed;
 	float	turn_speed;
 }				t_player;
+
+typedef struct	s_line
+{
+	void	*img_ptr;
+	int		*data;
+	int		size_l;
+	int		bpp;
+	int		endian;
+}				t_line;
+
 
 typedef struct	s_window
 {
