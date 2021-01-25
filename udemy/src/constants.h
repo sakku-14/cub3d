@@ -1,9 +1,6 @@
 #define FALSE	0
 #define TRUE	1
 
-#define	PI	3.14159265
-#define	TWO_PI	6.28318530
-
 #define TILE_SIZE		64
 #define MINIMAP_SCALE_FACTOR	1
 #define MAP_NUM_ROWS	13
@@ -12,10 +9,11 @@
 #define WIN_WIDTH	(MAP_NUM_COLS * TILE_SIZE)
 #define WIN_HEIGHT	(MAP_NUM_ROWS * TILE_SIZE)
 
-#define FOV_ANGLE	(60 * (PI / 180))
+#define FOV_ANGLE	(60 * (M_PI / 180))
+#define NUM_RAYS	60
 
 #define X_EVENT_KEY_PRESS	2
-#define X_EVENT_KEY_release	3
+#define X_EVENT_KEY_RELEASE	3
 #define X_EVENT_KEY_EXIT	17
 #define X_EVENT_BTN_PRESS	4
 
@@ -38,9 +36,12 @@ typedef struct	s_player
 	int		endian;
 	float	player_x;
 	float	player_y;
-	int	width;
-	int	height;
+	int		width;
+	int		height;
 	float	rotation_angle;
+	int		turn_direction;
+	int		walk_direction;
+	int		side_direction;
 	float	walk_speed;
 	float	turn_speed;
 }				t_player;
@@ -75,6 +76,24 @@ typedef struct	s_map
 	int		tile_y;
 }				t_map;
 
+typedef struct	s_rays
+{
+	void	*img_ptr;
+	int		*data;
+	int		size_l;
+	int		bpp;
+	int		endian;
+	float	ray_angle;
+	float	wall_hit_x;
+	float	wall_hit_y;
+	float	distance;
+	int		was_hit_vertical;
+	int		is_ray_facing_up;
+	int		is_ray_facing_down;
+	int		is_ray_facing_right;
+	int		is_ray_facing_left;
+	int		wall_hit_content;
+}				t_rays;
 
 typedef struct	s_mlx
 {
@@ -83,5 +102,6 @@ typedef struct	s_mlx
 	t_player	player;
 	t_window	window;
 	t_map		map;
+	t_rays		rays[NUM_RAYS];
 }				t_mlx;
 
