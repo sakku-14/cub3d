@@ -31,8 +31,8 @@ void	mlx_conf(t_mlx *mlx)
 {
 	mlx->player.player_x = WIN_WIDTH / 2;
 	mlx->player.player_y = WIN_HEIGHT / 2;
-	mlx->player.width = 5;
-	mlx->player.height = 5;
+	mlx->player.width = 4;
+	mlx->player.height = 4;
 	mlx->player.rotation_angle = 90 * (M_PI / 180);
 	mlx->player.walk_speed = 5;
 	mlx->player.turn_speed = 4 * (M_PI / 180);
@@ -81,7 +81,7 @@ int close_button_press(t_mlx *mlx)
 void put_line(t_mlx *mlx)
 {
 	int r = 0;
-	while (r < 100 / MINIMAP_SCALE_FACTOR)
+	while (r < 200 / MINIMAP_SCALE_FACTOR)
 	{
 		mlx_pixel_put(mlx->mlx_ptr, mlx->win, (mlx->player.player_x + r * cos(mlx->player.rotation_angle)) / MINIMAP_SCALE_FACTOR, (mlx->player.player_y + r * sin(mlx->player.rotation_angle)) / MINIMAP_SCALE_FACTOR, 0x00FF00);
 		r++;
@@ -164,7 +164,6 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	while (next_horz_touch_x >= 0 && next_horz_touch_x <= WIN_WIDTH && next_horz_touch_y >= 0 && next_horz_touch_y <= WIN_HEIGHT)
 	{
 		float x_to_check = next_horz_touch_x;
-		//なぜ、is_ray_facing_up -1 0 ????????????
 		float y_to_check = next_horz_touch_y + (is_ray_facing_up ? -1 : 0);
 		if (map_has_wall_at(x_to_check, y_to_check))
 		{
@@ -204,7 +203,6 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	while (next_vert_touch_x >= 0 && next_vert_touch_x <= WIN_WIDTH && next_vert_touch_y >= 0 && next_vert_touch_y <= WIN_HEIGHT)
 	{
 		float x_to_check = next_vert_touch_x + (is_ray_facing_left ? -1 : 0);
-		//なぜ、is_ray_facing_up -1 0 ????????????
 		float y_to_check = next_vert_touch_y;
 		if (map_has_wall_at(x_to_check, y_to_check))
 		{
@@ -272,15 +270,15 @@ void setting_ray_point(t_mlx *mlx)
 
 	while (i < NUM_RAYS)
 	{
-		mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 10 / MINIMAP_SCALE_FACTOR, 10 / MINIMAP_SCALE_FACTOR);
+		mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR);
 		mlx->rays[i].data = (int *)mlx_get_data_addr(mlx->rays[i].img_ptr, &(mlx->rays[i].bpp), &(mlx->rays[i].size_l), &(mlx->rays[i].endian));
 		y = -1;
-		while (++y < 10 / MINIMAP_SCALE_FACTOR)
+		while (++y < 20 / MINIMAP_SCALE_FACTOR)
 		{
 			x = -1;
-			while (++x < 10 / MINIMAP_SCALE_FACTOR)
+			while (++x < 20 / MINIMAP_SCALE_FACTOR)
 			{
-				mlx->rays[i].data[y * 10 / MINIMAP_SCALE_FACTOR + x] = 0xff8c00;
+				mlx->rays[i].data[y * 20 / MINIMAP_SCALE_FACTOR + x] = 0xff0000;
 			}
 		}
 		i++;
@@ -304,16 +302,29 @@ void put_rays(t_mlx *mlx)
 	}
 }
 
-int rendering_loop(t_mlx *mlx)
+void generate_3d_projection(t_mlx *mlx)
 {
-	move(mlx);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
-	put_line(mlx);
-	cast_all_rays(mlx);
-	put_rays(mlx);
-	return (TRUE);
+	int x = 0;
+	int i;
+	int y;
+	while (x < WIN_WIDTH)
+	{
+		i = x / (WIN_WIDTH / NUM_RAYS);
+		mlx->window.distance_proj_plane = (WIN_WIDTH / 2) / tan(FOV_ANGLE / 2);
+		mlx->window.projected_wall_height = (TILE_SIZE / mlx->rays[i].distance) * mlx->window.distance_proj_plane;
+		mlx->window.wall_strip_height = (int)mlx->window.projected_wall_height;
+		mlx->window.wall_top_pixel = (WIN_HEIGHT / 2) - (mlx->window.wall_strip_height / 2);
+		mlx->window.wall_top_pixel = mlx->window.wall_top_pixel < 0 ? 0 : mlx->window.wall_top_pixel;
+		mlx->window.wall_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->window.wall_strip_height / 2);
+		mlx->window.wall_bottom_pixel = mlx->window.wall_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->window.wall_bottom_pixel;
+		y = mlx->window.wall_top_pixel;
+		while (y < mlx->window.wall_bottom_pixel)
+		{
+			mlx->window.data[WIN_WIDTH * y + x] = 0xffffff;
+			y++;
+		}
+		x++;
+	}
 }
 
 void setting_window(t_mlx *mlx)
@@ -331,6 +342,20 @@ void setting_window(t_mlx *mlx)
 			mlx->window.data[y * WIN_WIDTH + x] = 0x000000;
 		}
 	}
+}
+
+int rendering_loop(t_mlx *mlx)
+{
+	move(mlx);
+	setting_window(mlx);
+	generate_3d_projection(mlx);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
+	put_line(mlx);
+	cast_all_rays(mlx);
+	put_rays(mlx);
+	return (TRUE);
 }
 
 void setting_map(t_mlx *mlx)
@@ -383,7 +408,6 @@ int initialize_window(t_mlx *mlx)
 
 int key_release(int key, t_mlx *mlx)
 {
-	// TODO:
 	//	release act
 	if (key == KEY_W)
 		mlx->player.walk_direction = 0;
@@ -405,10 +429,8 @@ int		main()
 	t_mlx	mlx;
 
 	mlx_conf(&mlx);
-
 	if (!(initialize_window(&mlx)))
 		return (FALSE);
-	setting_window(&mlx);
 	setting_map(&mlx);
 	setting_player(&mlx);
 	setting_ray_point(&mlx);
@@ -417,6 +439,5 @@ int		main()
 	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);
 	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);
 	mlx_loop(mlx.mlx_ptr);
-
 	return (TRUE);
 }
