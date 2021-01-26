@@ -10,7 +10,7 @@
 #define WIN_HEIGHT	(MAP_NUM_ROWS * TILE_SIZE)
 
 #define FOV_ANGLE	(60 * (M_PI / 180))
-#define NUM_RAYS	100
+#define NUM_RAYS	300
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_RELEASE	3
@@ -63,6 +63,7 @@ typedef struct	s_window
 	int		size_l;
 	int		bpp;
 	int		endian;
+	float	perp_distance;
 	float	distance_proj_plane;
 	float	projected_wall_height;
 	int		wall_strip_height;
