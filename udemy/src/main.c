@@ -17,14 +17,14 @@ const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
 float dist_between_points(float x1, float y1, float x2, float y2)
 {
-	return (sqrt((x1 - x2) * ( x1 - x2 ) + (y1 - y2) * (y1 - y2)));
+	return (sqrtf((x1 - x2) * ( x1 - x2 ) + (y1 - y2) * (y1 - y2)));
 }
 
 void	mlx_conf(t_mlx *mlx)
@@ -136,7 +136,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 
 	int is_ray_facing_down = ray_angle > 0 && ray_angle < M_PI;
 	int is_ray_facing_up = !is_ray_facing_down;
-	int is_ray_facing_right = ray_angle < M_PI / 2 && ray_angle > M_PI * 3 / 2;
+	int is_ray_facing_right = ray_angle < M_PI / 2 || ray_angle > M_PI * 3 / 2;
 	int is_ray_facing_left = !is_ray_facing_right;
 
 	float x_intercept, y_intercept, x_step, y_step;
@@ -194,7 +194,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	y_intercept = mlx->player.player_y + (x_intercept - mlx->player.player_x) * tan(ray_angle);
 	x_step = TILE_SIZE;
 	x_step *= is_ray_facing_left ? -1 : 1;
-	y_step = TILE_SIZE / tan(ray_angle);
+	y_step = TILE_SIZE * tan(ray_angle);
 	y_step *= (is_ray_facing_up && y_step > 0) ? -1 : 1;
 	y_step *= (is_ray_facing_down && y_step < 0) ? -1 : 1;
 
@@ -293,13 +293,13 @@ void put_rays(t_mlx *mlx)
 
 	while (i < NUM_RAYS)
 	{
-		// r = 0;
-		// while (r < mlx->rays[i].distance)
-		// {
-		// 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->player.player_x + (r * cos(mlx->rays[i].ray_angle)), mlx->player.player_y + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
-		// 	r++;
-		// }
-		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, mlx->rays[i].wall_hit_x, mlx->rays[i].wall_hit_y);
+		r = 0;
+		while (r < mlx->rays[i].distance)
+		{
+			mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->player.player_x + (r * cos(mlx->rays[i].ray_angle)), mlx->player.player_y + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
+			r++;
+		}
+		//mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, mlx->rays[i].wall_hit_x, mlx->rays[i].wall_hit_y);
 		i++;
 	}
 }
