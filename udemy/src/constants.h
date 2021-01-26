@@ -2,7 +2,7 @@
 #define TRUE	1
 
 #define TILE_SIZE		64
-#define MINIMAP_SCALE_FACTOR	1
+#define MINIMAP_SCALE_FACTOR	4
 #define MAP_NUM_ROWS	13
 #define MAP_NUM_COLS	20
 
