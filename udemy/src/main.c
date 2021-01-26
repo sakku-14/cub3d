@@ -318,10 +318,22 @@ void generate_3d_projection(t_mlx *mlx)
 		mlx->window.wall_top_pixel = mlx->window.wall_top_pixel < 0 ? 0 : mlx->window.wall_top_pixel;
 		mlx->window.wall_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->window.wall_strip_height / 2);
 		mlx->window.wall_bottom_pixel = mlx->window.wall_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->window.wall_bottom_pixel;
+		y = 0;
+		while (y < mlx->window.wall_top_pixel && y < WIN_HEIGHT)
+		{
+			mlx->window.data[(WIN_WIDTH * y) + x] = 0x333333;
+			y++;
+		}
 		y = mlx->window.wall_top_pixel;
 		while (y < mlx->window.wall_bottom_pixel)
 		{
 			mlx->window.data[(WIN_WIDTH * y) + x] = mlx->rays[i].was_hit_vertical ? 0xffffff : 0xbbbbbb;
+			y++;
+		}
+		y = mlx->window.wall_bottom_pixel;
+		while (y < WIN_HEIGHT && y >= 0)
+		{
+			mlx->window.data[(WIN_WIDTH * y) + x] = 0x777777;
 			y++;
 		}
 		x++;
