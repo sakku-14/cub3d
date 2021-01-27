@@ -327,6 +327,7 @@ void generate_3d_projection(t_mlx *mlx)
 		y = mlx->window.wall_top_pixel;
 		while (y < mlx->window.wall_bottom_pixel)
 		{
+			//mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (WIN_WIDTH / 2);
 			mlx->window.data[(WIN_WIDTH * y) + x] = mlx->rays[i].was_hit_vertical ? 0xffffff : 0xbbbbbb;
 			y++;
 		}
