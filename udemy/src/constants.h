@@ -10,7 +10,7 @@
 #define WIN_HEIGHT	(MAP_NUM_ROWS * TILE_SIZE)
 
 #define FOV_ANGLE	(60 * (M_PI / 180))
-#define NUM_RAYS	1280
+#define NUM_RAYS	128
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_RELEASE	3

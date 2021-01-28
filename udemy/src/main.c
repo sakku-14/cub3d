@@ -425,7 +425,7 @@ void setting_player(t_mlx *mlx)
 
 int setting_wall_img(t_mlx *mlx)
 {
-	// TODO:東西南北の.xpmをtex[i]に取り込む
+	// TODO:falseの時の戻り値設定
 	int i = 0;
 	int width = 64;
 	int height = 64;
