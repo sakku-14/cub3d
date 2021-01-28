@@ -337,7 +337,7 @@ void generate_3d_projection(t_mlx *mlx)
 			// TODO: 取り込んだtexを壁の向き、遠さに合わせて出力する
 			int tex_index;
 			if (mlx->rays[i].was_hit_vertical)
-				tex_index = mlx->rays[i].is_ray_facing_right ? 3 : 2;
+				tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
 			else
 				tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
 			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (WIN_HEIGHT / 2);
@@ -434,26 +434,16 @@ int setting_wall_img(t_mlx *mlx)
 	int height = 64;
 	char *path_n = "./textures/NO.xpm";
 	char *path_s = "./textures/SO.xpm";
-	char *path_w = "./textures/WE.xpm";
 	char *path_e = "./textures/EA.xpm";
+	char *path_w = "./textures/WE.xpm";
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_n, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_s, &width, &height);
 	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
-	mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_w, &width, &height);
+	mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_e, &width, &height);
 	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
-	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_e, &width, &height);
+	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_w, &width, &height);
 	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
-
-//	char path[5][20] = {"../textures/NO.xpm", "../textures/SO.xpm", "../textures/EA.xpm", "../textures/WE.xpm"};
-/*
-	while (i < 4)
-	{
-		mlx->tex[i].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path[i], &width, &height);
-		mlx->tex[i].data = (int *)mlx_get_data_addr(mlx->tex[i].img_ptr, &(mlx->tex[i].bpp), &(mlx->tex[i].size_l), &(mlx->tex[i].endian));
-		i++;
-	}
-*/
 	return (TRUE);
 }
 
