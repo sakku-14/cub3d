@@ -33,7 +33,7 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.player_y = WIN_HEIGHT / 2;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
-	mlx->player.rotation_angle = 90 * (M_PI / 180);
+	mlx->player.rotation_angle = 270 * (M_PI / 180);
 	mlx->player.walk_speed = 5;
 	mlx->player.turn_speed = 4 * (M_PI / 180);
 }
@@ -321,20 +321,32 @@ void generate_3d_projection(t_mlx *mlx)
 		y = 0;
 		while (y < mlx->window.wall_top_pixel && y < WIN_HEIGHT)
 		{
-			mlx->window.data[(WIN_WIDTH * y) + x] = 0x333333;
+			mlx->window.data[(WIN_WIDTH * y) + x] = 0x444444;
+			if (mlx->rays[i].was_hit_vertical)
+				mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_y % TILE_SIZE;
+			else
+				mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_x % TILE_SIZE;
 			y++;
 		}
 		y = mlx->window.wall_top_pixel;
 		while (y < mlx->window.wall_bottom_pixel)
 		{
-			//mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (WIN_WIDTH / 2);
-			mlx->window.data[(WIN_WIDTH * y) + x] = mlx->rays[i].was_hit_vertical ? 0xffffff : 0xbbbbbb;
+			//mlx->window.data[(WIN_WIDTH * y) + x] = mlx->rays[i].was_hit_vertical ? 0xffffff : 0xbbbbbb;
+			// TODO: 取り込んだtexを壁の向き、遠さに合わせて出力する
+			int tex_index;
+			if (mlx->rays[i].was_hit_vertical)
+				tex_index = mlx->rays[i].is_ray_facing_right ? 3 : 2;
+			else
+				tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
+			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (WIN_HEIGHT / 2);
+			mlx->window.texture_offset_y = mlx->window.distance_from_top * ((float)64 / mlx->window.wall_strip_height);
+			mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
 			y++;
 		}
 		y = mlx->window.wall_bottom_pixel;
 		while (y < WIN_HEIGHT && y >= 0)
 		{
-			mlx->window.data[(WIN_WIDTH * y) + x] = 0x777777;
+			mlx->window.data[(WIN_WIDTH * y) + x] = 0x888888;
 			y++;
 		}
 		x++;
@@ -364,11 +376,11 @@ int rendering_loop(t_mlx *mlx)
 	setting_window(mlx);
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
-	put_line(mlx);
+//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
+//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
+//	put_line(mlx);
 	cast_all_rays(mlx);
-	put_rays(mlx);
+//	put_rays(mlx);
 	return (TRUE);
 }
 
@@ -411,6 +423,37 @@ void setting_player(t_mlx *mlx)
 	}
 }
 
+int setting_wall_img(t_mlx *mlx)
+{
+	// TODO:東西南北の.xpmをtex[i]に取り込む
+	int i = 0;
+	int width = 64;
+	int height = 64;
+	char *path_n = "./textures/NO.xpm";
+	char *path_s = "./textures/SO.xpm";
+	char *path_w = "./textures/WE.xpm";
+	char *path_e = "./textures/EA.xpm";
+	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_n, &width, &height);
+	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
+	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_s, &width, &height);
+	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
+	mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_w, &width, &height);
+	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
+	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_e, &width, &height);
+	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
+
+//	char path[5][20] = {"../textures/NO.xpm", "../textures/SO.xpm", "../textures/EA.xpm", "../textures/WE.xpm"};
+/*
+	while (i < 4)
+	{
+		mlx->tex[i].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path[i], &width, &height);
+		mlx->tex[i].data = (int *)mlx_get_data_addr(mlx->tex[i].img_ptr, &(mlx->tex[i].bpp), &(mlx->tex[i].size_l), &(mlx->tex[i].endian));
+		i++;
+	}
+*/
+	return (TRUE);
+}
+
 int initialize_window(t_mlx *mlx)
 {
 	if (!(mlx->mlx_ptr = mlx_init()))
@@ -448,6 +491,8 @@ int		main()
 	setting_map(&mlx);
 	setting_player(&mlx);
 	setting_ray_point(&mlx);
+	if (!(setting_wall_img(&mlx)))
+		return (FALSE);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);

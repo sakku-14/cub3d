@@ -10,7 +10,7 @@
 #define WIN_HEIGHT	(MAP_NUM_ROWS * TILE_SIZE)
 
 #define FOV_ANGLE	(60 * (M_PI / 180))
-#define NUM_RAYS	128
+#define NUM_RAYS	1280
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_RELEASE	3
@@ -70,6 +70,8 @@ typedef struct	s_window
 	int		wall_top_pixel;
 	int		wall_bottom_pixel;
 	int		distance_from_top;
+	int		texture_offset_x;
+	int		texture_offset_y;
 }				t_window;
 
 typedef struct	s_map
@@ -102,6 +104,15 @@ typedef struct	s_rays
 	int		wall_hit_content;
 }				t_rays;
 
+typedef struct	s_tex
+{
+	void	*img_ptr;
+	int		*data;
+	int		size_l;
+	int		bpp;
+	int		endian;
+}				t_tex;
+
 typedef struct	s_mlx
 {
 	void		*mlx_ptr;
@@ -110,5 +121,6 @@ typedef struct	s_mlx
 	t_window	window;
 	t_map		map;
 	t_rays		rays[NUM_RAYS];
+	t_tex		tex[5];
 }				t_mlx;
 
