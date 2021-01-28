@@ -318,6 +318,7 @@ void generate_3d_projection(t_mlx *mlx)
 		mlx->window.wall_top_pixel = mlx->window.wall_top_pixel < 0 ? 0 : mlx->window.wall_top_pixel;
 		mlx->window.wall_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->window.wall_strip_height / 2);
 		mlx->window.wall_bottom_pixel = mlx->window.wall_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->window.wall_bottom_pixel;
+		// describe about ceil
 		y = 0;
 		while (y < mlx->window.wall_top_pixel && y < WIN_HEIGHT)
 		{
@@ -328,6 +329,7 @@ void generate_3d_projection(t_mlx *mlx)
 				mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_x % TILE_SIZE;
 			y++;
 		}
+		// describe about wall(texture)
 		y = mlx->window.wall_top_pixel;
 		while (y < mlx->window.wall_bottom_pixel)
 		{
@@ -343,6 +345,7 @@ void generate_3d_projection(t_mlx *mlx)
 			mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
 			y++;
 		}
+		// describe about floor
 		y = mlx->window.wall_bottom_pixel;
 		while (y < WIN_HEIGHT && y >= 0)
 		{
