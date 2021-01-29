@@ -323,13 +323,13 @@ void generate_3d_projection(t_mlx *mlx)
 		while (y < mlx->window.wall_top_pixel && y < WIN_HEIGHT)
 		{
 			mlx->window.data[(WIN_WIDTH * y) + x] = 0x444444;
-			if (mlx->rays[i].was_hit_vertical)
-				mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_y % TILE_SIZE;
-			else
-				mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_x % TILE_SIZE;
 			y++;
 		}
 		// describe about wall(texture)
+		if (mlx->rays[i].was_hit_vertical)
+			mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_y % TEXTURE_HEIGHT;
+		else
+			mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_x % TEXTURE_WIDTH;
 		y = mlx->window.wall_top_pixel;
 		while (y < mlx->window.wall_bottom_pixel)
 		{

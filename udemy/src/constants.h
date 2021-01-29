@@ -9,6 +9,9 @@
 #define WIN_WIDTH	(MAP_NUM_COLS * TILE_SIZE)
 #define WIN_HEIGHT	(MAP_NUM_ROWS * TILE_SIZE)
 
+#define TEXTURE_WIDTH	64
+#define TEXTURE_HEIGHT	64
+
 #define FOV_ANGLE	(60 * (M_PI / 180))
 #define NUM_RAYS	128
 
