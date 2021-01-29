@@ -342,7 +342,13 @@ void generate_3d_projection(t_mlx *mlx)
 				tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
 			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (WIN_HEIGHT / 2);
 			mlx->window.texture_offset_y = mlx->window.distance_from_top * ((float)64 / mlx->window.wall_strip_height);
-			mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
+			if (tex_index == 0 || tex_index == 2)
+				mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
+			else
+			{
+				mlx->window.texture_offset_x_rev = TEXTURE_WIDTH - mlx->window.texture_offset_x - 1;
+				mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x_rev];
+			}
 			y++;
 		}
 		// describe about floor
@@ -436,6 +442,12 @@ int setting_wall_img(t_mlx *mlx)
 	char *path_s = "./textures/greystone.xpm";
 	char *path_e = "./textures/purplestone.xpm";
 	char *path_w = "./textures/colorstone.xpm";
+/*
+	char *path_n = "./textures/test.xpm";
+	char *path_s = "./textures/test.xpm";
+	char *path_e = "./textures/test.xpm";
+	char *path_w = "./textures/test.xpm";
+*/
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_n, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_s, &width, &height);

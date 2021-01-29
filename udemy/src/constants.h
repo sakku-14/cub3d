@@ -13,7 +13,7 @@
 #define TEXTURE_HEIGHT	64
 
 #define FOV_ANGLE	(60 * (M_PI / 180))
-#define NUM_RAYS	1280
+#define NUM_RAYS	300
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_RELEASE	3
@@ -74,6 +74,7 @@ typedef struct	s_window
 	int		wall_bottom_pixel;
 	int		distance_from_top;
 	int		texture_offset_x;
+	int		texture_offset_x_rev;
 	int		texture_offset_y;
 }				t_window;
 
