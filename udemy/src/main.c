@@ -379,11 +379,11 @@ int rendering_loop(t_mlx *mlx)
 	setting_window(mlx);
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
-//	put_line(mlx);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
+	put_line(mlx);
 	cast_all_rays(mlx);
-//	put_rays(mlx);
+	put_rays(mlx);
 	return (TRUE);
 }
 
@@ -432,10 +432,10 @@ int setting_wall_img(t_mlx *mlx)
 	int i = 0;
 	int width = 64;
 	int height = 64;
-	char *path_n = "./textures/NO.xpm";
-	char *path_s = "./textures/SO.xpm";
-	char *path_e = "./textures/EA.xpm";
-	char *path_w = "./textures/WE.xpm";
+	char *path_n = "./textures/test.xpm";
+	char *path_s = "./textures/test.xpm";
+	char *path_e = "./textures/test.xpm";
+	char *path_w = "./textures/test.xpm";
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_n, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_s, &width, &height);
