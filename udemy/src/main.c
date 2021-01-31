@@ -10,8 +10,8 @@ const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
-    {1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
+    {1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
@@ -38,6 +38,7 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.turn_speed = 4 * (M_PI / 180);
 }
 
+// check sprite too
 int	map_has_wall_at(float x, float y)
 {
 	int map_grid_index_x;
@@ -291,12 +292,12 @@ void put_rays(t_mlx *mlx)
 
 	while (i < NUM_RAYS)
 	{
-		// r = 0;
-		// while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
-		// {
-		// 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->player.player_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->player.player_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
-		// 	r++;
-		// }
+//		 r = 0;
+//		 while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
+//		 {
+//		 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->player.player_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->player.player_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
+//		 	r++;
+//		 }
 		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, mlx->rays[i].wall_hit_x / MINIMAP_SCALE_FACTOR, mlx->rays[i].wall_hit_y / MINIMAP_SCALE_FACTOR);
 		i++;
 	}
