@@ -9,7 +9,7 @@
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
     {1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
@@ -47,7 +47,7 @@ int	map_has_wall_at(float x, float y)
 		return (TRUE);
 	map_grid_index_x = floor(x / TILE_SIZE);
 	map_grid_index_y = floor(y / TILE_SIZE);
-	return (map[map_grid_index_y][map_grid_index_x] != 0);
+	return (map[map_grid_index_y][map_grid_index_x] == 1);
 }
 
 int	key_press(int key, t_mlx *mlx)
@@ -82,9 +82,17 @@ int close_button_press(t_mlx *mlx)
 void put_line(t_mlx *mlx)
 {
 	int r = 0;
-	while (r < 200 / MINIMAP_SCALE_FACTOR)
+	while (r < 150 / MINIMAP_SCALE_FACTOR)
 	{
-		mlx_pixel_put(mlx->mlx_ptr, mlx->win, (mlx->player.player_x + r * cos(mlx->player.rotation_angle)) / MINIMAP_SCALE_FACTOR, (mlx->player.player_y + r * sin(mlx->player.rotation_angle)) / MINIMAP_SCALE_FACTOR, 0x00FF00);
+		mlx_pixel_put(
+				mlx->mlx_ptr,
+				mlx->win,
+				(mlx->player.player_x + r * cos(mlx->player.rotation_angle))
+				/ MINIMAP_SCALE_FACTOR,
+				(mlx->player.player_y + r * sin(mlx->player.rotation_angle))
+				/ MINIMAP_SCALE_FACTOR,
+				0x00FF00
+				);
 		r++;
 	}
 }
@@ -334,8 +342,6 @@ void generate_3d_projection(t_mlx *mlx)
 		y = mlx->window.wall_top_pixel;
 		while (y < mlx->window.wall_bottom_pixel)
 		{
-			//mlx->window.data[(WIN_WIDTH * y) + x] = mlx->rays[i].was_hit_vertical ? 0xffffff : 0xbbbbbb;
-			// TODO: 取り込んだtexを壁の向き、遠さに合わせて出力する
 			int tex_index;
 			if (mlx->rays[i].was_hit_vertical)
 				tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
@@ -384,13 +390,17 @@ int rendering_loop(t_mlx *mlx)
 {
 	move(mlx);
 	setting_window(mlx);
+	cast_all_rays(mlx);
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
 	put_line(mlx);
+	put_rays(mlx);
+/*
 	cast_all_rays(mlx);
 	put_rays(mlx);
+*/
 	return (TRUE);
 }
 
