@@ -1,7 +1,9 @@
-#include "./get_next_line.h"
+#include "../get_next_line/get_next_line.h"
+#include "../libft/libft.h"
 
 #define FALSE	0
 #define TRUE	1
+#define ERROR	-1
 #define PI		3.1415926535
 
 #define TILE_SIZE		64
@@ -138,6 +140,27 @@ typedef	struct	s_sprites
 	int		texture_offset_y;
 }				t_sprites;
 
+typedef struct	s_conf
+{
+	int		win_w;
+	int		win_h;
+	char	*path_no;
+	char	*path_so;
+	char	*path_ea;
+	char	*path_we;
+	char	*path_sp;
+	int		floor_r;
+	int		floor_g;
+	int		floor_b;
+	int		ceil_r;
+	int		ceil_g;
+	int		ceil_b;
+	char	*map_str;
+	char	**map;
+	int		map_y;
+	int		map_x;
+}				t_conf;
+
 typedef struct	s_mlx
 {
 	void		*mlx_ptr;
@@ -147,6 +170,7 @@ typedef struct	s_mlx
 	t_map		map;
 	t_rays		rays[NUM_RAYS];
 	t_sprites	*sprite;
+	t_conf		conf;
 	int			sprite_num;
 	t_tex		tex[5];
 }				t_mlx;

@@ -6,13 +6,13 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 13:43:34 by ysakuma           #+#    #+#             */
-/*   Updated: 2020/11/10 17:39:34 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/02/16 11:26:25 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	*ft_calloc_gnl(size_t count, size_t size)
 {
 	void			*ret;
 	size_t			i;
@@ -27,13 +27,13 @@ void	*ft_calloc(size_t count, size_t size)
 	return (ret);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t	ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize)
 {
 	char		*src_c;
 	size_t		len;
 
 	src_c = (char *)src;
-	len = ft_strlen(src);
+	len = ft_strlen_gnl(src);
 	while (dstsize > 1 && *src_c)
 	{
 		*dst++ = *src_c++;
@@ -44,7 +44,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (len);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen_gnl(const char *s)
 {
 	size_t len;
 
@@ -54,7 +54,7 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-void	*ft_memchr(const void *s, int c, size_t n)
+void	*ft_memchr_gnl(const void *s, int c, size_t n)
 {
 	unsigned char	*s_c;
 
@@ -68,18 +68,18 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	return (NULL);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
+size_t	ft_strlcat_gnl(char *dst, const char *src, size_t dstsize)
 {
 	size_t len;
 	size_t room;
 
-	if (dstsize < ft_strlen(dst))
-		return (ft_strlen(src) + dstsize);
+	if (dstsize < ft_strlen_gnl(dst))
+		return (ft_strlen_gnl(src) + dstsize);
 	else
-		len = ft_strlen(dst) + ft_strlen(src);
-	room = dstsize - 1 - ft_strlen(dst);
+		len = ft_strlen_gnl(dst) + ft_strlen_gnl(src);
+	room = dstsize - 1 - ft_strlen_gnl(dst);
 	while (*dst)
 		dst++;
-	ft_strlcpy(dst, src, room + 1);
+	ft_strlcpy_gnl(dst, src, room + 1);
 	return (len);
 }

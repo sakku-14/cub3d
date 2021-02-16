@@ -691,31 +691,297 @@ int key_release(int key, t_mlx *mlx)
 		mlx->player.turn_direction = 0;
 	return (TRUE);
 }
-/*
-void get_conf()
+
+int		pack_win_size(t_mlx *mlx, char *line)
+{
+	char	**strs;
+
+	strs = ft_split(line, ' ');
+	strs++;
+	if (*strs)
+		mlx->conf.win_w = ft_atoi(*strs);
+	strs++;
+	if (*strs)
+		mlx->conf.win_h = ft_atoi(*strs);
+	printf("w:%d, h:%d\n", mlx->conf.win_w, mlx->conf.win_h);
+	return (TRUE);
+}
+
+int		pack_path(t_mlx *mlx, char *line)
+{
+	char	**strs;
+	int		i;
+	int		len;
+
+	strs = ft_split(line, ' ');
+	i = 0;
+	len = ft_strlen(strs[1]);
+	if (strs[1])
+	{
+		if (ft_strnstr(strs[0], "NO", 2))
+			mlx->conf.path_no = ft_substr(strs[1], 0, len);
+		else if (ft_strnstr(strs[0], "SO", 2))
+			mlx->conf.path_so = ft_substr(strs[1], 0, len);
+		else if (ft_strnstr(strs[0], "EA", 2))
+			mlx->conf.path_ea = ft_substr(strs[1], 0, len);
+		else if (ft_strnstr(strs[0], "WE", 2))
+			mlx->conf.path_we = ft_substr(strs[1], 0, len);
+		else if (ft_strnstr(strs[0], "S", 1))
+			mlx->conf.path_sp = ft_substr(strs[1], 0, len);
+	}
+	return (TRUE);
+}
+
+int		pack_rgb(t_mlx *mlx, char *line)
+{
+	char	**sub_strs;
+	char	**strs;
+
+	sub_strs = ft_split(line, ' ');
+	strs = ft_split(sub_strs[1], ',');
+	if (ft_strnstr(sub_strs[0], "F", 1))
+	{
+		mlx->conf.floor_r = ft_atoi(strs[0]);
+		mlx->conf.floor_g = ft_atoi(strs[1]);
+		mlx->conf.floor_b = ft_atoi(strs[2]);
+	}
+	else if (ft_strnstr(sub_strs[0], "C", 1))
+	{
+		mlx->conf.ceil_r = ft_atoi(strs[0]);
+		mlx->conf.ceil_g = ft_atoi(strs[1]);
+		mlx->conf.ceil_b = ft_atoi(strs[2]);
+	}
+	return (TRUE);
+}
+
+int		max_len(int x, int y)
+{
+	if (x > y)
+		return (x);
+	else
+		return (y);
+}
+
+int		pack_map_str(t_mlx *mlx, char *line)
+{
+	if (!mlx->conf.map_str)
+	{
+		mlx->conf.map_str = malloc(1);
+		*(mlx->conf.map_str) = '\0';
+	}
+	mlx->conf.map_x = max_len(mlx->conf.map_x, (int)ft_strlen(line));
+	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, line);
+	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, "\n");
+	mlx->conf.map_y++;
+	return (TRUE);
+}
+
+int		get_conf(t_mlx *mlx)
 {
 	//TODO: code about get conf and map with gnl
 	int fd = open("./map_conf.cub", O_RDONLY);
 	int res;
+	int flag;
 	char *line;
 
-	res = get_next_line(fd, &line);
-	printf("%s\n", line);
+	flag = 0;
+	mlx->conf.map_y = 0;
+	mlx->conf.map_x = 0;
+	while ((res = get_next_line(fd, &line)))
+	{
+		if (res == -1)
+			return (FALSE);
+		printf("%s\n", line);
+		if (flag == 8)
+		{
+			if (pack_map_str(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "R", 1))
+		{
+			flag++;
+			if (pack_win_size(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "NO", 2))
+		{
+			flag++;
+			if (pack_path(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "SO", 2))
+		{
+			flag++;
+			if (pack_path(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "EA", 2))
+		{
+			flag++;
+			if (pack_path(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "WE", 2))
+		{
+			flag++;
+			if (pack_path(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "S", 1))
+		{
+			flag++;
+			if (pack_path(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "F", 1))
+		{
+			flag++;
+			if (pack_rgb(mlx, line) == FALSE)
+				return (FALSE);
+		}
+		else if (ft_strnstr(line, "C", 1))
+		{
+			flag++;
+			if (pack_rgb(mlx, line) == FALSE)
+				return (FALSE);
+		}
+	}
+	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
+	int index = 0;
+	while (index < mlx->conf.map_y)
+	{
+		while (ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
+		{
+			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
+		}
+		printf("%s\n", (mlx->conf.map)[index]);
+		index++;
+	}
+	return (TRUE);
 }
-*/
+
+void print_map(char *map_p, int y, int x)
+{
+	int i = 0;
+	int j = 0;
+
+	while (i < y)
+	{
+		j = 0;
+		while (j < x)
+		{
+			printf("%c", map_p[i * x + j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+	printf("\n");
+}
+
+void	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
+{
+	if (map_p[p_y * x + p_x] == 'p' || map_p[p_y * x + p_x] == '1' || *false_checker == 1)
+		return ;
+//	print_map(map_p, y, x);
+	if (map_p[p_y * x + p_x] == 'X')
+	{
+		*false_checker = 1;
+		return ;
+	}
+	if (map_p[p_y * x + p_x] == '0' || map_p[p_y * x + p_x] == 's')
+		map_p[p_y * x + p_x] = 'p';
+	check_fill(map_p, y, x, p_y - 1, p_x, false_checker);
+	check_fill(map_p, y, x, p_y, p_x + 1, false_checker);
+	check_fill(map_p, y, x, p_y + 1, p_x, false_checker);
+	check_fill(map_p, y, x, p_y, p_x - 1, false_checker);
+}
+
+void put_grid_to_container(t_mlx *mlx, char *cont_p, int y, int x)
+{
+	int i = 0, j = 0;
+	while (i < y)
+	{
+		j = 0;
+		while (j < x)
+		{
+			if (i == 0 || i == y - 1 || j == 0 || j == x - 1)
+				cont_p[i * x + j] = 'X';
+			else if (i > y - 2 || j > x - 2 || (mlx->conf.map)[i - 1][j - 1] == ' ')
+				cont_p[i * x + j] = 's';
+			else
+				cont_p[i * x + j] = (mlx->conf.map)[i - 1][j - 1];
+			j++;
+		}
+		i++;
+	}
+}
+
+int	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x)
+{
+	int i = 0, j = 0;
+	int player_counter = 0;
+	while (i < y)
+	{
+		j = 0;
+		while (j < x)
+		{
+			if (cont_p[i * x + j] == 'N' || cont_p[i * x + j] == 'S' || cont_p[i * x + j] == 'E' || cont_p[i * x + j] == 'W')
+			{
+				*player_y = i;
+				*player_x = j;
+				player_counter++;
+			}
+			j++;
+		}
+		i++;
+	}
+	if (player_counter == 1)
+		return (1); //change to TRUE from 1
+	return (0); //change to FALSE from 0
+}
+
+int	check_map(t_mlx *mlx)
+{
+	int player_x, player_y;
+	char *map_p = (char *)mlx->conf.map;
+	int y = mlx->conf.map_y + 2;
+	int x = mlx->conf.map_x + 2;
+	char *cont_p = malloc(sizeof(char) * y * x);
+	int false_checker = -1;
+	put_grid_to_container(mlx, cont_p, y, x);
+	printf("\n***origin map packed in container***\n");
+	print_map(cont_p, y, x);
+	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x))
+	{
+		printf("Error: Player does not exist or more than 2 players on the map\n");
+		return (0);
+	}
+	printf("\nplayer position:(%d, %d)\n\n", player_x, player_y);
+	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
+	printf("***map filled by p***\n");
+	print_map(cont_p, y, x);
+	if (false_checker == 1)
+		printf("\nError: Map is not sorrounded by wall.\n");
+	return (TRUE);
+}
+
 int		main()
 {
 	t_mlx	mlx;
 
-//	get_conf();
+	if (get_conf(&mlx) == FALSE)
+		return (ERROR);
+	if (check_map(&mlx) == FALSE)
+		return (ERROR);
 	mlx_conf(&mlx);
 	if (!(initialize_window(&mlx)))
-		return (FALSE);
+		return (ERROR);
 	setting_map(&mlx);
 	setting_player(&mlx);
 	setting_ray_point(&mlx);
 	if (!(setting_img(&mlx)))
-		return (FALSE);
+		return (ERROR);
 	check_sprite_info(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
