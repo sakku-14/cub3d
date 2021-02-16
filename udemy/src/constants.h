@@ -1,5 +1,8 @@
+#include "./get_next_line.h"
+
 #define FALSE	0
 #define TRUE	1
+#define PI		3.1415926535
 
 #define TILE_SIZE		64
 #define MINIMAP_SCALE_FACTOR	4
@@ -13,7 +16,7 @@
 #define TEXTURE_HEIGHT	64
 
 #define FOV_ANGLE	(60 * (M_PI / 180))
-#define NUM_RAYS	640
+#define NUM_RAYS	320
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_RELEASE	3
@@ -117,6 +120,24 @@ typedef struct	s_tex
 	int		endian;
 }				t_tex;
 
+typedef	struct	s_sprites
+{
+	float	sprite_x;
+	float	sprite_y;
+	int		visible;
+	float	distance;
+	float	angle_from_player;
+	float	perp_distance;
+	float	distance_proj_plane;
+	float	projected_sprite_height;
+	int		sprite_strip_height;
+	int		sprite_top_pixel;
+	int		sprite_bottom_pixel;
+	int		distance_from_top;
+	int		texture_offset_x;
+	int		texture_offset_y;
+}				t_sprites;
+
 typedef struct	s_mlx
 {
 	void		*mlx_ptr;
@@ -125,6 +146,7 @@ typedef struct	s_mlx
 	t_window	window;
 	t_map		map;
 	t_rays		rays[NUM_RAYS];
+	t_sprites	*sprite;
+	int			sprite_num;
 	t_tex		tex[5];
 }				t_mlx;
-

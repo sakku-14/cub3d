@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <float.h>
@@ -9,13 +12,13 @@
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
-    {1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+    {1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -33,12 +36,11 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.player_y = WIN_HEIGHT / 2;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
-	mlx->player.rotation_angle = 270 * (M_PI / 180);
-	mlx->player.walk_speed = 5;
-	mlx->player.turn_speed = 4 * (M_PI / 180);
+	mlx->player.rotation_angle = 270 * (PI / 180);
+	mlx->player.walk_speed = 10;
+	mlx->player.turn_speed = 4 * (PI / 180);
 }
 
-// check sprite too
 int	map_has_wall_at(float x, float y)
 {
 	int map_grid_index_x;
@@ -103,17 +105,17 @@ void move(t_mlx *mlx)
 	float new_player_y = mlx->player.player_y;
 
 	if (mlx->player.side_direction == -1)
-		new_player_x = mlx->player.player_x - cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_x = mlx->player.player_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.side_direction == 1)
-		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == 1)
 		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == -1)
 		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	if (mlx->player.side_direction == -1)
-		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.side_direction == 1)
-		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle + M_PI / 2) * mlx->player.walk_speed;
+		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == 1)
 		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == -1)
@@ -133,19 +135,50 @@ void move(t_mlx *mlx)
 
 float normalize_angle(float angle)
 {
-	angle = remainder(angle, 2 * M_PI);
+	angle = remainder(angle, 2 * PI);
 	if (angle < 0)
-		angle += 2 * M_PI;
+		angle += 2 * PI;
 	return (angle);
+}
+
+int		search_sprite_index(int x, int y, t_mlx *mlx)
+{
+	int i = 0;
+	while (i < mlx->sprite_num)
+	{
+		if (mlx->sprite[i].sprite_x == x && mlx->sprite[i].sprite_y == y)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+void	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
+{
+	float	x_to_check;
+	float	y_to_check;
+	int		index;
+
+	// TODO: ここでエラー処理必要か確認
+	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+		return ;
+	x_to_check = floor(x / TILE_SIZE);
+	y_to_check = floor(y / TILE_SIZE);
+	if (map[(int)y_to_check][(int)x_to_check] == 2)
+	{
+		index = search_sprite_index((int)x_to_check, (int)y_to_check, mlx);
+		if (index >= 0)
+			mlx->sprite[index].visible = 1;
+	}
 }
 
 void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 {
 	ray_angle = normalize_angle(ray_angle);
 
-	int is_ray_facing_down = ray_angle > 0 && ray_angle < M_PI;
+	int is_ray_facing_down = ray_angle > 0 && ray_angle < PI;
 	int is_ray_facing_up = !is_ray_facing_down;
-	int is_ray_facing_right = ray_angle < M_PI / 2 || ray_angle > M_PI * 3 / 2;
+	int is_ray_facing_right = ray_angle < PI / 2 || ray_angle > PI * 3 / 2;
 	int is_ray_facing_left = !is_ray_facing_right;
 
 	float x_intercept, y_intercept, x_step, y_step;
@@ -174,6 +207,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	{
 		float x_to_check = next_horz_touch_x;
 		float y_to_check = next_horz_touch_y + (is_ray_facing_up ? -1 : 0);
+		map_has_sprite_at(x_to_check, y_to_check, mlx, strip_id);
 		if (map_has_wall_at(x_to_check, y_to_check))
 		{
 			horz_wall_hit_x = next_horz_touch_x;
@@ -213,6 +247,8 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	{
 		float x_to_check = next_vert_touch_x + (is_ray_facing_left ? -1 : 0);
 		float y_to_check = next_vert_touch_y;
+
+		map_has_sprite_at(x_to_check, y_to_check, mlx, strip_id);
 		if (map_has_wall_at(x_to_check, y_to_check))
 		{
 			vert_wall_hit_x = next_vert_touch_x;
@@ -293,6 +329,7 @@ void setting_ray_point(t_mlx *mlx)
 		i++;
 	}
 }
+
 void put_rays(t_mlx *mlx)
 {
 	int i = 0;
@@ -311,10 +348,80 @@ void put_rays(t_mlx *mlx)
 	}
 }
 
+void	get_info_sprite(t_mlx *mlx)
+{
+	int i = 0;
+	float	base;
+	float	height;
+
+	while (i < mlx->sprite_num)
+	{
+		if (mlx->sprite[i].visible == 1)
+		{
+			base = (mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE - mlx->player.player_x;
+			height = (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE - mlx->player.player_y;
+			mlx->sprite[i].distance = dist_between_points((mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE, (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE, mlx->player.player_x, mlx->player.player_y);
+			mlx->sprite[i].angle_from_player = atanf(height / base);
+			if (base < 0 && height < 0)
+				mlx->sprite[i].angle_from_player = PI + mlx->sprite[i].angle_from_player;
+			else if (base >= 0 && height < 0)
+				mlx->sprite[i].angle_from_player = 2 * PI + mlx->sprite[i].angle_from_player;
+			else if (base >= 0 && height >= 0)
+				mlx->sprite[i].angle_from_player = mlx->sprite[i].angle_from_player;
+			else
+				mlx->sprite[i].angle_from_player = PI + mlx->sprite[i].angle_from_player;
+		}
+		i++;
+	}
+}
+
+void	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
+{
+	int mid, i, j, k;
+	t_sprites	tmp[mlx->sprite_num];
+
+	if (left >= right)
+		return ;
+	mid = (left + right) / 2;
+	mergesort_sprite_structure(mlx, left, mid);
+	mergesort_sprite_structure(mlx, mid + 1, right);
+	i = left;
+	while (i <= mid)
+	{
+		tmp[i] = mlx->sprite[i];
+		i++;
+	}
+	i = mid + 1;
+	j = right;
+	while (i <= right)
+	{
+		tmp[i] = mlx->sprite[j];
+		i++;
+		j--;
+	}
+	i = left;
+	j = right;
+	k = left;
+	while (k <= right)
+	{
+		if (tmp[i].distance >= tmp[j].distance)
+			mlx->sprite[k] = tmp[i++];
+		else
+			mlx->sprite[k] = tmp[j--];
+		k++;
+	}
+}
+
+void	sort_sprite_structure(t_mlx *mlx)
+{
+	mergesort_sprite_structure(mlx, 0, mlx->sprite_num - 1);
+}
+
 void generate_3d_projection(t_mlx *mlx)
 {
 	int x = 0;
 	int i;
+	int j = 0;
 	int y;
 	while (x < WIN_WIDTH)
 	{
@@ -327,6 +434,22 @@ void generate_3d_projection(t_mlx *mlx)
 		mlx->window.wall_top_pixel = mlx->window.wall_top_pixel < 0 ? 0 : mlx->window.wall_top_pixel;
 		mlx->window.wall_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->window.wall_strip_height / 2);
 		mlx->window.wall_bottom_pixel = mlx->window.wall_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->window.wall_bottom_pixel;
+		// for sprite
+		while (j < mlx->sprite_num)
+		{
+			if (mlx->sprite[j].visible == 1)
+			{
+				mlx->sprite[j].perp_distance = mlx->sprite[j].distance * cos(mlx->sprite[j].angle_from_player - mlx->player.rotation_angle);
+				mlx->sprite[j].distance_proj_plane = (WIN_WIDTH / 2) / tan(FOV_ANGLE / 2);
+				mlx->sprite[j].projected_sprite_height = (TILE_SIZE / mlx->sprite[j].perp_distance) * mlx->sprite[j].distance_proj_plane;
+				mlx->sprite[j].sprite_strip_height = (int)mlx->sprite[j].projected_sprite_height;
+				mlx->sprite[j].sprite_top_pixel = (WIN_HEIGHT / 2) - (mlx->sprite[j].sprite_strip_height / 2);
+				mlx->sprite[j].sprite_top_pixel = mlx->sprite[j].sprite_top_pixel < 0 ? 0 : mlx->sprite[j].sprite_top_pixel;
+				mlx->sprite[j].sprite_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->sprite[j].sprite_strip_height / 2);
+				mlx->sprite[j].sprite_bottom_pixel = mlx->sprite[j].sprite_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->sprite[j].sprite_bottom_pixel;
+			}
+			j++;
+		}
 		// describe about ceil
 		y = 0;
 		while (y < mlx->window.wall_top_pixel && y < WIN_HEIGHT)
@@ -365,6 +488,27 @@ void generate_3d_projection(t_mlx *mlx)
 			mlx->window.data[(WIN_WIDTH * y) + x] = 0x888888;
 			y++;
 		}
+		// describe about sprite
+		j = 0;
+		while (j < mlx->sprite_num)
+		{
+			if (mlx->sprite[j].distance < mlx->rays[i].distance && mlx->sprite[j].visible == 1 && x >= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * WIN_WIDTH) - (mlx->sprite[j].projected_sprite_height / 2) && x <= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * WIN_WIDTH) + (mlx->sprite[j].projected_sprite_height / 2))
+			{
+				mlx->sprite[j].texture_offset_x = (int)((x - (((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * WIN_WIDTH) - (mlx->sprite[j].projected_sprite_height / 2))) / mlx->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
+				y = mlx->sprite[j].sprite_top_pixel;
+				while (y < mlx->sprite[j].sprite_bottom_pixel)
+				{
+					mlx->sprite[j].distance_from_top = y + (mlx->sprite[j].sprite_strip_height / 2) - (WIN_HEIGHT / 2);
+					mlx->sprite[j].texture_offset_y = mlx->sprite[j].distance_from_top * ((float)64 / mlx->sprite[j].sprite_strip_height);
+					if ((mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
+					{
+						mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x];
+					}
+					y++;
+				}
+			}
+			j++;
+		}
 		x++;
 	}
 }
@@ -386,21 +530,31 @@ void setting_window(t_mlx *mlx)
 	}
 }
 
+void	reset_sprite_info(t_mlx *mlx)
+{
+	int i = 0;
+	while (i < mlx->sprite_num)
+	{
+		mlx->sprite[i].visible = 0;
+		mlx->sprite[i].distance = 0;
+		i++;
+	}
+}
+
 int rendering_loop(t_mlx *mlx)
 {
 	move(mlx);
 	setting_window(mlx);
 	cast_all_rays(mlx);
+	get_info_sprite(mlx);
+	sort_sprite_structure(mlx);
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
 	put_line(mlx);
 	put_rays(mlx);
-/*
-	cast_all_rays(mlx);
-	put_rays(mlx);
-*/
+	reset_sprite_info(mlx);
 	return (TRUE);
 }
 
@@ -443,7 +597,7 @@ void setting_player(t_mlx *mlx)
 	}
 }
 
-int setting_wall_img(t_mlx *mlx)
+int setting_img(t_mlx *mlx)
 {
 	// TODO:falseの時の戻り値設定
 	int i = 0;
@@ -451,14 +605,10 @@ int setting_wall_img(t_mlx *mlx)
 	int height = 64;
 	char *path_n = "./textures/bluestone.xpm";
 	char *path_s = "./textures/greystone.xpm";
-	char *path_e = "./textures/purplestone.xpm";
+	char *path_e = "./textures/redbrick.xpm";
 	char *path_w = "./textures/colorstone.xpm";
-/*
-	char *path_n = "./textures/pillar.xpm";
-	char *path_s = "./textures/pillar.xpm";
-	char *path_e = "./textures/pillar.xpm";
-	char *path_w = "./textures/pillar.xpm";
-*/
+	char *path_sprite = "./textures/barrel.xpm";
+
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_n, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_s, &width, &height);
@@ -467,7 +617,52 @@ int setting_wall_img(t_mlx *mlx)
 	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
 	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_w, &width, &height);
 	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
+	mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_sprite, &width, &height);
+	mlx->tex[4].data = (int *)mlx_get_data_addr(mlx->tex[4].img_ptr, &(mlx->tex[4].bpp), &(mlx->tex[4].size_l), &(mlx->tex[4].endian));
 	return (TRUE);
+}
+
+void check_sprite_info(t_mlx *mlx)
+{
+	int i, j, k;
+
+	mlx->sprite_num = 0;
+	i = 0;
+	j = 0;
+	while (i < MAP_NUM_ROWS)
+	{
+		j = 0;
+		while (j < MAP_NUM_COLS)
+		{
+			if (map[i][j] == 2)
+				mlx->sprite_num++;
+			j++;
+		}
+		i++;
+	}
+	mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1));
+	i = 0;
+	k = 0;
+	while (i < MAP_NUM_ROWS)
+	{
+		j = 0;
+		while (j < MAP_NUM_COLS && k < mlx->sprite_num)
+		{
+			if (map[i][j] == 2)
+			{
+				mlx->sprite[k].sprite_y = i;
+				mlx->sprite[k].sprite_x = j;
+				mlx->sprite[k].visible = 0;
+				k++;
+			}
+			j++;
+		}
+		i++;
+	}
+	//TODO: これ必要？　確認！
+	mlx->sprite[k].sprite_x =  -1;
+	mlx->sprite[k].sprite_y = -1;
+	mlx->sprite[k].visible = -1;
 }
 
 int initialize_window(t_mlx *mlx)
@@ -496,19 +691,32 @@ int key_release(int key, t_mlx *mlx)
 		mlx->player.turn_direction = 0;
 	return (TRUE);
 }
+/*
+void get_conf()
+{
+	//TODO: code about get conf and map with gnl
+	int fd = open("./map_conf.cub", O_RDONLY);
+	int res;
+	char *line;
 
+	res = get_next_line(fd, &line);
+	printf("%s\n", line);
+}
+*/
 int		main()
 {
 	t_mlx	mlx;
 
+//	get_conf();
 	mlx_conf(&mlx);
 	if (!(initialize_window(&mlx)))
 		return (FALSE);
 	setting_map(&mlx);
 	setting_player(&mlx);
 	setting_ray_point(&mlx);
-	if (!(setting_wall_img(&mlx)))
+	if (!(setting_img(&mlx)))
 		return (FALSE);
+	check_sprite_info(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);
