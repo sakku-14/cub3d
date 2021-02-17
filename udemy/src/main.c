@@ -518,14 +518,14 @@ void setting_window(t_mlx *mlx)
 	int x = -1;
 	int y = -1;
 
-	mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w, mlx->conf.win_h);
 	mlx->window.data = (int *)mlx_get_data_addr(mlx->window.img_ptr, &(mlx->window.bpp), &(mlx->window.size_l), &(mlx->window.endian));
-	while (++y < WIN_HEIGHT)
+	while (++y < mlx->conf.win_h)
 	{
 		x = -1;
-		while (++x < WIN_WIDTH)
+		while (++x < mlx->conf.win_w)
 		{
-			mlx->window.data[y * WIN_WIDTH + x] = 0x000000;
+			mlx->window.data[y * mlx->conf.win_w + x] = 0x000000;
 		}
 	}
 }
