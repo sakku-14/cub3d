@@ -126,7 +126,7 @@ void move(t_mlx *mlx)
 	else if (mlx->player.turn_direction == -1)
 		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
 
-	if (!map_has_wall_at(new_player_x, new_player_y))
+	if (!map_has_wall_at(mlx, new_player_x, new_player_y))
 	{
 		mlx->player.player_x = new_player_x;
 		mlx->player.player_y = new_player_y;
@@ -208,7 +208,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 		float x_to_check = next_horz_touch_x;
 		float y_to_check = next_horz_touch_y + (is_ray_facing_up ? -1 : 0);
 		map_has_sprite_at(x_to_check, y_to_check, mlx, strip_id);
-		if (map_has_wall_at(x_to_check, y_to_check))
+		if (map_has_wall_at(mlx, x_to_check, y_to_check))
 		{
 			horz_wall_hit_x = next_horz_touch_x;
 			horz_wall_hit_y = next_horz_touch_y;
@@ -249,7 +249,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 		float y_to_check = next_vert_touch_y;
 
 		map_has_sprite_at(x_to_check, y_to_check, mlx, strip_id);
-		if (map_has_wall_at(x_to_check, y_to_check))
+		if (map_has_wall_at(mlx, x_to_check, y_to_check))
 		{
 			vert_wall_hit_x = next_vert_touch_x;
 			vert_wall_hit_y = next_vert_touch_y;
