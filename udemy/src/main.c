@@ -203,7 +203,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	float next_horz_touch_x = x_intercept;
 	float next_horz_touch_y = y_intercept;
 
-	while (next_horz_touch_x >= 0 && next_horz_touch_x <= WIN_WIDTH && next_horz_touch_y >= 0 && next_horz_touch_y <= WIN_HEIGHT)
+	while (next_horz_touch_x >= 0 && next_horz_touch_x <= mlx->conf.win_w && next_horz_touch_y >= 0 && next_horz_touch_y <= mlx->conf.win_h)
 	{
 		float x_to_check = next_horz_touch_x;
 		float y_to_check = next_horz_touch_y + (is_ray_facing_up ? -1 : 0);
@@ -243,7 +243,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	float next_vert_touch_x = x_intercept;
 	float next_vert_touch_y = y_intercept;
 
-	while (next_vert_touch_x >= 0 && next_vert_touch_x <= WIN_WIDTH && next_vert_touch_y >= 0 && next_vert_touch_y <= WIN_HEIGHT)
+	while (next_vert_touch_x >= 0 && next_vert_touch_x <= mlx->conf.win_w && next_vert_touch_y >= 0 && next_vert_touch_y <= mlx->conf.win_h)
 	{
 		float x_to_check = next_vert_touch_x + (is_ray_facing_left ? -1 : 0);
 		float y_to_check = next_vert_touch_y;
@@ -292,6 +292,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	mlx->rays[strip_id].is_ray_facing_right = is_ray_facing_right;
 }
 
+// TODO: player.rotation_angle from .cub
 void cast_all_rays(t_mlx *mlx)
 {
 	int		strip_id;
