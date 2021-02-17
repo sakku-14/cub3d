@@ -12,7 +12,7 @@
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -160,7 +160,7 @@ void	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
 	int		index;
 
 	// TODO: ここでエラー処理必要か確認
-	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+	if (x < 0 || x > mlx->conf.win_w || y < 0 || y > mlx->conf.win_h)
 		return ;
 	x_to_check = floor(x / TILE_SIZE);
 	y_to_check = floor(y / TILE_SIZE);
