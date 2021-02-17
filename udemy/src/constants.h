@@ -7,7 +7,7 @@
 #define PI		3.1415926535
 
 #define TILE_SIZE		64
-#define MINIMAP_SCALE_FACTOR	4
+#define MINIMAP_SCALE_FACTOR	2
 #define MAP_NUM_ROWS	13
 #define MAP_NUM_COLS	20
 
@@ -81,8 +81,6 @@ typedef struct	s_window
 	int		texture_offset_x;
 	int		texture_offset_x_rev;
 	int		texture_offset_y;
-	int		win_w;
-	int		win_h;
 }				t_window;
 
 typedef struct	s_map
