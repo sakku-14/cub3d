@@ -39,6 +39,8 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.rotation_angle = 270 * (PI / 180);
 	mlx->player.walk_speed = 10;
 	mlx->player.turn_speed = 4 * (PI / 180);
+	mlx->window.win_w = 1500;
+	mlx->window.win_h = 1000;
 }
 
 int	map_has_wall_at(float x, float y)
@@ -669,7 +671,7 @@ int initialize_window(t_mlx *mlx)
 {
 	if (!(mlx->mlx_ptr = mlx_init()))
 		return (FALSE);
-	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "cub3d_window")))
+	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, mlx->window.win_w, mlx->window.win_h, "cub3d_window")))
 		return (FALSE);
 	return (TRUE);
 }

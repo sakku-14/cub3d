@@ -81,6 +81,8 @@ typedef struct	s_window
 	int		texture_offset_x;
 	int		texture_offset_x_rev;
 	int		texture_offset_y;
+	int		win_w;
+	int		win_h;
 }				t_window;
 
 typedef struct	s_map
