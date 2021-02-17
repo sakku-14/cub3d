@@ -9,7 +9,7 @@
 #include "../../mlx/mlx.h"
 #include "constants.h"
 
-const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
+const char map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -552,7 +552,7 @@ int rendering_loop(t_mlx *mlx)
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR, mlx->conf.pl_y / MINIMAP_SCALE_FACTOR);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
 	put_line(mlx);
 	put_rays(mlx);
 	reset_sprite_info(mlx);
