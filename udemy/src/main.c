@@ -552,7 +552,7 @@ int rendering_loop(t_mlx *mlx)
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->player.player_x / MINIMAP_SCALE_FACTOR, mlx->player.player_y / MINIMAP_SCALE_FACTOR);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR, mlx->conf.pl_y / MINIMAP_SCALE_FACTOR);
 	put_line(mlx);
 	put_rays(mlx);
 	reset_sprite_info(mlx);
