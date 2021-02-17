@@ -12,15 +12,15 @@
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
@@ -424,38 +424,38 @@ void generate_3d_projection(t_mlx *mlx)
 	int i;
 	int j = 0;
 	int y;
-	while (x < WIN_WIDTH)
+	while (x < mlx->conf.win_w)
 	{
-		i = x / ceil((double)WIN_WIDTH / (double)NUM_RAYS);
+		i = x / ceil((double)mlx->conf.win_w / (double)NUM_RAYS);
 		mlx->window.perp_distance = mlx->rays[i].distance * cos(mlx->rays[i].ray_angle - mlx->player.rotation_angle);
-		mlx->window.distance_proj_plane = (WIN_WIDTH / 2) / tan(FOV_ANGLE / 2);
+		mlx->window.distance_proj_plane = (mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
 		mlx->window.projected_wall_height = (TILE_SIZE / mlx->window.perp_distance) * mlx->window.distance_proj_plane;
 		mlx->window.wall_strip_height = (int)mlx->window.projected_wall_height;
-		mlx->window.wall_top_pixel = (WIN_HEIGHT / 2) - (mlx->window.wall_strip_height / 2);
+		mlx->window.wall_top_pixel = (mlx->conf.win_h / 2) - (mlx->window.wall_strip_height / 2);
 		mlx->window.wall_top_pixel = mlx->window.wall_top_pixel < 0 ? 0 : mlx->window.wall_top_pixel;
-		mlx->window.wall_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->window.wall_strip_height / 2);
-		mlx->window.wall_bottom_pixel = mlx->window.wall_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->window.wall_bottom_pixel;
+		mlx->window.wall_bottom_pixel = (mlx->conf.win_h / 2) + (mlx->window.wall_strip_height / 2);
+		mlx->window.wall_bottom_pixel = mlx->window.wall_bottom_pixel > mlx->conf.win_h ? mlx->conf.win_h : mlx->window.wall_bottom_pixel;
 		// for sprite
 		while (j < mlx->sprite_num)
 		{
 			if (mlx->sprite[j].visible == 1)
 			{
 				mlx->sprite[j].perp_distance = mlx->sprite[j].distance * cos(mlx->sprite[j].angle_from_player - mlx->player.rotation_angle);
-				mlx->sprite[j].distance_proj_plane = (WIN_WIDTH / 2) / tan(FOV_ANGLE / 2);
+				mlx->sprite[j].distance_proj_plane = (mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
 				mlx->sprite[j].projected_sprite_height = (TILE_SIZE / mlx->sprite[j].perp_distance) * mlx->sprite[j].distance_proj_plane;
 				mlx->sprite[j].sprite_strip_height = (int)mlx->sprite[j].projected_sprite_height;
-				mlx->sprite[j].sprite_top_pixel = (WIN_HEIGHT / 2) - (mlx->sprite[j].sprite_strip_height / 2);
+				mlx->sprite[j].sprite_top_pixel = (mlx->conf.win_h / 2) - (mlx->sprite[j].sprite_strip_height / 2);
 				mlx->sprite[j].sprite_top_pixel = mlx->sprite[j].sprite_top_pixel < 0 ? 0 : mlx->sprite[j].sprite_top_pixel;
-				mlx->sprite[j].sprite_bottom_pixel = (WIN_HEIGHT / 2) + (mlx->sprite[j].sprite_strip_height / 2);
-				mlx->sprite[j].sprite_bottom_pixel = mlx->sprite[j].sprite_bottom_pixel > WIN_HEIGHT ? WIN_HEIGHT : mlx->sprite[j].sprite_bottom_pixel;
+				mlx->sprite[j].sprite_bottom_pixel = (mlx->conf.win_h / 2) + (mlx->sprite[j].sprite_strip_height / 2);
+				mlx->sprite[j].sprite_bottom_pixel = mlx->sprite[j].sprite_bottom_pixel > mlx->conf.win_h ? mlx->conf.win_h : mlx->sprite[j].sprite_bottom_pixel;
 			}
 			j++;
 		}
 		// describe about ceil
 		y = 0;
-		while (y < mlx->window.wall_top_pixel && y < WIN_HEIGHT)
+		while (y < mlx->window.wall_top_pixel && y < mlx->conf.win_h)
 		{
-			mlx->window.data[(WIN_WIDTH * y) + x] = 0x444444;
+			mlx->window.data[(mlx->conf.win_w * y) + x] = 0x444444;
 			y++;
 		}
 		// describe about wall(texture)
@@ -471,39 +471,39 @@ void generate_3d_projection(t_mlx *mlx)
 				tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
 			else
 				tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
-			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (WIN_HEIGHT / 2);
+			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (mlx->conf.win_h / 2);
 			mlx->window.texture_offset_y = mlx->window.distance_from_top * ((float)64 / mlx->window.wall_strip_height);
 			if (tex_index == 0 || tex_index == 2)
-				mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
+				mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
 			else
 			{
 				mlx->window.texture_offset_x_rev = TEXTURE_WIDTH - mlx->window.texture_offset_x - 1;
-				mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x_rev];
+				mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x_rev];
 			}
 			y++;
 		}
 		// describe about floor
 		y = mlx->window.wall_bottom_pixel;
-		while (y < WIN_HEIGHT && y >= 0)
+		while (y < mlx->conf.win_h && y >= 0)
 		{
-			mlx->window.data[(WIN_WIDTH * y) + x] = 0x888888;
+			mlx->window.data[(mlx->conf.win_w * y) + x] = 0x888888;
 			y++;
 		}
 		// describe about sprite
 		j = 0;
 		while (j < mlx->sprite_num)
 		{
-			if (mlx->sprite[j].distance < mlx->rays[i].distance && mlx->sprite[j].visible == 1 && x >= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * WIN_WIDTH) - (mlx->sprite[j].projected_sprite_height / 2) && x <= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * WIN_WIDTH) + (mlx->sprite[j].projected_sprite_height / 2))
+			if (mlx->sprite[j].distance < mlx->rays[i].distance && mlx->sprite[j].visible == 1 && x >= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * mlx->conf.win_w) - (mlx->sprite[j].projected_sprite_height / 2) && x <= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * mlx->conf.win_w) + (mlx->sprite[j].projected_sprite_height / 2))
 			{
-				mlx->sprite[j].texture_offset_x = (int)((x - (((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * WIN_WIDTH) - (mlx->sprite[j].projected_sprite_height / 2))) / mlx->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
+				mlx->sprite[j].texture_offset_x = (int)((x - (((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * mlx->conf.win_w) - (mlx->sprite[j].projected_sprite_height / 2))) / mlx->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
 				y = mlx->sprite[j].sprite_top_pixel;
 				while (y < mlx->sprite[j].sprite_bottom_pixel)
 				{
-					mlx->sprite[j].distance_from_top = y + (mlx->sprite[j].sprite_strip_height / 2) - (WIN_HEIGHT / 2);
+					mlx->sprite[j].distance_from_top = y + (mlx->sprite[j].sprite_strip_height / 2) - (mlx->conf.win_h / 2);
 					mlx->sprite[j].texture_offset_y = mlx->sprite[j].distance_from_top * ((float)64 / mlx->sprite[j].sprite_strip_height);
 					if ((mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
 					{
-						mlx->window.data[(WIN_WIDTH * y) + x] = mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x];
+						mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x];
 					}
 					y++;
 				}
