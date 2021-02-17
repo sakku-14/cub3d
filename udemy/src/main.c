@@ -32,8 +32,8 @@ float dist_between_points(float x1, float y1, float x2, float y2)
 
 void	mlx_conf(t_mlx *mlx)
 {
-	mlx->player.player_x = WIN_WIDTH / 2;
-	mlx->player.player_y = WIN_HEIGHT / 2;
+	mlx->conf.pl_x = WIN_WIDTH / 2;
+	mlx->conf.pl_y = WIN_HEIGHT / 2;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
 	mlx->player.rotation_angle = 270 * (PI / 180);
@@ -101,25 +101,25 @@ void put_line(t_mlx *mlx)
 
 void move(t_mlx *mlx)
 {
-	float new_player_x = mlx->player.player_x;
-	float new_player_y = mlx->player.player_y;
+	float new_player_x = mlx->conf.pl_x;
+	float new_player_y = mlx->conf.pl_y;
 
 	if (mlx->player.side_direction == -1)
-		new_player_x = mlx->player.player_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.side_direction == 1)
-		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == 1)
-		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == -1)
-		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	if (mlx->player.side_direction == -1)
-		new_player_y = mlx->player.player_y - sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.side_direction == 1)
-		new_player_y = mlx->player.player_y + sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == 1)
-		new_player_x = mlx->player.player_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == -1)
-		new_player_x = mlx->player.player_x - cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 
 	if (mlx->player.turn_direction == 1)
 		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
@@ -128,8 +128,8 @@ void move(t_mlx *mlx)
 
 	if (!map_has_wall_at(mlx, new_player_x, new_player_y))
 	{
-		mlx->player.player_x = new_player_x;
-		mlx->player.player_y = new_player_y;
+		mlx->conf.pl_x = new_player_x;
+		mlx->conf.pl_y = new_player_y;
 	}
 }
 
@@ -191,9 +191,9 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	float horz_wall_hit_y = 0;
 	int horz_wall_content = 0;
 
-	y_intercept = floor(mlx->player.player_y / TILE_SIZE) * TILE_SIZE;
+	y_intercept = floor(mlx->conf.pl_y / TILE_SIZE) * TILE_SIZE;
 	y_intercept += is_ray_facing_down ? TILE_SIZE : 0;
-	x_intercept = mlx->player.player_x + (y_intercept - mlx->player.player_y) / tan(ray_angle);
+	x_intercept = mlx->conf.pl_x + (y_intercept - mlx->conf.pl_y) / tan(ray_angle);
 	y_step = TILE_SIZE;
 	y_step *= is_ray_facing_up ? -1 : 1;
 	x_step = TILE_SIZE / tan(ray_angle);
@@ -231,9 +231,9 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	float vert_wall_hit_y = 0;
 	int vert_wall_content = 0;
 
-	x_intercept = floor(mlx->player.player_x / TILE_SIZE) * TILE_SIZE;
+	x_intercept = floor(mlx->conf.pl_x / TILE_SIZE) * TILE_SIZE;
 	x_intercept += is_ray_facing_right ? TILE_SIZE : 0;
-	y_intercept = mlx->player.player_y + (x_intercept - mlx->player.player_x) * tan(ray_angle);
+	y_intercept = mlx->conf.pl_y + (x_intercept - mlx->conf.pl_x) * tan(ray_angle);
 	x_step = TILE_SIZE;
 	x_step *= is_ray_facing_left ? -1 : 1;
 	y_step = TILE_SIZE * tan(ray_angle);
@@ -265,10 +265,10 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	}
 
 	float horz_hit_distance = found_horz_wall_hit
-		? dist_between_points(mlx->player.player_x, mlx->player.player_y, horz_wall_hit_x, horz_wall_hit_y)
+		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, horz_wall_hit_x, horz_wall_hit_y)
 		: FLT_MAX;
 	float vert_hit_distance = found_vert_wall_hit
-		? dist_between_points(mlx->player.player_x, mlx->player.player_y, vert_wall_hit_x, vert_wall_hit_y)
+		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, vert_wall_hit_x, vert_wall_hit_y)
 		: FLT_MAX;
 
 	if (vert_hit_distance < horz_hit_distance)
@@ -341,7 +341,7 @@ void put_rays(t_mlx *mlx)
 //		 r = 0;
 //		 while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
 //		 {
-//		 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->player.player_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->player.player_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
+//		 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
 //		 	r++;
 //		 }
 		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, mlx->rays[i].wall_hit_x / MINIMAP_SCALE_FACTOR, mlx->rays[i].wall_hit_y / MINIMAP_SCALE_FACTOR);
@@ -359,9 +359,9 @@ void	get_info_sprite(t_mlx *mlx)
 	{
 		if (mlx->sprite[i].visible == 1)
 		{
-			base = (mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE - mlx->player.player_x;
-			height = (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE - mlx->player.player_y;
-			mlx->sprite[i].distance = dist_between_points((mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE, (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE, mlx->player.player_x, mlx->player.player_y);
+			base = (mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE - mlx->conf.pl_x;
+			height = (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE - mlx->conf.pl_y;
+			mlx->sprite[i].distance = dist_between_points((mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE, (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE, mlx->conf.pl_x, mlx->conf.pl_y);
 			mlx->sprite[i].angle_from_player = atanf(height / base);
 			if (base < 0 && height < 0)
 				mlx->sprite[i].angle_from_player = PI + mlx->sprite[i].angle_from_player;
