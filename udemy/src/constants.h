@@ -7,7 +7,7 @@
 #define PI		3.1415926535
 
 #define TILE_SIZE		64
-#define MINIMAP_SCALE_FACTOR	4
+#define MINIMAP_SCALE_FACTOR	1
 #define MAP_NUM_ROWS	13
 #define MAP_NUM_COLS	20
 
