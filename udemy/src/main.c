@@ -344,7 +344,7 @@ void put_rays(t_mlx *mlx)
 //		 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
 //		 	r++;
 //		 }
-		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, mlx->rays[i].wall_hit_x / MINIMAP_SCALE_FACTOR, mlx->rays[i].wall_hit_y / MINIMAP_SCALE_FACTOR);
+		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, (mlx->rays[i].wall_hit_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->rays[i].wall_hit_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
 		i++;
 	}
 }
@@ -623,7 +623,6 @@ int setting_img(t_mlx *mlx)
 	return (TRUE);
 }
 
-// TODO: change MAP_NUM_COLS and some more...
 void check_sprite_info(t_mlx *mlx)
 {
 	int i, j, k;
