@@ -89,9 +89,9 @@ void put_line(t_mlx *mlx)
 		mlx_pixel_put(
 				mlx->mlx_ptr,
 				mlx->win,
-				(mlx->player.player_x + r * cos(mlx->player.rotation_angle))
+				(mlx->conf.pl_x + r * cos(mlx->player.rotation_angle))
 				/ MINIMAP_SCALE_FACTOR,
-				(mlx->player.player_y + r * sin(mlx->player.rotation_angle))
+				(mlx->conf.pl_y + r * sin(mlx->player.rotation_angle))
 				/ MINIMAP_SCALE_FACTOR,
 				0x00FF00
 				);
