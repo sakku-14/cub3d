@@ -11,8 +11,8 @@
 
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
+    {1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
@@ -631,10 +631,10 @@ void check_sprite_info(t_mlx *mlx)
 	mlx->sprite_num = 0;
 	i = 0;
 	j = 0;
-	while (i < MAP_NUM_ROWS)
+	while (i < mlx->conf.map_y)
 	{
 		j = 0;
-		while (j < MAP_NUM_COLS)
+		while (j < mlx->conf.map_x)
 		{
 			if (map[i][j] == 2)
 				mlx->sprite_num++;
@@ -645,10 +645,10 @@ void check_sprite_info(t_mlx *mlx)
 	mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1));
 	i = 0;
 	k = 0;
-	while (i < MAP_NUM_ROWS)
+	while (i < mlx->conf.map_y)
 	{
 		j = 0;
-		while (j < MAP_NUM_COLS && k < mlx->sprite_num)
+		while (j < mlx->conf.map_x && k < mlx->sprite_num)
 		{
 			if (map[i][j] == 2)
 			{
