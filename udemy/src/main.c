@@ -601,8 +601,8 @@ int setting_img(t_mlx *mlx)
 {
 	// TODO:falseの時の戻り値設定
 	int i = 0;
-	int width = 64;
-	int height = 64;
+	int width = TEXTURE_WIDTH;
+	int height = TEXTURE_HEIGHT;
 	char *path_n = "./textures/bluestone.xpm";
 	char *path_s = "./textures/greystone.xpm";
 	char *path_e = "./textures/redbrick.xpm";
@@ -622,6 +622,7 @@ int setting_img(t_mlx *mlx)
 	return (TRUE);
 }
 
+// TODO: change MAP_NUM_COLS and some more...
 void check_sprite_info(t_mlx *mlx)
 {
 	int i, j, k;
@@ -963,6 +964,8 @@ int	check_map(t_mlx *mlx)
 	print_map(cont_p, y, x);
 	if (false_checker == 1)
 		printf("\nError: Map is not sorrounded by wall.\n");
+	mlx->conf.pl_y = player_y - 1;
+	mlx->conf.pl_x = player_x - 1;
 	return (TRUE);
 }
 
