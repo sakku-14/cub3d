@@ -32,8 +32,8 @@ float dist_between_points(float x1, float y1, float x2, float y2)
 
 void	mlx_conf(t_mlx *mlx)
 {
-	mlx->conf.pl_x = WIN_WIDTH / 2;
-	mlx->conf.pl_y = WIN_HEIGHT / 2;
+	mlx->conf.pl_x *= TILE_SIZE;
+	mlx->conf.pl_y *= TILE_SIZE;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
 	mlx->player.rotation_angle = 270 * (PI / 180);
