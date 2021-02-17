@@ -41,11 +41,11 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.turn_speed = 4 * (PI / 180);
 }
 
-int	map_has_wall_at(float x, float y)
+int	map_has_wall_at(t_mlx *mlx, float x, float y)
 {
 	int map_grid_index_x;
 	int map_grid_index_y;
-	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+	if (x < 0 || x > mlx->conf.win_w || y < 0 || y > mlx->conf.win_h)
 		return (TRUE);
 	map_grid_index_x = floor(x / TILE_SIZE);
 	map_grid_index_y = floor(y / TILE_SIZE);
