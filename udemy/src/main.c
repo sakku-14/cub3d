@@ -610,21 +610,22 @@ int setting_img(t_mlx *mlx)
 	int i = 0;
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
+	/*
 	char *path_n = "./textures/bluestone.xpm";
 	char *path_s = "./textures/greystone.xpm";
 	char *path_e = "./textures/redbrick.xpm";
 	char *path_w = "./textures/colorstone.xpm";
 	char *path_sprite = "./textures/barrel.xpm";
-
-	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_n, &width, &height);
+*/
+	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
-	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_s, &width, &height);
+	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height);
 	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
-	mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_e, &width, &height);
+	mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_ea, &width, &height);
 	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
-	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_w, &width, &height);
+	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_we, &width, &height);
 	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
-	mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, path_sprite, &width, &height);
+	mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_sp, &width, &height);
 	mlx->tex[4].data = (int *)mlx_get_data_addr(mlx->tex[4].img_ptr, &(mlx->tex[4].bpp), &(mlx->tex[4].size_l), &(mlx->tex[4].endian));
 	return (TRUE);
 }
