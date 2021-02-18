@@ -9,24 +9,6 @@
 #include "../../mlx/mlx.h"
 #include "constants.h"
 
-/*
-const char map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
-    {1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
-*/
-
 float dist_between_points(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x1 - x2) * ( x1 - x2 ) + (y1 - y2) * (y1 - y2)));
@@ -47,7 +29,7 @@ int	map_has_wall_at(t_mlx *mlx, float x, float y)
 {
 	int map_grid_index_x;
 	int map_grid_index_y;
-	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE || y < 0 || y >= mlx->conf.map_y * TILE_SIZE) //<- 間違えてたmapの範囲指定しなきゃなのに、winの範囲を条件にしていた
+	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE || y < 0 || y >= mlx->conf.map_y * TILE_SIZE)
 		return (TRUE);
 	map_grid_index_x = floor(x / TILE_SIZE);
 	map_grid_index_y = floor(y / TILE_SIZE);
@@ -105,6 +87,8 @@ void move(t_mlx *mlx)
 {
 	float new_player_x = mlx->conf.pl_x;
 	float new_player_y = mlx->conf.pl_y;
+	float check_pl_x;
+	float check_pl_y;
 
 	if (mlx->player.side_direction == -1)
 		new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
@@ -358,12 +342,14 @@ void put_rays(t_mlx *mlx)
 
 	while (i < NUM_RAYS)
 	{
-//		 r = 0;
-//		 while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
-//		 {
-//		 	mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
-//		 	r++;
-//		 }
+		/*
+		r = 0;
+		while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
+		{
+			mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
+			r++;
+		}
+		*/
 		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, (mlx->rays[i].wall_hit_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->rays[i].wall_hit_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
 		i++;
 	}
@@ -876,7 +862,6 @@ int		get_conf(t_mlx *mlx)
 		{
 			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
 		}
-//		(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], "1");
 		index++;
 	}
 	return (TRUE);
