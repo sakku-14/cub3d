@@ -9,6 +9,7 @@
 #include "../../mlx/mlx.h"
 #include "constants.h"
 
+/*
 const char map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
     {1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
@@ -24,6 +25,7 @@ const char map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
+*/
 
 float dist_between_points(float x1, float y1, float x2, float y2)
 {
@@ -45,11 +47,11 @@ int	map_has_wall_at(t_mlx *mlx, float x, float y)
 {
 	int map_grid_index_x;
 	int map_grid_index_y;
-	if (x < 0 || x > mlx->conf.win_w || y < 0 || y > mlx->conf.win_h)
+	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE || y < 0 || y >= mlx->conf.map_y * TILE_SIZE) //<- 間違えてたmapの範囲指定しなきゃなのに、winの範囲を条件にしていた
 		return (TRUE);
 	map_grid_index_x = floor(x / TILE_SIZE);
 	map_grid_index_y = floor(y / TILE_SIZE);
-	return (map[map_grid_index_y][map_grid_index_x] == 1);
+	return ((mlx->conf.map)[map_grid_index_y][map_grid_index_x] == '1');
 }
 
 int	key_press(int key, t_mlx *mlx)
@@ -160,15 +162,21 @@ void	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
 	int		index;
 
 	// TODO: ここでエラー処理必要か確認
-	if (x < 0 || x > mlx->conf.win_w || y < 0 || y > mlx->conf.win_h)
+	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE || y < 0 || y > mlx->conf.map_y * TILE_SIZE)
 		return ;
 	x_to_check = floor(x / TILE_SIZE);
 	y_to_check = floor(y / TILE_SIZE);
-	if (map[(int)y_to_check][(int)x_to_check] == 2)
+	// check below
+//	if ((int)y_to_check < 0 || (int)x_to_check < 0 || (int)y_to_check >= mlx->conf.map_y || (int)x_to_check >= mlx->conf.map_x)
+//		printf("line 171:y:%d, x:%d\n", (int)y_to_check, (int)x_to_check);
+	if (!((int)y_to_check < 0 || (int)x_to_check < 0 || (int)y_to_check >= mlx->conf.map_y || (int)x_to_check >= mlx->conf.map_x))
 	{
-		index = search_sprite_index((int)x_to_check, (int)y_to_check, mlx);
-		if (index >= 0)
-			mlx->sprite[index].visible = 1;
+		if ((mlx->conf.map)[(int)y_to_check][(int)x_to_check] == '2')
+		{
+			index = search_sprite_index((int)x_to_check, (int)y_to_check, mlx);
+			if (index >= 0)
+				mlx->sprite[index].visible = 1;
+		}
 	}
 }
 
@@ -189,7 +197,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	int found_horz_wall_hit = FALSE;
 	float horz_wall_hit_x = 0;
 	float horz_wall_hit_y = 0;
-	int horz_wall_content = 0;
+	char horz_wall_content = '\0';
 
 	y_intercept = floor(mlx->conf.pl_y / TILE_SIZE) * TILE_SIZE;
 	y_intercept += is_ray_facing_down ? TILE_SIZE : 0;
@@ -203,7 +211,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	float next_horz_touch_x = x_intercept;
 	float next_horz_touch_y = y_intercept;
 
-	while (next_horz_touch_x >= 0 && next_horz_touch_x <= mlx->conf.win_w && next_horz_touch_y >= 0 && next_horz_touch_y <= mlx->conf.win_h)
+	while (next_horz_touch_x >= 0 && next_horz_touch_x <= mlx->conf.map_x * TILE_SIZE && next_horz_touch_y >= 0 && next_horz_touch_y <= mlx->conf.map_y * TILE_SIZE)
 	{
 		float x_to_check = next_horz_touch_x;
 		float y_to_check = next_horz_touch_y + (is_ray_facing_up ? -1 : 0);
@@ -212,7 +220,13 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 		{
 			horz_wall_hit_x = next_horz_touch_x;
 			horz_wall_hit_y = next_horz_touch_y;
-			horz_wall_content = map[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
+			// TODO: check below
+//			if ((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x)
+//				printf("line 223(horz): y:%d, x:%d\n", (int)floor(y_to_check / TILE_SIZE), (int)floor(x_to_check / TILE_SIZE));
+			if (!((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
+				horz_wall_content = (mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
+			else
+				horz_wall_content = '1';
 			found_horz_wall_hit = TRUE;
 			break;
 		}
@@ -229,7 +243,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	int found_vert_wall_hit = FALSE;
 	float vert_wall_hit_x = 0;
 	float vert_wall_hit_y = 0;
-	int vert_wall_content = 0;
+	char vert_wall_content = '\0';
 
 	x_intercept = floor(mlx->conf.pl_x / TILE_SIZE) * TILE_SIZE;
 	x_intercept += is_ray_facing_right ? TILE_SIZE : 0;
@@ -243,7 +257,7 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 	float next_vert_touch_x = x_intercept;
 	float next_vert_touch_y = y_intercept;
 
-	while (next_vert_touch_x >= 0 && next_vert_touch_x <= mlx->conf.win_w && next_vert_touch_y >= 0 && next_vert_touch_y <= mlx->conf.win_h)
+	while (next_vert_touch_x >= 0 && next_vert_touch_x <= mlx->conf.map_x * TILE_SIZE && next_vert_touch_y >= 0 && next_vert_touch_y <= mlx->conf.map_y * TILE_SIZE)
 	{
 		float x_to_check = next_vert_touch_x + (is_ray_facing_left ? -1 : 0);
 		float y_to_check = next_vert_touch_y;
@@ -253,7 +267,13 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 		{
 			vert_wall_hit_x = next_vert_touch_x;
 			vert_wall_hit_y = next_vert_touch_y;
-			vert_wall_content = map[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
+			// TODO: check below
+//			if ((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x)
+//				printf("line 267(vert): y:%d, x:%d\n", (int)floor(y_to_check / TILE_SIZE), (int)floor(x_to_check / TILE_SIZE));
+			if (!((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
+				vert_wall_content = (mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
+			else
+				vert_wall_content = '1';
 			found_vert_wall_hit = TRUE;
 			break;
 		}
@@ -573,9 +593,9 @@ void setting_map(t_mlx *mlx)
 		{
 			mlx->map.tile_x = (x * mlx->conf.map_x) / (mlx->conf.win_w / MINIMAP_SCALE_FACTOR);
 			mlx->map.tile_y = (y * mlx->conf.map_y) / (mlx->conf.win_h / MINIMAP_SCALE_FACTOR);
-			if (map[mlx->map.tile_y][mlx->map.tile_x] == 0)
+			if ((mlx->conf.map)[mlx->map.tile_y][mlx->map.tile_x] == '0')
 				mlx->map.data[y * (mlx->conf.win_w / MINIMAP_SCALE_FACTOR) + x] = 0x020202;
-			else if (map[mlx->map.tile_y][mlx->map.tile_x] == 1)
+			else if ((mlx->conf.map)[mlx->map.tile_y][mlx->map.tile_x] == '1')
 				mlx->map.data[y * (mlx->conf.win_w / MINIMAP_SCALE_FACTOR) + x] = 0xffffff;
 		}
 	}
@@ -635,7 +655,7 @@ void check_sprite_info(t_mlx *mlx)
 		j = 0;
 		while (j < mlx->conf.map_x)
 		{
-			if (map[i][j] == 2)
+			if ((mlx->conf.map)[i][j] == '2')
 				mlx->sprite_num++;
 			j++;
 		}
@@ -649,7 +669,7 @@ void check_sprite_info(t_mlx *mlx)
 		j = 0;
 		while (j < mlx->conf.map_x && k < mlx->sprite_num)
 		{
-			if (map[i][j] == 2)
+			if ((mlx->conf.map)[i][j] == '2')
 			{
 				mlx->sprite[k].sprite_y = i;
 				mlx->sprite[k].sprite_x = j;
@@ -849,13 +869,14 @@ int		get_conf(t_mlx *mlx)
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
 	int index = 0;
+	// mapの幅を空白で埋める
 	while (index < mlx->conf.map_y)
 	{
 		while (ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
 		{
 			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
 		}
-		printf("%s\n", (mlx->conf.map)[index]);
+//		(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], "1");
 		index++;
 	}
 	return (TRUE);
@@ -882,9 +903,8 @@ void print_map(char *map_p, int y, int x)
 
 void	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
 {
-	if (map_p[p_y * x + p_x] == 'p' || map_p[p_y * x + p_x] == '1' || *false_checker == 1)
+	if (map_p[p_y * x + p_x] == 'p' || map_p[p_y * x + p_x] == '1' || map_p[p_y * x + p_x] == '3' || *false_checker == 1)
 		return ;
-//	print_map(map_p, y, x);
 	if (map_p[p_y * x + p_x] == 'X')
 	{
 		*false_checker = 1;
@@ -892,6 +912,8 @@ void	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
 	}
 	if (map_p[p_y * x + p_x] == '0' || map_p[p_y * x + p_x] == 's')
 		map_p[p_y * x + p_x] = 'p';
+	if (map_p[p_y * x + p_x] == '2')
+		map_p[p_y * x + p_x] = '3';
 	check_fill(map_p, y, x, p_y - 1, p_x, false_checker);
 	check_fill(map_p, y, x, p_y, p_x + 1, false_checker);
 	check_fill(map_p, y, x, p_y + 1, p_x, false_checker);
@@ -958,7 +980,8 @@ int	check_map(t_mlx *mlx)
 		printf("Error: Player does not exist or more than 2 players on the map\n");
 		return (0);
 	}
-	printf("\nplayer position:(%d, %d)\n\n", player_x, player_y);
+	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
+	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
 	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
 	printf("***map filled by p***\n");
 	print_map(cont_p, y, x);
