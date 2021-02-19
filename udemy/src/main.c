@@ -459,7 +459,7 @@ void generate_3d_projection(t_mlx *mlx)
 		y = 0;
 		while (y < mlx->window.wall_top_pixel && y < mlx->conf.win_h)
 		{
-			mlx->window.data[(mlx->conf.win_w * y) + x] = 0x444444;
+			mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->conf.ceil_c;
 			y++;
 		}
 		// describe about wall(texture)
@@ -490,7 +490,7 @@ void generate_3d_projection(t_mlx *mlx)
 		y = mlx->window.wall_bottom_pixel;
 		while (y < mlx->conf.win_h && y >= 0)
 		{
-			mlx->window.data[(mlx->conf.win_w * y) + x] = 0x888888;
+			mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->conf.floor_c;
 			y++;
 		}
 		// describe about sprite
@@ -608,13 +608,7 @@ int setting_img(t_mlx *mlx)
 	int i = 0;
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
-	/*
-	char *path_n = "./textures/bluestone.xpm";
-	char *path_s = "./textures/greystone.xpm";
-	char *path_e = "./textures/redbrick.xpm";
-	char *path_w = "./textures/colorstone.xpm";
-	char *path_sprite = "./textures/barrel.xpm";
-*/
+
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height);
@@ -757,6 +751,17 @@ int		pack_rgb(t_mlx *mlx, char *line)
 		mlx->conf.ceil_g = ft_atoi(strs[1]);
 		mlx->conf.ceil_b = ft_atoi(strs[2]);
 	}
+	mlx->conf.floor_c = mlx->conf.floor_r;
+	mlx->conf.floor_c = mlx->conf.floor_c << 8;
+	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_g;
+	mlx->conf.floor_c = mlx->conf.floor_c << 8;
+	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_b;
+
+	mlx->conf.ceil_c = mlx->conf.ceil_r;
+	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
+	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_g;
+	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
+	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_b;
 	return (TRUE);
 }
 

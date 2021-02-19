@@ -152,9 +152,11 @@ typedef struct	s_conf
 	int		floor_r;
 	int		floor_g;
 	int		floor_b;
+	int		floor_c;
 	int		ceil_r;
 	int		ceil_g;
 	int		ceil_b;
+	int		ceil_c;
 	char	*map_str;
 	char	**map;
 	int		map_y;
