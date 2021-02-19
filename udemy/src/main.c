@@ -7,6 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include "../../mlx/mlx.h"
+#include "../../mlx_beta/mlx.h"
 #include "constants.h"
 
 float dist_between_points(float x1, float y1, float x2, float y2)
@@ -703,7 +704,8 @@ int		pack_win_size(t_mlx *mlx, char *line)
 	strs++;
 	if (*strs)
 		mlx->conf.win_h = ft_atoi(*strs);
-	printf("w:%d, h:%d\n", mlx->conf.win_w, mlx->conf.win_h);
+	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
+	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
 	return (TRUE);
 }
 
@@ -802,7 +804,6 @@ int		get_conf(t_mlx *mlx)
 	{
 		if (res == -1)
 			return (FALSE);
-		printf("%s\n", line);
 		if (flag == 8)
 		{
 			if (pack_map_str(mlx, line) == FALSE)
@@ -985,6 +986,7 @@ int		main()
 {
 	t_mlx	mlx;
 
+	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
 	if (get_conf(&mlx) == FALSE)
 		return (ERROR);
 	if (check_map(&mlx) == FALSE)

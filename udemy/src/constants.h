@@ -144,6 +144,8 @@ typedef struct	s_conf
 {
 	int		win_w;
 	int		win_h;
+	int		win_max_w;
+	int		win_max_h;
 	char	*path_no;
 	char	*path_so;
 	char	*path_ea;
