@@ -16,8 +16,8 @@ float dist_between_points(float x1, float y1, float x2, float y2)
 
 void	mlx_conf(t_mlx *mlx)
 {
-	mlx->conf.pl_x *= TILE_SIZE;
-	mlx->conf.pl_y *= TILE_SIZE;
+	mlx->conf.pl_x = (mlx->conf.pl_x + 0.5) * TILE_SIZE;
+	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
 	mlx->player.rotation_angle = 270 * (PI / 180);
@@ -87,8 +87,6 @@ void move(t_mlx *mlx)
 {
 	float new_player_x = mlx->conf.pl_x;
 	float new_player_y = mlx->conf.pl_y;
-	float check_pl_x;
-	float check_pl_y;
 
 	if (mlx->player.side_direction == -1)
 		new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;

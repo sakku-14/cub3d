@@ -159,8 +159,8 @@ typedef struct	s_conf
 	char	**map;
 	int		map_y;
 	int		map_x;
-	int		pl_y;
-	int		pl_x;
+	float		pl_y;
+	float		pl_x;
 }				t_conf;
 
 typedef struct	s_mlx
