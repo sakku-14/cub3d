@@ -21,7 +21,7 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
-	mlx->player.rotation_angle = 270 * (PI / 180);
+	//mlx->player.rotation_angle = 270 * (PI / 180);
 	mlx->player.walk_speed = 10;
 	mlx->player.turn_speed = 4 * (PI / 180);
 }
@@ -804,7 +804,8 @@ int		get_conf(t_mlx *mlx)
 	{
 		if (res == -1)
 			return (FALSE);
-		if (flag == 8)
+		if (!*line);
+		else if (flag == 8)
 		{
 			if (pack_map_str(mlx, line) == FALSE)
 				return (FALSE);
@@ -930,7 +931,7 @@ void put_grid_to_container(t_mlx *mlx, char *cont_p, int y, int x)
 	}
 }
 
-int	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x)
+int	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_mlx *mlx)
 {
 	int i = 0, j = 0;
 	int player_counter = 0;
@@ -941,6 +942,14 @@ int	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x)
 		{
 			if (cont_p[i * x + j] == 'N' || cont_p[i * x + j] == 'S' || cont_p[i * x + j] == 'E' || cont_p[i * x + j] == 'W')
 			{
+				if (cont_p[i * x + j] == 'N')
+					mlx->player.rotation_angle = 270 * (PI / 180);
+				else if (cont_p[i * x + j] == 'S')
+					mlx->player.rotation_angle = 90 * (PI / 180);
+				else if (cont_p[i * x + j] == 'E')
+					mlx->player.rotation_angle = 0 * (PI / 180);
+				else if (cont_p[i * x + j] == 'W')
+					mlx->player.rotation_angle = 180 * (PI / 180);
 				*player_y = i;
 				*player_x = j;
 				player_counter++;
@@ -965,7 +974,7 @@ int	check_map(t_mlx *mlx)
 	put_grid_to_container(mlx, cont_p, y, x);
 	printf("\n***origin map packed in container***\n");
 	print_map(cont_p, y, x);
-	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x))
+	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
 	{
 		printf("Error: Player does not exist or more than 2 players on the map\n");
 		return (0);
