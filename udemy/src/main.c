@@ -21,7 +21,6 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
-	//mlx->player.rotation_angle = 270 * (PI / 180);
 	mlx->player.walk_speed = 10;
 	mlx->player.turn_speed = 4 * (PI / 180);
 }
