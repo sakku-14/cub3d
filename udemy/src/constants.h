@@ -151,14 +151,11 @@ typedef struct	s_conf
 	char	*path_ea;
 	char	*path_we;
 	char	*path_sp;
-	int		floor_r;
-	int		floor_g;
-	int		floor_b;
+	int		floor_colors[3];
 	int		floor_c;
-	int		ceil_r;
-	int		ceil_g;
-	int		ceil_b;
+	int		ceil_colors[3];
 	int		ceil_c;
+	int		cub_flag[8];
 	char	*map_str;
 	char	**map;
 	int		map_y;

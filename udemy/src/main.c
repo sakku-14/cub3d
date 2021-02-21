@@ -742,27 +742,26 @@ int		pack_rgb(t_mlx *mlx, char *line)
 	strs = ft_split(sub_strs[1], ',');
 	if (ft_strnstr(sub_strs[0], "F", 1))
 	{
-		mlx->conf.floor_r = ft_atoi(strs[0]);
-		mlx->conf.floor_g = ft_atoi(strs[1]);
-		mlx->conf.floor_b = ft_atoi(strs[2]);
+		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
+		mlx->conf.floor_colors[1] = ft_atoi(strs[1]);
+		mlx->conf.floor_colors[2] = ft_atoi(strs[2]);
 	}
 	else if (ft_strnstr(sub_strs[0], "C", 1))
 	{
-		mlx->conf.ceil_r = ft_atoi(strs[0]);
-		mlx->conf.ceil_g = ft_atoi(strs[1]);
-		mlx->conf.ceil_b = ft_atoi(strs[2]);
+		mlx->conf.ceil_colors[0] = ft_atoi(strs[0]);
+		mlx->conf.ceil_colors[1] = ft_atoi(strs[1]);
+		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
 	}
-	mlx->conf.floor_c = mlx->conf.floor_r;
+	mlx->conf.floor_c = mlx->conf.floor_colors[0];
 	mlx->conf.floor_c = mlx->conf.floor_c << 8;
-	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_g;
+	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[1];
 	mlx->conf.floor_c = mlx->conf.floor_c << 8;
-	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_b;
-
-	mlx->conf.ceil_c = mlx->conf.ceil_r;
+	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[2];
+	mlx->conf.ceil_c = mlx->conf.ceil_colors[0];
 	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
-	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_g;
+	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[1];
 	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
-	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_b;
+	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
 	return (TRUE);
 }
 
@@ -788,6 +787,19 @@ int		pack_map_str(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
+int		conf_fill_checker(t_mlx *mlx)
+{
+	int i;
+
+	i = 0;
+	while (i < 8)
+	{
+		if (mlx->conf.cub_flag[i++] == 0)
+			return (FALSE);
+	}
+	return (TRUE);
+}
+
 int		get_conf(t_mlx *mlx, char *file_name)
 {
 	int fd = open(file_name, O_RDONLY);
@@ -805,54 +817,64 @@ int		get_conf(t_mlx *mlx, char *file_name)
 		if (!*line);
 		else if (flag == 8)
 		{
+			if (conf_fill_checker(mlx) == FALSE) //TODO: error message
+				return (FALSE);
 			if (pack_map_str(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "R", 1))
 		{
 			flag++;
+			mlx->conf.cub_flag[0] = 1;
 			if (pack_win_size(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "NO", 2))
 		{
 			flag++;
+			mlx->conf.cub_flag[1] = 1;
 			if (pack_path(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "SO", 2))
 		{
 			flag++;
+			mlx->conf.cub_flag[2] = 1;
 			if (pack_path(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "EA", 2))
 		{
 			flag++;
+			mlx->conf.cub_flag[3] = 1;
 			if (pack_path(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "WE", 2))
 		{
 			flag++;
+			mlx->conf.cub_flag[4] = 1;
 			if (pack_path(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "S", 1))
 		{
 			flag++;
+			mlx->conf.cub_flag[5] = 1;
 			if (pack_path(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "F", 1))
 		{
 			flag++;
+			mlx->conf.cub_flag[6] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
 				return (FALSE);
 		}
 		else if (ft_strnstr(line, "C", 1))
 		{
 			flag++;
+			mlx->conf.cub_flag[7] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
 				return (FALSE);
 		}
@@ -1016,6 +1038,15 @@ int	save_checker(char *av)
 	return (TRUE);
 }
 
+void init_vars(t_mlx *mlx)
+{
+	int i;
+
+	i = 0;
+	while (i < 8)
+		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
+}
+
 int		main(int ac, char **av)
 {
 	t_mlx	mlx;
@@ -1035,6 +1066,7 @@ int		main(int ac, char **av)
 		printf("Error: invalid second arg\n");
 		return (ERROR);
 	}
+	init_vars(&mlx);
 	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
 	if (get_conf(&mlx, av[1]) == FALSE)
 		return (ERROR);
