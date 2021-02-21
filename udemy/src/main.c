@@ -818,7 +818,10 @@ int		get_conf(t_mlx *mlx, char *file_name)
 		else if (flag == 8)
 		{
 			if (conf_fill_checker(mlx) == FALSE) //TODO: error message
+			{
+				printf("ERROR: invalid configure\n");
 				return (FALSE);
+			}
 			if (pack_map_str(mlx, line) == FALSE)
 				return (FALSE);
 		}
