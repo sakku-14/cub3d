@@ -788,10 +788,9 @@ int		pack_map_str(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
-int		get_conf(t_mlx *mlx)
+int		get_conf(t_mlx *mlx, char *file_name)
 {
-	//TODO: code about get conf and map with gnl
-	int fd = open("./map_conf.cub", O_RDONLY);
+	int fd = open(file_name, O_RDONLY);
 	int res;
 	int flag;
 	char *line;
@@ -990,12 +989,54 @@ int	check_map(t_mlx *mlx)
 	return (TRUE);
 }
 
-int		main()
+int	cub_checker(char *av)
+{
+	int i;
+
+	i = 0;
+	while (av[i])
+	{
+		if (av[i] == '.')
+		{
+			if (!(ft_strncmp(&av[i], ".cub", 4)) && (ft_strlen(&av[i]) == 4))
+				return (TRUE);
+		}
+		i++;
+	}
+	return (FALSE);
+}
+
+int	save_checker(char *av)
+{
+	if (av && *av)
+	{
+		if (ft_strncmp(av, "--save", 6) || !(ft_strlen(av) == 6))
+			return (FALSE);
+	}
+	return (TRUE);
+}
+
+int		main(int ac, char **av)
 {
 	t_mlx	mlx;
 
+	if (ac < 1 || ac > 3)
+	{
+		printf("Error: few args or too many args\n");
+		return (ERROR);
+	}
+	if (ac == 3 && !save_checker(av[2]))
+	{
+		printf("Error: invalid third arg\n");
+		return (ERROR);
+	}
+	if (!cub_checker(av[1]))
+	{
+		printf("Error: invalid second arg\n");
+		return (ERROR);
+	}
 	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
-	if (get_conf(&mlx) == FALSE)
+	if (get_conf(&mlx, av[1]) == FALSE)
 		return (ERROR);
 	if (check_map(&mlx) == FALSE)
 		return (ERROR);
