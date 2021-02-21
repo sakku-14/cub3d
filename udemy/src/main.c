@@ -302,11 +302,11 @@ void cast_all_rays(t_mlx *mlx)
 
 	strip_id = 0;
 	ray_angle = mlx->player.rotation_angle - (FOV_ANGLE / 2);
-	while (strip_id < NUM_RAYS)
+	while (strip_id < mlx->conf.win_w)
 	{
 		cast_ray(ray_angle, strip_id, mlx);
 		strip_id++;
-		ray_angle += FOV_ANGLE / NUM_RAYS;
+		ray_angle += FOV_ANGLE / mlx->conf.win_w;
 	}
 }
 
@@ -316,7 +316,7 @@ void setting_ray_point(t_mlx *mlx)
 	int y = -1;
 	int i = 0;
 
-	while (i < NUM_RAYS)
+	while (i < mlx->conf.win_w)
 	{
 		mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR);
 		mlx->rays[i].data = (int *)mlx_get_data_addr(mlx->rays[i].img_ptr, &(mlx->rays[i].bpp), &(mlx->rays[i].size_l), &(mlx->rays[i].endian));
@@ -338,7 +338,7 @@ void put_rays(t_mlx *mlx)
 	int i = 0;
 	float r;
 
-	while (i < NUM_RAYS)
+	while (i < mlx->conf.win_w)
 	{
 		/*
 		r = 0;
@@ -430,7 +430,7 @@ void generate_3d_projection(t_mlx *mlx)
 	int y;
 	while (x < mlx->conf.win_w)
 	{
-		i = x / ceil((double)mlx->conf.win_w / (double)NUM_RAYS);
+		i = x / ceil((double)mlx->conf.win_w / (double)mlx->conf.win_w);
 		mlx->window.perp_distance = mlx->rays[i].distance * cos(mlx->rays[i].ray_angle - mlx->player.rotation_angle);
 		mlx->window.distance_proj_plane = (mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
 		mlx->window.projected_wall_height = (TILE_SIZE / mlx->window.perp_distance) * mlx->window.distance_proj_plane;
