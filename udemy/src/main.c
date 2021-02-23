@@ -563,6 +563,23 @@ int rendering_loop(t_mlx *mlx)
 	return (TRUE);
 }
 
+int rendering_for_bmp(t_mlx *mlx)
+{
+	move(mlx);
+	setting_window(mlx);
+	cast_all_rays(mlx);
+	get_info_sprite(mlx);
+	sort_sprite_structure(mlx);
+	generate_3d_projection(mlx);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
+	put_line(mlx);
+	put_rays(mlx);
+//	reset_sprite_info(mlx);
+	return (TRUE);
+}
+
 void setting_map(t_mlx *mlx)
 {
 	int x = -1;
@@ -1207,6 +1224,45 @@ void init_vars(t_mlx *mlx)
 		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
 }
 
+void	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_size)
+{
+	unsigned int	file_header_size;
+	unsigned int	info_header_size;
+	unsigned int	bmp_size;
+	unsigned int	plane;
+	int i;
+
+	file_header_size = write(fd, "BM", 2);
+	bmp_size = header_size + img_size;
+	file_header_size += write(fd, &bmp_size, 4);
+	file_header_size += write(fd, "\0\0\0\0", 4);
+	file_header_size += write(fd, &header_size, 4);
+	info_header_size = header_size - file_header_size;
+	write(fd, &info_header_size, 4);
+	write(fd, &(mlx->conf.win_w), 4);
+	write(fd, &(mlx->conf.win_h), 4);
+	plane = 1;
+	write(fd, &plane, 2);
+	write(fd, &(mlx->window.bpp), 2);
+	write(fd, "\0\0\0\0", 2);
+	write(fd, &img_size, 4);
+	write(fd, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
+}
+
+void	create_bmp(t_mlx mlx)
+{
+	int	fd;
+	unsigned int	img_size;
+	unsigned int	header_size;
+
+	rendering_for_bmp(mlx);
+	if ((fd = open("", O_RDWR | O_CREATE | O_TRUNC, S_IRWXU)) < 0)
+		return ; //TODO: error act
+	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h); //* (mlx->window.bpp / 8)
+	header_size = 54;
+	make_header(mlx, fd, header_size, img_size);
+}
+
 int		main(int ac, char **av)
 {
 	t_mlx	mlx;
@@ -1241,6 +1297,8 @@ int		main(int ac, char **av)
 	if (!(setting_img(&mlx)))
 		return (ERROR);
 	check_sprite_info(&mlx);
+	if (ac == 3)
+		create_bmp(&mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);
