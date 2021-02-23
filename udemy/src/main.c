@@ -786,7 +786,11 @@ int		pack_map_str(t_mlx *mlx, char *line)
 {
 	if (mlx->conf.cub_flag[8] == 1)
 	{
-		mlx->conf.map_str = malloc(sizeof(char));
+		if (!(mlx->conf.map_str = malloc(sizeof(char))))
+		{
+			printf("Error: could not malloc of map_str");
+			return (FALSE);
+		}
 		*(mlx->conf.map_str) = '\0';
 	}
 	mlx->conf.map_x = max_len(mlx->conf.map_x, (int)ft_strlen(line));
@@ -823,14 +827,24 @@ int		get_conf(t_mlx *mlx, char *file_name)
 	{
 		if (res == -1)
 			return (FALSE);
-		if (!*line);
-		else if (flag == 8)
+		if (!*line)
+		{
+			if (flag == 9)
+				flag = 10;
+		}
+		else if (flag >= 8)
 		{
 			if (mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE) //TODO: error message
 			{
 				printf("ERROR: invalid configure\n");
 				return (FALSE);
 			}
+			if (flag == 10)
+			{
+				printf("Error: invalid configure\n");
+				return (FALSE);
+			}
+			flag = 9;
 			mlx->conf.cub_flag[8] += 1;
 			if (pack_map_str(mlx, line) == FALSE)
 				return (FALSE);
@@ -1047,7 +1061,10 @@ int	check_map(t_mlx *mlx)
 	printf("***map filled by p***\n");
 	print_map(cont_p, y, x);
 	if (false_checker == 1)
+	{
 		printf("\nError: Map is not sorrounded by wall.\n");
+		return (FALSE);
+	}
 	mlx->conf.pl_y = player_y - 1;
 	mlx->conf.pl_x = player_x - 1;
 	return (TRUE);
