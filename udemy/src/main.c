@@ -760,6 +760,45 @@ int		pack_path(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
+int	check_rgb_available(char **strs, t_mlx *mlx)
+{
+	int num;
+	int i;
+	int j;
+
+	num = 0;
+	while (strs[num])
+		num++;
+	if (num != 3)
+	{
+		return (FALSE);
+	}
+	i = 0;
+	j = 0;
+	while (i < num)
+	{
+		j = 0;
+		while (strs[i][j] != '\0')
+		{
+			if (ft_isdigit(strs[i][j]))
+				j++;
+			else
+				return (FALSE);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < num)
+	{
+		if (mlx->conf.floor_colors[i] < 0 || mlx->conf.floor_colors[i] > 255)
+			return (FALSE);
+		if (mlx->conf.ceil_colors[i] < 0 || mlx->conf.ceil_colors[i] > 255)
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
+
 int		pack_rgb(t_mlx *mlx, char *line)
 {
 	char	**sub_strs;
@@ -780,6 +819,8 @@ int		pack_rgb(t_mlx *mlx, char *line)
 		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
 	}
 	else
+		return (FALSE);
+	if (!check_rgb_available(strs, mlx))
 		return (FALSE);
 	mlx->conf.floor_c = mlx->conf.floor_colors[0];
 	mlx->conf.floor_c = mlx->conf.floor_c << 8;
