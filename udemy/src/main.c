@@ -1224,13 +1224,32 @@ void init_vars(t_mlx *mlx)
 		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
 }
 
+void	make_img(t_mlx *mlx, int fd)
+{
+	int	x;
+	int	y;
+	int	color;
+
+	y = mlx->conf.win_h - 1;
+	while (y >= 0)
+	{
+		x = 0;
+		while (x < mlx->conf.win_w)
+		{
+			color = mlx->window.data[(mlx->conf.win_w * y) + x];
+			write(fd, &color, 4);
+			x++;
+		}
+		y--;
+	}
+}
+
 void	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_size)
 {
 	unsigned int	file_header_size;
 	unsigned int	info_header_size;
 	unsigned int	bmp_size;
 	unsigned int	plane;
-	int i;
 
 	file_header_size = write(fd, "BM", 2);
 	bmp_size = header_size + img_size;
@@ -1244,23 +1263,25 @@ void	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_
 	plane = 1;
 	write(fd, &plane, 2);
 	write(fd, &(mlx->window.bpp), 2);
-	write(fd, "\0\0\0\0", 2);
+	write(fd, "\0\0\0\0", 4);
 	write(fd, &img_size, 4);
 	write(fd, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
 }
 
-void	create_bmp(t_mlx mlx)
+void	create_bmp(t_mlx *mlx)
 {
 	int	fd;
 	unsigned int	img_size;
 	unsigned int	header_size;
 
 	rendering_for_bmp(mlx);
-	if ((fd = open("", O_RDWR | O_CREATE | O_TRUNC, S_IRWXU)) < 0)
+	if ((fd = open("image.bmp", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU)) < 0)
 		return ; //TODO: error act
-	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h); //* (mlx->window.bpp / 8)
+	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h) * (mlx->window.bpp / 8);
 	header_size = 54;
 	make_header(mlx, fd, header_size, img_size);
+	make_img(mlx, fd);
+	exit (0);
 }
 
 int		main(int ac, char **av)
