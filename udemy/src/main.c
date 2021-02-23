@@ -874,6 +874,36 @@ int		conf_fill_checker(t_mlx *mlx)
 	return (TRUE);
 }
 
+int	check_c_in_str(char c, char *str)
+{
+	int len;
+	int i;
+
+	len = ft_strlen(str);
+	i = 0;
+	while (str[i])
+	{
+		if (c == str[i])
+			return (TRUE);
+		i++;
+	}
+	return (FALSE);
+}
+
+int		check_is_map(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!check_c_in_str(line[i], " 012NSEW"))
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
+
 int		get_conf(t_mlx *mlx, char *file_name)
 {
 	int fd;
@@ -900,7 +930,7 @@ int		get_conf(t_mlx *mlx, char *file_name)
 		}
 		else if (flag >= 8)
 		{
-			if (mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE) //TODO: error message
+			if (mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE)
 			{
 				printf("ERROR: invalid configure\n");
 				return (FALSE);
@@ -908,6 +938,11 @@ int		get_conf(t_mlx *mlx, char *file_name)
 			if (flag == 10)
 			{
 				printf("Error: invalid configure\n");
+				return (FALSE);
+			}
+			if (check_is_map(line) == FALSE)
+			{
+				printf("Error: map is not made by map element\n");
 				return (FALSE);
 			}
 			flag = 9;
