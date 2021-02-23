@@ -697,6 +697,8 @@ int		pack_win_size(t_mlx *mlx, char *line)
 	char	**strs;
 
 	strs = ft_split(line, ' ');
+	if (ft_strlen(*strs) != 1)
+		return (FALSE);
 	strs++;
 	if (*strs)
 		mlx->conf.win_w = ft_atoi(*strs);
@@ -715,6 +717,11 @@ int		pack_path(t_mlx *mlx, char *line)
 	int		len;
 
 	strs = ft_split(line, ' ');
+	if (ft_strlen(*strs) != 2)
+	{
+		if (ft_strlen(*strs) != 1 && ft_strncmp(*strs, "S", 1))
+			return (FALSE);
+	}
 	i = 0;
 	len = ft_strlen(strs[1]);
 	if (strs[1])
@@ -740,18 +747,20 @@ int		pack_rgb(t_mlx *mlx, char *line)
 
 	sub_strs = ft_split(line, ' ');
 	strs = ft_split(sub_strs[1], ',');
-	if (ft_strnstr(sub_strs[0], "F", 1))
+	if (ft_strnstr(sub_strs[0], "F", 1) && ft_strlen(sub_strs[0]) == 1)
 	{
 		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
 		mlx->conf.floor_colors[1] = ft_atoi(strs[1]);
 		mlx->conf.floor_colors[2] = ft_atoi(strs[2]);
 	}
-	else if (ft_strnstr(sub_strs[0], "C", 1))
+	else if (ft_strnstr(sub_strs[0], "C", 1) && ft_strlen(sub_strs[0]) == 1)
 	{
 		mlx->conf.ceil_colors[0] = ft_atoi(strs[0]);
 		mlx->conf.ceil_colors[1] = ft_atoi(strs[1]);
 		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
 	}
+	else
+		return (FALSE);
 	mlx->conf.floor_c = mlx->conf.floor_colors[0];
 	mlx->conf.floor_c = mlx->conf.floor_c << 8;
 	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[1];
@@ -775,9 +784,9 @@ int		max_len(int x, int y)
 
 int		pack_map_str(t_mlx *mlx, char *line)
 {
-	if (!mlx->conf.map_str)
+	if (mlx->conf.cub_flag[8] == 1)
 	{
-		mlx->conf.map_str = malloc(1);
+		mlx->conf.map_str = malloc(sizeof(char));
 		*(mlx->conf.map_str) = '\0';
 	}
 	mlx->conf.map_x = max_len(mlx->conf.map_x, (int)ft_strlen(line));
@@ -817,11 +826,12 @@ int		get_conf(t_mlx *mlx, char *file_name)
 		if (!*line);
 		else if (flag == 8)
 		{
-			if (conf_fill_checker(mlx) == FALSE) //TODO: error message
+			if (mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE) //TODO: error message
 			{
 				printf("ERROR: invalid configure\n");
 				return (FALSE);
 			}
+			mlx->conf.cub_flag[8] += 1;
 			if (pack_map_str(mlx, line) == FALSE)
 				return (FALSE);
 		}
@@ -830,56 +840,85 @@ int		get_conf(t_mlx *mlx, char *file_name)
 			flag++;
 			mlx->conf.cub_flag[0] = 1;
 			if (pack_win_size(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "NO", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[1] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "SO", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[2] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "EA", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[3] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "WE", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[4] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "S", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[5] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "F", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[6] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
 		}
 		else if (ft_strnstr(line, "C", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[7] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
+			{
+				printf("Error: invalid configure\n");
 				return (FALSE);
+			}
+		}
+		else
+		{
+			printf("Error: invalid configure\n");
+			return (FALSE);
 		}
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
@@ -1046,7 +1085,7 @@ void init_vars(t_mlx *mlx)
 	int i;
 
 	i = 0;
-	while (i < 8)
+	while (i < 9)
 		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
 }
 

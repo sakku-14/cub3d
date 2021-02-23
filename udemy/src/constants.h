@@ -155,7 +155,7 @@ typedef struct	s_conf
 	int		floor_c;
 	int		ceil_colors[3];
 	int		ceil_c;
-	int		cub_flag[8];
+	int		cub_flag[9];
 	char	*map_str;
 	char	**map;
 	int		map_y;
