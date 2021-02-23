@@ -1,6 +1,6 @@
 R 800 500 
 NO ./textures/mossy.xpm
-SO ./textures/wood.xpm
+SO ./textures/wod.xpm
 WE ./textures/purplestone.xpm
 EA ./textures/eagle.xpm
 S ./textures/barrel.xpm

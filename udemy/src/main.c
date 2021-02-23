@@ -602,6 +602,21 @@ void setting_player(t_mlx *mlx)
 	}
 }
 
+int	check_path_available(t_mlx *mlx)
+{
+	if (open(mlx->conf.path_no, O_RDONLY) == -1)
+		return (FALSE);
+	if (open(mlx->conf.path_so, O_RDONLY) == -1)
+		return (FALSE);
+	if (open(mlx->conf.path_ea, O_RDONLY) == -1)
+		return (FALSE);
+	if (open(mlx->conf.path_we, O_RDONLY) == -1)
+		return (FALSE);
+	if (open(mlx->conf.path_sp, O_RDONLY) == -1)
+		return (FALSE);
+	return (TRUE);
+}
+
 int setting_img(t_mlx *mlx)
 {
 	// TODO:falseの時の戻り値設定
@@ -609,6 +624,11 @@ int setting_img(t_mlx *mlx)
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
 
+	if (!check_path_available(mlx))
+	{
+		printf("Error: invalid path of texture\n");
+		return (FALSE);
+	}
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height);
@@ -815,11 +835,16 @@ int		conf_fill_checker(t_mlx *mlx)
 
 int		get_conf(t_mlx *mlx, char *file_name)
 {
-	int fd = open(file_name, O_RDONLY);
+	int fd;
 	int res;
 	int flag;
 	char *line;
 
+	if ((fd = open(file_name, O_RDONLY)) == -1)
+	{
+		printf("Error: invalid fd");
+		return (FALSE);
+	}
 	flag = 0;
 	mlx->conf.map_y = 0;
 	mlx->conf.map_x = 0;
