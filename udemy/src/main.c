@@ -6,8 +6,12 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>
-#include "../../mlx/mlx.h"
-#include "../../mlx_beta/mlx.h"
+#include "../../minilibx_mms_20200219/mlx.h"
+#include "../../minilibx_opengl_20191021/mlx.h"
+//#include "../../minilibx_opengl_20191021/mlx_int.h"
+//#include "../../minilibx_opengl_20191021/mlx_new_window.h"
+//#include "../../minilibx_opengl_20191021/mlx_opengl.h"
+//#include "../../minilibx_opengl_20191021/mlx_png.h"
 #include "constants.h"
 
 float dist_between_points(float x1, float y1, float x2, float y2)
@@ -21,7 +25,7 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
-	mlx->player.walk_speed = 10;
+	mlx->player.walk_speed = 5;
 	mlx->player.turn_speed = 4 * (PI / 180);
 }
 
@@ -326,7 +330,7 @@ void setting_ray_point(t_mlx *mlx)
 			x = -1;
 			while (++x < 20 / MINIMAP_SCALE_FACTOR)
 			{
-				mlx->rays[i].data[y * 20 / MINIMAP_SCALE_FACTOR + x] = 0xff0000;
+				mlx->rays[i].data[y * (mlx->rays[i].size_l / 4) + x] = 0xff0000;
 			}
 		}
 		i++;
@@ -459,7 +463,7 @@ void generate_3d_projection(t_mlx *mlx)
 		y = 0;
 		while (y < mlx->window.wall_top_pixel && y < mlx->conf.win_h)
 		{
-			mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->conf.ceil_c;
+			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.ceil_c;
 			y++;
 		}
 		// describe about wall(texture)
@@ -478,11 +482,11 @@ void generate_3d_projection(t_mlx *mlx)
 			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (mlx->conf.win_h / 2);
 			mlx->window.texture_offset_y = mlx->window.distance_from_top * ((float)64 / mlx->window.wall_strip_height);
 			if (tex_index == 0 || tex_index == 2)
-				mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
+				mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
 			else
 			{
 				mlx->window.texture_offset_x_rev = TEXTURE_WIDTH - mlx->window.texture_offset_x - 1;
-				mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->tex[tex_index].data[(64 * mlx->window.texture_offset_y) + mlx->window.texture_offset_x_rev];
+				mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) * mlx->window.texture_offset_y) + mlx->window.texture_offset_x_rev];
 			}
 			y++;
 		}
@@ -490,7 +494,7 @@ void generate_3d_projection(t_mlx *mlx)
 		y = mlx->window.wall_bottom_pixel;
 		while (y < mlx->conf.win_h && y >= 0)
 		{
-			mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->conf.floor_c;
+			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.floor_c;
 			y++;
 		}
 		// describe about sprite
@@ -505,9 +509,9 @@ void generate_3d_projection(t_mlx *mlx)
 				{
 					mlx->sprite[j].distance_from_top = y + (mlx->sprite[j].sprite_strip_height / 2) - (mlx->conf.win_h / 2);
 					mlx->sprite[j].texture_offset_y = mlx->sprite[j].distance_from_top * ((float)64 / mlx->sprite[j].sprite_strip_height);
-					if ((mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
+					if ((mlx->tex[4].data[((mlx->tex[4].size_l / 4) * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
 					{
-						mlx->window.data[(mlx->conf.win_w * y) + x] = mlx->tex[4].data[(64 * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x];
+						mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->tex[4].data[((mlx->tex[4].size_l / 4) * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x];
 					}
 					y++;
 				}
@@ -530,7 +534,7 @@ void setting_window(t_mlx *mlx)
 		x = -1;
 		while (++x < mlx->conf.win_w)
 		{
-			mlx->window.data[y * mlx->conf.win_w + x] = 0x000000;
+			mlx->window.data[y * (mlx->window.size_l / 4) + x] = 0x000000;
 		}
 	}
 }
@@ -555,10 +559,10 @@ int rendering_loop(t_mlx *mlx)
 	sort_sprite_structure(mlx);
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
-	put_line(mlx);
-	put_rays(mlx);
+//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
+//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
+//	put_line(mlx);
+//	put_rays(mlx);
 	reset_sprite_info(mlx);
 	return (TRUE);
 }
@@ -595,9 +599,9 @@ void setting_map(t_mlx *mlx)
 			mlx->map.tile_x = (x * mlx->conf.map_x) / (mlx->conf.win_w / MINIMAP_SCALE_FACTOR);
 			mlx->map.tile_y = (y * mlx->conf.map_y) / (mlx->conf.win_h / MINIMAP_SCALE_FACTOR);
 			if ((mlx->conf.map)[mlx->map.tile_y][mlx->map.tile_x] == '0')
-				mlx->map.data[y * (mlx->conf.win_w / MINIMAP_SCALE_FACTOR) + x] = 0x020202;
+				mlx->map.data[y * (mlx->map.size_l / 4) + x] = 0x020202;
 			else if ((mlx->conf.map)[mlx->map.tile_y][mlx->map.tile_x] == '1')
-				mlx->map.data[y * (mlx->conf.win_w / MINIMAP_SCALE_FACTOR) + x] = 0xffffff;
+				mlx->map.data[y * (mlx->map.size_l / 4) + x] = 0xffffff;
 		}
 	}
 }
@@ -614,7 +618,7 @@ void setting_player(t_mlx *mlx)
 		x = -1;
 		while (++x < mlx->player.width)
 		{
-			mlx->player.data[y * mlx->player.width + x] = 0xFFFF00;
+			mlx->player.data[y * (mlx->player.size_l / 4) + x] = 0xFFFF00;
 		}
 	}
 }
@@ -1236,7 +1240,7 @@ void	make_img(t_mlx *mlx, int fd)
 		x = 0;
 		while (x < mlx->conf.win_w)
 		{
-			color = mlx->window.data[(mlx->conf.win_w * y) + x];
+			color = mlx->window.data[((mlx->window.size_l / 4) * y) + x];
 			write(fd, &color, 4);
 			x++;
 		}
