@@ -882,13 +882,16 @@ int
 	while (sub_strs[num])
 		num++;
 	if (num != 2)
-		return (FALSE);
+		return (free_strs(sub_strs, num, FALSE));
 	strs = ft_split(sub_strs[1], ',');
 	num = 0;
 	while (strs[num])
 		num++;
 	if (num != 3)
-		return (FALSE);
+	{
+		free_strs(sub_strs, 2, 0);
+		return (free_strs(strs, num, FALSE));
+	}
 	if (ft_strnstr(sub_strs[0], "F", 1) && ft_strlen(sub_strs[0]) == 1)
 	{
 		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
@@ -902,9 +905,15 @@ int
 		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
 	}
 	else
-		return (FALSE);
+	{
+		free_strs(sub_strs, 2, 0);
+		return (free_strs(strs, num, FALSE));
+	}
 	if (!check_rgb_available(strs, mlx))
-		return (FALSE);
+	{
+		free_strs(sub_strs, 2, 0);
+		return (free_strs(strs, num, FALSE));
+	}
 	mlx->conf.floor_c = mlx->conf.floor_colors[0];
 	mlx->conf.floor_c = mlx->conf.floor_c << 8;
 	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[1];
@@ -915,7 +924,8 @@ int
 	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[1];
 	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
 	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
-	return (TRUE);
+	free_strs(sub_strs, 2, 0);
+	return (free_strs(strs, num, TRUE));
 }
 
 int
@@ -1008,6 +1018,7 @@ int
 			return (error_mes("Error: some error while gnl working\n", FALSE));
 		if (!*line)
 		{
+			free(line);
 			if (flag == 9)
 				flag = 10;
 		}
