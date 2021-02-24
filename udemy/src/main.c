@@ -23,6 +23,19 @@ int
 	return (ret);
 }
 
+int
+	free_strs(char **strs, int num, int ret)
+{
+	while (--num >= 0)
+	{
+		free(strs[num]);
+		if (num == 0)
+			break ;
+	}
+	free(strs);
+	return (ret);
+}
+
 float
 	dist_between_points(float x1, float y1, float x2, float y2)
 {
@@ -778,17 +791,13 @@ int
 	while (strs[num])
 		num++;
 	if (num != 3)
-		return (FALSE);
-	if (ft_strlen(*strs) != 1)
-		return (FALSE);
-	strs++;
-	if (*strs)
-		mlx->conf.win_w = ft_atoi(*strs);
-	strs++;
-	if (*strs)
-		mlx->conf.win_h = ft_atoi(*strs);
+		return (free_strs(strs, num, FALSE));
+	if (ft_strlen(strs[0]) != 1)
+		return (free_strs(strs, num, FALSE));
+	mlx->conf.win_w = ft_atoi(strs[1]);
+	mlx->conf.win_h = ft_atoi(strs[2]);
 	if (mlx->conf.win_w <= 0 || mlx->conf.win_h <= 0)
-		return (FALSE);
+		return (free_strs(strs, num, FALSE));
 	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
 	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
 	return (TRUE);
@@ -1021,7 +1030,10 @@ int
 			flag++;
 			mlx->conf.cub_flag[0] = 1;
 			if (pack_win_size(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "NO", 2))
 		{
