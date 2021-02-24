@@ -736,8 +736,14 @@ int key_release(int key, t_mlx *mlx)
 int		pack_win_size(t_mlx *mlx, char *line)
 {
 	char	**strs;
+	int		num;
 
 	strs = ft_split(line, ' ');
+	num = 0;
+	while (strs[num])
+		num++;
+	if (num != 3)
+		return (FALSE);
 	if (ft_strlen(*strs) != 1)
 		return (FALSE);
 	strs++;
@@ -746,6 +752,8 @@ int		pack_win_size(t_mlx *mlx, char *line)
 	strs++;
 	if (*strs)
 		mlx->conf.win_h = ft_atoi(*strs);
+	if (mlx->conf.win_w <= 0 || mlx->conf.win_h <= 0)
+		return (FALSE);
 	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
 	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
 	return (TRUE);
@@ -758,6 +766,11 @@ int		pack_path(t_mlx *mlx, char *line)
 	int		len;
 
 	strs = ft_split(line, ' ');
+	len = 0;
+	while (strs[len])
+		len++;
+	if (len != 2)
+		return (FALSE);
 	if (ft_strlen(*strs) != 2)
 	{
 		if (ft_strlen(*strs) != 1 && ft_strncmp(*strs, "S", 1))
@@ -791,9 +804,7 @@ int	check_rgb_available(char **strs, t_mlx *mlx)
 	while (strs[num])
 		num++;
 	if (num != 3)
-	{
 		return (FALSE);
-	}
 	i = 0;
 	j = 0;
 	while (i < num)
@@ -824,9 +835,20 @@ int		pack_rgb(t_mlx *mlx, char *line)
 {
 	char	**sub_strs;
 	char	**strs;
+	int		num;
 
 	sub_strs = ft_split(line, ' ');
+	num = 0;
+	while (sub_strs[num])
+		num++;
+	if (num != 2)
+		return (FALSE);
 	strs = ft_split(sub_strs[1], ',');
+	num = 0;
+	while (strs[num])
+		num++;
+	if (num != 3)
+		return (FALSE);
 	if (ft_strnstr(sub_strs[0], "F", 1) && ft_strlen(sub_strs[0]) == 1)
 	{
 		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
