@@ -925,6 +925,7 @@ int
 	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
 	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
 	free_strs(sub_strs, 2, 0);
+	free(line);
 	return (free_strs(strs, num, TRUE));
 }
 
@@ -940,16 +941,24 @@ int
 int
 	pack_map_str(t_mlx *mlx, char *line)
 {
+	char *tmp;
+	int len;
+
 	if (mlx->conf.cub_flag[8] == 1)
 	{
 		if (!(mlx->conf.map_str = malloc(sizeof(char))))
-			return (error_mes("Error: could not malloc for map_str", FALSE));
+			return (error_mes("Error: could not malloc for map_str\n", FALSE));
 		*(mlx->conf.map_str) = '\0';
 	}
-	mlx->conf.map_x = max_len(mlx->conf.map_x, (int)ft_strlen(line));
+	len = ft_strlen(line);
+	mlx->conf.map_x = max_len(mlx->conf.map_x, len);
+	tmp = mlx->conf.map_str;
 	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, line);
+	free(tmp);
+	tmp = mlx->conf.map_str;
 	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, "\n");
 	mlx->conf.map_y++;
+	free(tmp);
 	return (TRUE);
 }
 
@@ -1006,6 +1015,7 @@ int
 	int res;
 	int flag;
 	char *line;
+	char *tmp;
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
 		return (error_mes("Error: invalid fd\n", FALSE));
@@ -1024,16 +1034,24 @@ int
 		}
 		else if (flag >= 8)
 		{
-			if (mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE)
+			if ((mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE) || flag == 10)
+			{
+				free(line);
 				return (error_mes("ERROR: invalid configure\n", FALSE));
-			if (flag == 10)
-				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 			if (check_is_map(line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: map is not made by map element\n", FALSE));
+			}
 			flag = 9;
 			mlx->conf.cub_flag[8] += 1;
 			if (pack_map_str(mlx, line) == FALSE)
+			{
+				free(line);
 				return (FALSE);
+			}
+			free(line);
 		}
 		else if (ft_strnstr(line, "R", 1))
 		{
@@ -1116,10 +1134,10 @@ int
 			}
 		}
 		else
-			{
-				free(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
-			}
+		{
+			free(line);
+			return (error_mes("Error: invalid configure\n", FALSE));
+		}
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
 	int index = 0;
@@ -1132,6 +1150,7 @@ int
 		}
 		index++;
 	}
+	free(line);
 	return (TRUE);
 }
 
@@ -1365,6 +1384,7 @@ int
 	free(mlx->conf.path_ea);
 	free(mlx->conf.path_we);
 	free(mlx->conf.path_sp);
+	free(mlx->conf.map_str);
 	return (ret);
 }
 
