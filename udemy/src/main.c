@@ -795,13 +795,12 @@ int		pack_path(t_mlx *mlx, char *line)
 
 int	check_rgb_available(char **strs, t_mlx *mlx)
 {
-	int num;
 	int i;
 	int j;
 
 	i = 0;
 	j = 0;
-	while (i < num)
+	while (i < 3)
 	{
 		j = 0;
 		while (strs[i][j] != '\0')
@@ -814,7 +813,7 @@ int	check_rgb_available(char **strs, t_mlx *mlx)
 		i++;
 	}
 	i = 0;
-	while (i < num)
+	while (i < 3)
 	{
 		if (mlx->conf.floor_colors[i] < 0 || mlx->conf.floor_colors[i] > 255)
 			return (FALSE);
@@ -950,7 +949,7 @@ int		get_conf(t_mlx *mlx, char *file_name)
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
 	{
-		printf("Error: invalid fd");
+		printf("Error: invalid fd\n");
 		return (FALSE);
 	}
 	flag = 0;
@@ -959,7 +958,10 @@ int		get_conf(t_mlx *mlx, char *file_name)
 	while ((res = get_next_line(fd, &line)))
 	{
 		if (res == -1)
+		{
+			printf("Error: some error while gnl working\n");
 			return (FALSE);
+		}
 		if (!*line)
 		{
 			if (flag == 9)
