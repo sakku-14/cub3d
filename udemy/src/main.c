@@ -576,10 +576,10 @@ int rendering_for_bmp(t_mlx *mlx)
 	sort_sprite_structure(mlx);
 	generate_3d_projection(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
-	put_line(mlx);
-	put_rays(mlx);
+//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
+//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
+//	put_line(mlx);
+//	put_rays(mlx);
 //	reset_sprite_info(mlx);
 	return (TRUE);
 }
@@ -717,7 +717,6 @@ int initialize_window(t_mlx *mlx)
 
 int key_release(int key, t_mlx *mlx)
 {
-	//	release act
 	if (key == KEY_W)
 		mlx->player.walk_direction = 0;
 	if (key == KEY_S)
@@ -800,11 +799,6 @@ int	check_rgb_available(char **strs, t_mlx *mlx)
 	int i;
 	int j;
 
-	num = 0;
-	while (strs[num])
-		num++;
-	if (num != 3)
-		return (FALSE);
 	i = 0;
 	j = 0;
 	while (i < num)
@@ -892,7 +886,7 @@ int		pack_map_str(t_mlx *mlx, char *line)
 	{
 		if (!(mlx->conf.map_str = malloc(sizeof(char))))
 		{
-			printf("Error: could not malloc of map_str");
+			printf("Error: could not malloc for map_str");
 			return (FALSE);
 		}
 		*(mlx->conf.map_str) = '\0';
