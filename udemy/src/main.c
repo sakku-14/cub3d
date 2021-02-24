@@ -8,18 +8,29 @@
 #include <math.h>
 #include "../../minilibx_mms_20200219/mlx.h"
 #include "../../minilibx_opengl_20191021/mlx.h"
-//#include "../../minilibx_opengl_20191021/mlx_int.h"
-//#include "../../minilibx_opengl_20191021/mlx_new_window.h"
-//#include "../../minilibx_opengl_20191021/mlx_opengl.h"
-//#include "../../minilibx_opengl_20191021/mlx_png.h"
 #include "constants.h"
 
-float dist_between_points(float x1, float y1, float x2, float y2)
+__attribute__((destructor))
+void    end()
+{
+    system("leaks raycast");
+}
+
+int
+	error_mes(char *str, int ret)
+{
+	write(STDERR, str, ft_strlen(str));
+	return (ret);
+}
+
+float
+	dist_between_points(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x1 - x2) * ( x1 - x2 ) + (y1 - y2) * (y1 - y2)));
 }
 
-void	mlx_conf(t_mlx *mlx)
+void
+	mlx_conf(t_mlx *mlx)
 {
 	mlx->conf.pl_x = (mlx->conf.pl_x + 0.5) * TILE_SIZE;
 	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
@@ -29,7 +40,8 @@ void	mlx_conf(t_mlx *mlx)
 	mlx->player.turn_speed = 4 * (PI / 180);
 }
 
-int	map_has_wall_at(t_mlx *mlx, float x, float y)
+int
+	map_has_wall_at(t_mlx *mlx, float x, float y)
 {
 	int map_grid_index_x;
 	int map_grid_index_y;
@@ -40,7 +52,8 @@ int	map_has_wall_at(t_mlx *mlx, float x, float y)
 	return ((mlx->conf.map)[map_grid_index_y][map_grid_index_x] == '1');
 }
 
-int	key_press(int key, t_mlx *mlx)
+int
+	key_press(int key, t_mlx *mlx)
 {
 	if (key == KEY_ESC)
 	{
@@ -62,14 +75,16 @@ int	key_press(int key, t_mlx *mlx)
 	return (TRUE);
 }
 
-int close_button_press(t_mlx *mlx)
+int
+	close_button_press(t_mlx *mlx)
 {
 	mlx_destroy_window(mlx->mlx_ptr, mlx->win);
 	exit(0);
 	return (TRUE);
 }
 
-void put_line(t_mlx *mlx)
+void
+	put_line(t_mlx *mlx)
 {
 	int r = 0;
 	while (r < 150 / MINIMAP_SCALE_FACTOR)
@@ -87,7 +102,8 @@ void put_line(t_mlx *mlx)
 	}
 }
 
-void move(t_mlx *mlx)
+void
+	move(t_mlx *mlx)
 {
 	float new_player_x = mlx->conf.pl_x;
 	float new_player_y = mlx->conf.pl_y;
@@ -121,7 +137,8 @@ void move(t_mlx *mlx)
 	}
 }
 
-float normalize_angle(float angle)
+float
+	normalize_angle(float angle)
 {
 	angle = remainder(angle, 2 * PI);
 	if (angle < 0)
@@ -129,7 +146,8 @@ float normalize_angle(float angle)
 	return (angle);
 }
 
-int		search_sprite_index(int x, int y, t_mlx *mlx)
+int
+	search_sprite_index(int x, int y, t_mlx *mlx)
 {
 	int i = 0;
 	while (i < mlx->sprite_num)
@@ -141,7 +159,8 @@ int		search_sprite_index(int x, int y, t_mlx *mlx)
 	return (-1);
 }
 
-void	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
+void
+	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
 {
 	float	x_to_check;
 	float	y_to_check;
@@ -166,7 +185,8 @@ void	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
 	}
 }
 
-void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
+void 
+	cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 {
 	ray_angle = normalize_angle(ray_angle);
 
@@ -299,7 +319,8 @@ void cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 }
 
 // TODO: player.rotation_angle from .cub
-void cast_all_rays(t_mlx *mlx)
+void
+	cast_all_rays(t_mlx *mlx)
 {
 	int		strip_id;
 	float	ray_angle;
@@ -314,7 +335,8 @@ void cast_all_rays(t_mlx *mlx)
 	}
 }
 
-void setting_ray_point(t_mlx *mlx)
+void
+	setting_ray_point(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
@@ -337,7 +359,8 @@ void setting_ray_point(t_mlx *mlx)
 	}
 }
 
-void put_rays(t_mlx *mlx)
+void
+	put_rays(t_mlx *mlx)
 {
 	int i = 0;
 	float r;
@@ -357,7 +380,8 @@ void put_rays(t_mlx *mlx)
 	}
 }
 
-void	get_info_sprite(t_mlx *mlx)
+void
+	get_info_sprite(t_mlx *mlx)
 {
 	int i = 0;
 	float	base;
@@ -384,7 +408,8 @@ void	get_info_sprite(t_mlx *mlx)
 	}
 }
 
-void	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
+void
+	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
 {
 	int mid, i, j, k;
 	t_sprites	tmp[mlx->sprite_num];
@@ -421,12 +446,14 @@ void	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
 	}
 }
 
-void	sort_sprite_structure(t_mlx *mlx)
+void
+	sort_sprite_structure(t_mlx *mlx)
 {
 	mergesort_sprite_structure(mlx, 0, mlx->sprite_num - 1);
 }
 
-void generate_3d_projection(t_mlx *mlx)
+void
+	generate_3d_projection(t_mlx *mlx)
 {
 	int x = 0;
 	int i;
@@ -522,7 +549,8 @@ void generate_3d_projection(t_mlx *mlx)
 	}
 }
 
-void setting_window(t_mlx *mlx)
+void
+	setting_window(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
@@ -539,7 +567,8 @@ void setting_window(t_mlx *mlx)
 	}
 }
 
-void	reset_sprite_info(t_mlx *mlx)
+void
+	reset_sprite_info(t_mlx *mlx)
 {
 	int i = 0;
 	while (i < mlx->sprite_num)
@@ -550,7 +579,8 @@ void	reset_sprite_info(t_mlx *mlx)
 	}
 }
 
-int rendering_loop(t_mlx *mlx)
+int
+	rendering_loop(t_mlx *mlx)
 {
 	move(mlx);
 	setting_window(mlx);
@@ -567,7 +597,8 @@ int rendering_loop(t_mlx *mlx)
 	return (TRUE);
 }
 
-int rendering_for_bmp(t_mlx *mlx)
+int
+	rendering_for_bmp(t_mlx *mlx)
 {
 	move(mlx);
 	setting_window(mlx);
@@ -584,7 +615,8 @@ int rendering_for_bmp(t_mlx *mlx)
 	return (TRUE);
 }
 
-void setting_map(t_mlx *mlx)
+void
+	setting_map(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
@@ -606,7 +638,8 @@ void setting_map(t_mlx *mlx)
 	}
 }
 
-void setting_player(t_mlx *mlx)
+void
+	setting_player(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
@@ -623,7 +656,8 @@ void setting_player(t_mlx *mlx)
 	}
 }
 
-int	check_path_available(t_mlx *mlx)
+int
+	check_path_available(t_mlx *mlx)
 {
 	if (open(mlx->conf.path_no, O_RDONLY) == -1)
 		return (FALSE);
@@ -638,7 +672,8 @@ int	check_path_available(t_mlx *mlx)
 	return (TRUE);
 }
 
-int setting_img(t_mlx *mlx)
+int
+	setting_img(t_mlx *mlx)
 {
 	// TODO:falseの時の戻り値設定
 	int i = 0;
@@ -646,10 +681,7 @@ int setting_img(t_mlx *mlx)
 	int height = TEXTURE_HEIGHT;
 
 	if (!check_path_available(mlx))
-	{
-		printf("Error: invalid path of texture\n");
-		return (FALSE);
-	}
+		return (error_mes("Error: invalid path of texture\n", FALSE));
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height);
@@ -663,7 +695,8 @@ int setting_img(t_mlx *mlx)
 	return (TRUE);
 }
 
-void check_sprite_info(t_mlx *mlx)
+void
+	check_sprite_info(t_mlx *mlx)
 {
 	int i, j, k;
 
@@ -706,7 +739,8 @@ void check_sprite_info(t_mlx *mlx)
 	mlx->sprite[k].visible = -1;
 }
 
-int initialize_window(t_mlx *mlx)
+int
+	initialize_window(t_mlx *mlx)
 {
 	if (!(mlx->mlx_ptr = mlx_init()))
 		return (FALSE);
@@ -715,7 +749,8 @@ int initialize_window(t_mlx *mlx)
 	return (TRUE);
 }
 
-int key_release(int key, t_mlx *mlx)
+int
+	key_release(int key, t_mlx *mlx)
 {
 	if (key == KEY_W)
 		mlx->player.walk_direction = 0;
@@ -732,7 +767,8 @@ int key_release(int key, t_mlx *mlx)
 	return (TRUE);
 }
 
-int		pack_win_size(t_mlx *mlx, char *line)
+int
+	pack_win_size(t_mlx *mlx, char *line)
 {
 	char	**strs;
 	int		num;
@@ -758,7 +794,8 @@ int		pack_win_size(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
-int		pack_path(t_mlx *mlx, char *line)
+int
+	pack_path(t_mlx *mlx, char *line)
 {
 	char	**strs;
 	int		i;
@@ -793,7 +830,8 @@ int		pack_path(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
-int	check_rgb_available(char **strs, t_mlx *mlx)
+int
+	check_rgb_available(char **strs, t_mlx *mlx)
 {
 	int i;
 	int j;
@@ -824,7 +862,8 @@ int	check_rgb_available(char **strs, t_mlx *mlx)
 	return (TRUE);
 }
 
-int		pack_rgb(t_mlx *mlx, char *line)
+int
+	pack_rgb(t_mlx *mlx, char *line)
 {
 	char	**sub_strs;
 	char	**strs;
@@ -871,7 +910,8 @@ int		pack_rgb(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
-int		max_len(int x, int y)
+int
+	max_len(int x, int y)
 {
 	if (x > y)
 		return (x);
@@ -879,15 +919,13 @@ int		max_len(int x, int y)
 		return (y);
 }
 
-int		pack_map_str(t_mlx *mlx, char *line)
+int
+	pack_map_str(t_mlx *mlx, char *line)
 {
 	if (mlx->conf.cub_flag[8] == 1)
 	{
 		if (!(mlx->conf.map_str = malloc(sizeof(char))))
-		{
-			printf("Error: could not malloc for map_str");
-			return (FALSE);
-		}
+			return (error_mes("Error: could not malloc for map_str", FALSE));
 		*(mlx->conf.map_str) = '\0';
 	}
 	mlx->conf.map_x = max_len(mlx->conf.map_x, (int)ft_strlen(line));
@@ -897,7 +935,8 @@ int		pack_map_str(t_mlx *mlx, char *line)
 	return (TRUE);
 }
 
-int		conf_fill_checker(t_mlx *mlx)
+int
+	conf_fill_checker(t_mlx *mlx)
 {
 	int i;
 
@@ -910,7 +949,8 @@ int		conf_fill_checker(t_mlx *mlx)
 	return (TRUE);
 }
 
-int	check_c_in_str(char c, char *str)
+int
+	check_c_in_str(char c, char *str)
 {
 	int len;
 	int i;
@@ -926,7 +966,8 @@ int	check_c_in_str(char c, char *str)
 	return (FALSE);
 }
 
-int		check_is_map(char *line)
+int
+	check_is_map(char *line)
 {
 	int i;
 
@@ -940,7 +981,8 @@ int		check_is_map(char *line)
 	return (TRUE);
 }
 
-int		get_conf(t_mlx *mlx, char *file_name)
+int
+	get_conf(t_mlx *mlx, char *file_name)
 {
 	int fd;
 	int res;
@@ -948,20 +990,14 @@ int		get_conf(t_mlx *mlx, char *file_name)
 	char *line;
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-	{
-		printf("Error: invalid fd\n");
-		return (FALSE);
-	}
+		return (error_mes("Error: invalid fd\n", FALSE));
 	flag = 0;
 	mlx->conf.map_y = 0;
 	mlx->conf.map_x = 0;
 	while ((res = get_next_line(fd, &line)))
 	{
 		if (res == -1)
-		{
-			printf("Error: some error while gnl working\n");
-			return (FALSE);
-		}
+			return (error_mes("Error: some error while gnl working\n", FALSE));
 		if (!*line)
 		{
 			if (flag == 9)
@@ -970,20 +1006,11 @@ int		get_conf(t_mlx *mlx, char *file_name)
 		else if (flag >= 8)
 		{
 			if (mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE)
-			{
-				printf("ERROR: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("ERROR: invalid configure\n", FALSE));
 			if (flag == 10)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 			if (check_is_map(line) == FALSE)
-			{
-				printf("Error: map is not made by map element\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: map is not made by map element\n", FALSE));
 			flag = 9;
 			mlx->conf.cub_flag[8] += 1;
 			if (pack_map_str(mlx, line) == FALSE)
@@ -994,86 +1021,59 @@ int		get_conf(t_mlx *mlx, char *file_name)
 			flag++;
 			mlx->conf.cub_flag[0] = 1;
 			if (pack_win_size(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "NO", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[1] = 1;
 			if (pack_path(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "SO", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[2] = 1;
 			if (pack_path(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "EA", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[3] = 1;
 			if (pack_path(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "WE", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[4] = 1;
 			if (pack_path(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "S", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[5] = 1;
 			if (pack_path(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "F", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[6] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else if (ft_strnstr(line, "C", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[7] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
-			{
-				printf("Error: invalid configure\n");
-				return (FALSE);
-			}
+				return (error_mes("Error: invalid configure\n", FALSE));
 		}
 		else
-		{
-			printf("Error: invalid configure\n");
-			return (FALSE);
-		}
+			return (error_mes("Error: invalid configure\n", FALSE));
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
 	int index = 0;
@@ -1089,7 +1089,8 @@ int		get_conf(t_mlx *mlx, char *file_name)
 	return (TRUE);
 }
 
-void print_map(char *map_p, int y, int x)
+void
+	print_map(char *map_p, int y, int x)
 {
 	int i = 0;
 	int j = 0;
@@ -1108,7 +1109,8 @@ void print_map(char *map_p, int y, int x)
 	printf("\n");
 }
 
-void	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
+void
+	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
 {
 	if (map_p[p_y * x + p_x] == 'p' || map_p[p_y * x + p_x] == '1' || map_p[p_y * x + p_x] == '3' || *false_checker == 1)
 		return ;
@@ -1127,7 +1129,8 @@ void	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
 	check_fill(map_p, y, x, p_y, p_x - 1, false_checker);
 }
 
-void put_grid_to_container(t_mlx *mlx, char *cont_p, int y, int x)
+void
+	put_grid_to_container(t_mlx *mlx, char *cont_p, int y, int x)
 {
 	int i = 0, j = 0;
 	while (i < y)
@@ -1147,7 +1150,8 @@ void put_grid_to_container(t_mlx *mlx, char *cont_p, int y, int x)
 	}
 }
 
-int	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_mlx *mlx)
+int
+	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_mlx *mlx)
 {
 	int i = 0, j = 0;
 	int player_counter = 0;
@@ -1179,7 +1183,8 @@ int	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_m
 	return (0); //change to FALSE from 0
 }
 
-int	check_map(t_mlx *mlx)
+int
+	check_map(t_mlx *mlx)
 {
 	int player_x, player_y;
 	char *map_p = (char *)mlx->conf.map;
@@ -1191,26 +1196,21 @@ int	check_map(t_mlx *mlx)
 	printf("\n***origin map packed in container***\n");
 	print_map(cont_p, y, x);
 	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
-	{
-		printf("Error: Player does not exist or more than 2 players on the map\n");
-		return (0);
-	}
+		return (error_mes("Error: Player does not exist or more than 2 players on the map\n", FALSE));
 	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
 	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
 	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
 	printf("***map filled by p***\n");
 	print_map(cont_p, y, x);
 	if (false_checker == 1)
-	{
-		printf("\nError: Map is not sorrounded by wall.\n");
-		return (FALSE);
-	}
+		return (error_mes("Error: Map is not sorrounded by wall.\n", FALSE));
 	mlx->conf.pl_y = player_y - 1;
 	mlx->conf.pl_x = player_x - 1;
 	return (TRUE);
 }
 
-int	cub_checker(char *av)
+int
+	cub_checker(char *av)
 {
 	int i;
 
@@ -1227,7 +1227,8 @@ int	cub_checker(char *av)
 	return (FALSE);
 }
 
-int	save_checker(char *av)
+int
+	save_checker(char *av)
 {
 	if (av && *av)
 	{
@@ -1237,7 +1238,8 @@ int	save_checker(char *av)
 	return (TRUE);
 }
 
-void init_vars(t_mlx *mlx)
+void
+	init_vars(t_mlx *mlx)
 {
 	int i;
 
@@ -1246,7 +1248,8 @@ void init_vars(t_mlx *mlx)
 		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
 }
 
-void	make_img(t_mlx *mlx, int fd)
+void
+	make_img(t_mlx *mlx, int fd)
 {
 	int	x;
 	int	y;
@@ -1266,7 +1269,8 @@ void	make_img(t_mlx *mlx, int fd)
 	}
 }
 
-void	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_size)
+void
+	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_size)
 {
 	unsigned int	file_header_size;
 	unsigned int	info_header_size;
@@ -1290,7 +1294,8 @@ void	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_
 	write(fd, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
 }
 
-void	create_bmp(t_mlx *mlx)
+void
+	create_bmp(t_mlx *mlx)
 {
 	int	fd;
 	unsigned int	img_size;
@@ -1306,25 +1311,17 @@ void	create_bmp(t_mlx *mlx)
 	exit (0);
 }
 
-int		main(int ac, char **av)
+int
+	main(int ac, char **av)
 {
 	t_mlx	mlx;
 
 	if (ac < 1 || ac > 3)
-	{
-		printf("Error: few args or too many args\n");
-		return (ERROR);
-	}
+		return (error_mes("Error: few args or too many args\n", ERROR));
 	if (ac == 3 && !save_checker(av[2]))
-	{
-		printf("Error: invalid third arg\n");
-		return (ERROR);
-	}
+		return (error_mes("Error: invalid third arg\n", ERROR));
 	if (!cub_checker(av[1]))
-	{
-		printf("Error: invalid second arg\n");
-		return (ERROR);
-	}
+		return (error_mes("Error: invalid second arg\n", ERROR));
 	init_vars(&mlx);
 	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
 	if (get_conf(&mlx, av[1]) == FALSE)

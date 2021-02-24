@@ -4,6 +4,7 @@
 #define FALSE	0
 #define TRUE	1
 #define ERROR	-1
+#define STDERR	2
 #define PI		3.1415926535
 
 #define TILE_SIZE		64
