@@ -800,28 +800,26 @@ int
 		return (free_strs(strs, num, FALSE));
 	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
 	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
-	return (TRUE);
+	free(line);
+	return (free_strs(strs, num, TRUE));
 }
 
 int
 	pack_path(t_mlx *mlx, char *line)
 {
 	char	**strs;
-	int		i;
+	int		num;
 	int		len;
 
 	strs = ft_split(line, ' ');
-	len = 0;
-	while (strs[len])
-		len++;
-	if (len != 2)
-		return (FALSE);
-	if (ft_strlen(*strs) != 2)
-	{
-		if (ft_strlen(*strs) != 1 && ft_strncmp(*strs, "S", 1))
-			return (FALSE);
-	}
-	i = 0;
+	num = 0;
+	while (strs[num])
+		num++;
+	if (num != 2)
+		return (free_strs(strs, num, FALSE));
+	if (ft_strlen(strs[0]) != 2 \
+			&& (ft_strlen(strs[0]) != 1 && ft_strncmp(strs[0], "S", 1)))
+		return (free_strs(strs, num, FALSE));
 	len = ft_strlen(strs[1]);
 	if (strs[1])
 	{
@@ -836,7 +834,8 @@ int
 		else if (ft_strnstr(strs[0], "S", 1))
 			mlx->conf.path_sp = ft_substr(strs[1], 0, len);
 	}
-	return (TRUE);
+	free(line);
+	return (free_strs(strs, num, TRUE));
 }
 
 int
@@ -1040,52 +1039,76 @@ int
 			flag++;
 			mlx->conf.cub_flag[1] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "SO", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[2] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "EA", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[3] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "WE", 2))
 		{
 			flag++;
 			mlx->conf.cub_flag[4] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "S", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[5] = 1;
 			if (pack_path(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "F", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[6] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else if (ft_strnstr(line, "C", 1))
 		{
 			flag++;
 			mlx->conf.cub_flag[7] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
+			{
+				free(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 		}
 		else
-			return (error_mes("Error: invalid configure\n", FALSE));
+			{
+				free(line);
+				return (error_mes("Error: invalid configure\n", FALSE));
+			}
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
 	int index = 0;
@@ -1324,6 +1347,17 @@ void
 }
 
 int
+	free_mlx(t_mlx *mlx, int ret)
+{
+	free(mlx->conf.path_no);
+	free(mlx->conf.path_so);
+	free(mlx->conf.path_ea);
+	free(mlx->conf.path_we);
+	free(mlx->conf.path_sp);
+	return (ret);
+}
+
+int
 	main(int ac, char **av)
 {
 	t_mlx	mlx;
@@ -1337,7 +1371,7 @@ int
 	init_vars(&mlx);
 	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
 	if (get_conf(&mlx, av[1]) == FALSE)
-		return (ERROR);
+		return (free_mlx(&mlx, ERROR));
 	if (check_map(&mlx) == FALSE)
 		return (ERROR);
 	mlx_conf(&mlx);
