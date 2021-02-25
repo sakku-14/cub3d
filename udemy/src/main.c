@@ -659,10 +659,10 @@ int
 	int y = -1;
 
 	//TODO: leak check again
-	if((mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w / MINIMAP_SCALE_FACTOR, mlx->conf.win_h / MINIMAP_SCALE_FACTOR)))
+	if(!(mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w / MINIMAP_SCALE_FACTOR, mlx->conf.win_h / MINIMAP_SCALE_FACTOR)))
 	{
 		free_mlx_map(mlx);
-		return (FALSE);
+		return (error_mes("Error: false mlx_new_image for map image\n", FALSE));
 	}
 	mlx->map.data = (int *)mlx_get_data_addr(mlx->map.img_ptr, &(mlx->map.bpp), &(mlx->map.size_l), &(mlx->map.endian));
 	while (++y < mlx->conf.win_h / MINIMAP_SCALE_FACTOR)
@@ -681,13 +681,18 @@ int
 	return (TRUE);
 }
 
-void
+int
 	setting_player(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
 
-	mlx->player.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width, mlx->player.height);
+	//TODO: leak check again
+	if (!(mlx->player.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width, mlx->player.height)))
+	{
+		free_mlx_map(mlx);
+		return (error_mes("Error: false mlx_new_image for player image\n", FALSE));
+	}
 	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.img_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
 	while (++y < mlx->player.height)
 	{
@@ -697,6 +702,7 @@ void
 			mlx->player.data[y * (mlx->player.size_l / 4) + x] = 0xFFFF00;
 		}
 	}
+	return (TRUE);
 }
 
 int
@@ -1450,7 +1456,8 @@ int
 		return (free_mlx(&mlx, ERROR));
 	if (setting_map(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
-	setting_player(&mlx);
+	if (setting_player(&mlx) == FALSE)
+		return (free_mlx(&mlx, ERROR));
 	setting_ray_point(&mlx);
 	if (!(setting_img(&mlx)))
 		return (ERROR);
