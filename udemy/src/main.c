@@ -372,7 +372,7 @@ void
 	}
 }
 
-void
+int
 	setting_ray_point(t_mlx *mlx)
 {
 	int x = -1;
@@ -381,7 +381,11 @@ void
 
 	while (i < mlx->conf.win_w)
 	{
-		mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR);
+		if (!(mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR)))
+		{
+			free_mlx_map(mlx);
+			return (error_mes("Error: false mlx_new_image for ray image\n", FALSE));
+		}
 		mlx->rays[i].data = (int *)mlx_get_data_addr(mlx->rays[i].img_ptr, &(mlx->rays[i].bpp), &(mlx->rays[i].size_l), &(mlx->rays[i].endian));
 		y = -1;
 		while (++y < 20 / MINIMAP_SCALE_FACTOR)
@@ -394,6 +398,7 @@ void
 		}
 		i++;
 	}
+	return (TRUE);
 }
 
 void
@@ -1458,7 +1463,8 @@ int
 		return (free_mlx(&mlx, ERROR));
 	if (setting_player(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
-	setting_ray_point(&mlx);
+	if (setting_ray_point(&mlx) == FALSE)
+		return (free_mlx(&mlx, ERROR));
 	if (!(setting_img(&mlx)))
 		return (ERROR);
 	check_sprite_info(&mlx);
