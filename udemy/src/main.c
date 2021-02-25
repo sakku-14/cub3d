@@ -23,17 +23,41 @@ int
 	return (ret);
 }
 
+void
+	free_str_safe(char *str)
+{
+	free(str);
+	str = NULL;
+}
+
 int
 	free_strs(char **strs, int num, int ret)
 {
 	while (--num >= 0)
 	{
-		free(strs[num]);
+		free_str_safe(strs[num]);
 		if (num == 0)
 			break ;
 	}
 	free(strs);
+	strs = NULL;
 	return (ret);
+}
+
+void
+	free_mlx_map(t_mlx *mlx)
+{
+	int i;
+
+	i = mlx->conf.map_y;
+	while (--i >= 0)
+	{
+		free_str_safe(mlx->conf.map[i]);
+		if (i == 0)
+			break ;
+	}
+	free(mlx->conf.map);
+	mlx->conf.map = NULL;
 }
 
 float
@@ -628,13 +652,18 @@ int
 	return (TRUE);
 }
 
-void
+int
 	setting_map(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
 
-	mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w / MINIMAP_SCALE_FACTOR, mlx->conf.win_h / MINIMAP_SCALE_FACTOR);
+	//TODO: leak check again
+	if((mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w / MINIMAP_SCALE_FACTOR, mlx->conf.win_h / MINIMAP_SCALE_FACTOR)))
+	{
+		free_mlx_map(mlx);
+		return (FALSE);
+	}
 	mlx->map.data = (int *)mlx_get_data_addr(mlx->map.img_ptr, &(mlx->map.bpp), &(mlx->map.size_l), &(mlx->map.endian));
 	while (++y < mlx->conf.win_h / MINIMAP_SCALE_FACTOR)
 	{
@@ -649,6 +678,7 @@ void
 				mlx->map.data[y * (mlx->map.size_l / 4) + x] = 0xffffff;
 		}
 	}
+	return (TRUE);
 }
 
 void
@@ -1244,8 +1274,9 @@ int
 		i++;
 	}
 	if (player_counter == 1)
-		return (1); //change to TRUE from 1
-	return (0); //change to FALSE from 0
+		return (TRUE);
+	free_str_safe(cont_p);
+	return (FALSE);
 }
 
 int
@@ -1257,20 +1288,29 @@ int
 	int x = mlx->conf.map_x + 2;
 	char *cont_p = malloc(sizeof(char) * y * x);
 	int false_checker = -1;
+
 	put_grid_to_container(mlx, cont_p, y, x);
 	printf("\n***origin map packed in container***\n");
 	print_map(cont_p, y, x);
 	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
+	{
+		free_mlx_map(mlx);
 		return (error_mes("Error: Player does not exist or more than 2 players on the map\n", FALSE));
+	}
 	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
 	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
 	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
 	printf("***map filled by p***\n");
 	print_map(cont_p, y, x);
 	if (false_checker == 1)
+	{
+		free_mlx_map(mlx);
+		free_str_safe(cont_p);
 		return (error_mes("Error: Map is not sorrounded by wall.\n", FALSE));
+	}
 	mlx->conf.pl_y = player_y - 1;
 	mlx->conf.pl_x = player_x - 1;
+	free_str_safe(cont_p);
 	return (TRUE);
 }
 
@@ -1404,11 +1444,12 @@ int
 	if (get_conf(&mlx, av[1]) == FALSE)
 		return (free_mlx(&mlx, ERROR));
 	if (check_map(&mlx) == FALSE)
-		return (ERROR);
+		return (free_mlx(&mlx, ERROR));
 	mlx_conf(&mlx);
 	if (!(initialize_window(&mlx)))
-		return (ERROR);
-	setting_map(&mlx);
+		return (free_mlx(&mlx, ERROR));
+	if (setting_map(&mlx) == FALSE)
+		return (free_mlx(&mlx, ERROR));
 	setting_player(&mlx);
 	setting_ray_point(&mlx);
 	if (!(setting_img(&mlx)))
