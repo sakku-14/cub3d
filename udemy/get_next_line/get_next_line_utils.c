@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 13:43:34 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/02/16 11:26:25 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/02/25 16:07:42 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ size_t	ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize)
 	size_t		len;
 
 	src_c = (char *)src;
-	len = ft_strlen_gnl(src);
+	len = ft_strlen(src);
 	while (dstsize > 1 && *src_c)
 	{
 		*dst++ = *src_c++;
@@ -49,6 +49,8 @@ size_t	ft_strlen_gnl(const char *s)
 	size_t len;
 
 	len = 0;
+	if (!s && !(*s))
+		return (len);
 	while (*s++)
 		len++;
 	return (len);
@@ -73,13 +75,13 @@ size_t	ft_strlcat_gnl(char *dst, const char *src, size_t dstsize)
 	size_t len;
 	size_t room;
 
-	if (dstsize < ft_strlen_gnl(dst))
-		return (ft_strlen_gnl(src) + dstsize);
+	if (dstsize < ft_strlen(dst))
+		return (ft_strlen(src) + dstsize);
 	else
-		len = ft_strlen_gnl(dst) + ft_strlen_gnl(src);
-	room = dstsize - 1 - ft_strlen_gnl(dst);
+		len = ft_strlen(dst) + ft_strlen(src);
+	room = dstsize - 1 - ft_strlen(dst);
 	while (*dst)
 		dst++;
-	ft_strlcpy_gnl(dst, src, room + 1);
+	ft_strlcpy(dst, src, room + 1);
 	return (len);
 }

@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 22:54:37 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/02/19 13:37:30 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/02/25 16:25:23 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlen(const char *s)
 	size_t len;
 
 	len = 0;
+	if (!s || !(*s))
+		return (len);
 	while (*s++)
 		len++;
 	return (len);

@@ -10,11 +10,13 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "constants.h"
 
+/*
 __attribute__((destructor))
 void    end()
 {
     system("leaks raycast");
 }
+*/
 
 int
 	error_mes(char *str, int ret)
@@ -47,6 +49,7 @@ int
 void
 	free_mlx_map(t_mlx *mlx)
 {
+//	free_strs(mlx->conf.map, mlx->conf.map_y, 1);
 	int i;
 
 	i = mlx->conf.map_y;
@@ -213,7 +216,7 @@ int
 }
 
 void
-	map_has_sprite_at(float x, float y, t_mlx *mlx, int i)
+	map_has_sprite_at(float x, float y, t_mlx *mlx)
 {
 	float	x_to_check;
 	float	y_to_check;
@@ -274,7 +277,7 @@ void
 	{
 		float x_to_check = next_horz_touch_x;
 		float y_to_check = next_horz_touch_y + (is_ray_facing_up ? -1 : 0);
-		map_has_sprite_at(x_to_check, y_to_check, mlx, strip_id);
+		map_has_sprite_at(x_to_check, y_to_check, mlx);
 		if (map_has_wall_at(mlx, x_to_check, y_to_check))
 		{
 			horz_wall_hit_x = next_horz_touch_x;
@@ -321,7 +324,7 @@ void
 		float x_to_check = next_vert_touch_x + (is_ray_facing_left ? -1 : 0);
 		float y_to_check = next_vert_touch_y;
 
-		map_has_sprite_at(x_to_check, y_to_check, mlx, strip_id);
+		map_has_sprite_at(x_to_check, y_to_check, mlx);
 		if (map_has_wall_at(mlx, x_to_check, y_to_check))
 		{
 			vert_wall_hit_x = next_vert_touch_x;
@@ -420,7 +423,6 @@ void
 	put_rays(t_mlx *mlx)
 {
 	int i = 0;
-	float r;
 
 	while (i < mlx->conf.win_w)
 	{
@@ -768,7 +770,6 @@ int
 int
 	setting_img(t_mlx *mlx)
 {
-	int i = 0;
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
 
@@ -1226,9 +1227,11 @@ int
 	// mapの幅を空白で埋める
 	while (index < mlx->conf.map_y)
 	{
-		while (ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
+		while ((int)ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
 		{
+			tmp = mlx->conf.map[index];
 			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
+			free_str_safe(tmp);
 		}
 		index++;
 	}
@@ -1335,7 +1338,6 @@ int
 	check_map(t_mlx *mlx)
 {
 	int player_x, player_y;
-	char *map_p = (char *)mlx->conf.map;
 	int y = mlx->conf.map_y + 2;
 	int x = mlx->conf.map_x + 2;
 	char *cont_p = malloc(sizeof(char) * y * x);
@@ -1494,12 +1496,12 @@ int
 	mlx_conf(&mlx);
 	if (!(initialize_window(&mlx)))
 		return (free_mlx(&mlx, ERROR));
-	if (setting_map(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
-	if (setting_player(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
-	if (setting_ray_point(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
+//	if (setting_map(&mlx) == FALSE)
+//		return (free_mlx(&mlx, ERROR));
+//	if (setting_player(&mlx) == FALSE)
+//		return (free_mlx(&mlx, ERROR));
+//	if (setting_ray_point(&mlx) == FALSE)
+//		return (free_mlx(&mlx, ERROR));
 	if (setting_img(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
 	check_sprite_info(&mlx);

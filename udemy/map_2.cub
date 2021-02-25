@@ -1,0 +1,20 @@
+R 500 500
+NO ./textures/mossy.xpm
+SO ./textures/wood.xpm
+WE ./textures/purplestone.xpm
+EA ./textures/eagle.xpm
+S ./textures/barrel.xpm
+
+F 25,25,112
+C 135,206,235
+
+111111      11111111
+100001      10000001
+ 10001      1000001
+  10001111110000001
+  1000000000000001
+   10000S00000001
+    100000000001
+     1000000001
+      10000001
+       111111
