@@ -713,6 +713,29 @@ int
 int
 	check_path_available(t_mlx *mlx)
 {
+	int fd[5];
+	int i;
+
+	fd[0] = open(mlx->conf.path_no, O_RDONLY);
+	close(fd[0]);
+	fd[1] = open(mlx->conf.path_so, O_RDONLY);
+	close(fd[1]);
+	fd[2] = open(mlx->conf.path_ea, O_RDONLY);
+	close(fd[2]);
+	fd[3] = open(mlx->conf.path_we, O_RDONLY);
+	close(fd[3]);
+	fd[4] = open(mlx->conf.path_sp, O_RDONLY);
+	close(fd[4]);
+	i = 0;
+	while (i < 5)
+	{
+		if (fd[i] == -1)
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+
+	/*
 	if (open(mlx->conf.path_no, O_RDONLY) == -1)
 		return (FALSE);
 	if (open(mlx->conf.path_so, O_RDONLY) == -1)
@@ -724,18 +747,22 @@ int
 	if (open(mlx->conf.path_sp, O_RDONLY) == -1)
 		return (FALSE);
 	return (TRUE);
+	*/
 }
 
 int
 	setting_img(t_mlx *mlx)
 {
-	// TODO:falseの時の戻り値設定
 	int i = 0;
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
 
 	if (!check_path_available(mlx))
+	{
+		free_mlx_map(mlx);
 		return (error_mes("Error: invalid path of texture\n", FALSE));
+	}
+	//TODO: mlx_xpm_file_to_image leak対応
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
 	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height);
@@ -787,7 +814,6 @@ void
 		}
 		i++;
 	}
-	//TODO: これ必要？　確認！
 	mlx->sprite[k].sprite_x =  -1;
 	mlx->sprite[k].sprite_y = -1;
 	mlx->sprite[k].visible = -1;
@@ -1465,8 +1491,8 @@ int
 		return (free_mlx(&mlx, ERROR));
 	if (setting_ray_point(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
-	if (!(setting_img(&mlx)))
-		return (ERROR);
+	if (setting_img(&mlx) == FALSE)
+		return (free_mlx(&mlx, ERROR));
 	check_sprite_info(&mlx);
 	if (ac == 3)
 		create_bmp(&mlx);
