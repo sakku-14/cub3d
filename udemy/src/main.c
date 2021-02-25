@@ -107,6 +107,8 @@ int
 	if (key == KEY_ESC)
 	{
 		mlx_destroy_window(mlx->mlx_ptr, mlx->win);
+		free_mlx_map(mlx);
+		free_mlx(mlx, TRUE);
 		exit(0);
 	}
 	if (key == KEY_W)
@@ -128,6 +130,8 @@ int
 	close_button_press(t_mlx *mlx)
 {
 	mlx_destroy_window(mlx->mlx_ptr, mlx->win);
+	free_mlx_map(mlx);
+	free_mlx(mlx, TRUE);
 	exit(0);
 	return (TRUE);
 }
@@ -367,7 +371,6 @@ void
 	mlx->rays[strip_id].is_ray_facing_right = is_ray_facing_right;
 }
 
-// TODO: player.rotation_angle from .cub
 void
 	cast_all_rays(t_mlx *mlx)
 {
@@ -879,7 +882,7 @@ int
 		return (free_strs(strs, num, FALSE));
 	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
 	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
-	free(line);
+	free_str_safe(line);
 	return (free_strs(strs, num, TRUE));
 }
 
@@ -913,7 +916,7 @@ int
 		else if (ft_strnstr(strs[0], "S", 1))
 			mlx->conf.path_sp = ft_substr(strs[1], 0, len);
 	}
-	free(line);
+	free_str_safe(line);
 	return (free_strs(strs, num, TRUE));
 }
 
@@ -1004,7 +1007,7 @@ int
 	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
 	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
 	free_strs(sub_strs, 2, 0);
-	free(line);
+	free_str_safe(line);
 	return (free_strs(strs, num, TRUE));
 }
 
@@ -1033,11 +1036,11 @@ int
 	mlx->conf.map_x = max_len(mlx->conf.map_x, len);
 	tmp = mlx->conf.map_str;
 	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, line);
-	free(tmp);
+	free_str_safe(tmp);
 	tmp = mlx->conf.map_str;
 	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, "\n");
 	mlx->conf.map_y++;
-	free(tmp);
+	free_str_safe(tmp);
 	return (TRUE);
 }
 
@@ -1107,7 +1110,7 @@ int
 			return (error_mes("Error: some error while gnl working\n", FALSE));
 		if (!*line)
 		{
-			free(line);
+			free_str_safe(line);
 			if (flag == 9)
 				flag = 10;
 		}
@@ -1115,22 +1118,22 @@ int
 		{
 			if ((mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE) || flag == 10)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("ERROR: invalid configure\n", FALSE));
 			}
 			if (check_is_map(line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: map is not made by map element\n", FALSE));
 			}
 			flag = 9;
 			mlx->conf.cub_flag[8] += 1;
 			if (pack_map_str(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (FALSE);
 			}
-			free(line);
+			free_str_safe(line);
 		}
 		else if (ft_strnstr(line, "R", 1))
 		{
@@ -1138,7 +1141,7 @@ int
 			mlx->conf.cub_flag[0] = 1;
 			if (pack_win_size(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1148,7 +1151,7 @@ int
 			mlx->conf.cub_flag[1] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1158,7 +1161,7 @@ int
 			mlx->conf.cub_flag[2] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1168,7 +1171,7 @@ int
 			mlx->conf.cub_flag[3] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1178,7 +1181,7 @@ int
 			mlx->conf.cub_flag[4] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1188,7 +1191,7 @@ int
 			mlx->conf.cub_flag[5] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1198,7 +1201,7 @@ int
 			mlx->conf.cub_flag[6] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
@@ -1208,13 +1211,13 @@ int
 			mlx->conf.cub_flag[7] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
 			{
-				free(line);
+				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
 		}
 		else
 		{
-			free(line);
+			free_str_safe(line);
 			return (error_mes("Error: invalid configure\n", FALSE));
 		}
 	}
@@ -1229,7 +1232,7 @@ int
 		}
 		index++;
 	}
-	free(line);
+	free_str_safe(line);
 	return (TRUE);
 }
 
