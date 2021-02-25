@@ -60,6 +60,18 @@ void
 	mlx->conf.map = NULL;
 }
 
+int
+	free_mlx(t_mlx *mlx, int ret)
+{
+	free(mlx->conf.path_no);
+	free(mlx->conf.path_so);
+	free(mlx->conf.path_ea);
+	free(mlx->conf.path_we);
+	free(mlx->conf.path_sp);
+	free(mlx->conf.map_str);
+	return (ret);
+}
+
 float
 	dist_between_points(float x1, float y1, float x2, float y2)
 {
@@ -1436,7 +1448,7 @@ void
 	write(fd, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
 }
 
-void
+int
 	create_bmp(t_mlx *mlx)
 {
 	int	fd;
@@ -1444,25 +1456,19 @@ void
 	unsigned int	header_size;
 
 	rendering_for_bmp(mlx);
-	if ((fd = open("image.bmp", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU)) < 0)
-		return ; //TODO: error act
+	if ((fd = open("image.bmp", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU)) == -1)
+	{
+		close(fd);
+		free_mlx_map(mlx);
+		return (FALSE);
+	}
 	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h) * (mlx->window.bpp / 8);
 	header_size = 54;
 	make_header(mlx, fd, header_size, img_size);
 	make_img(mlx, fd);
+	free_mlx_map(mlx);
+	free_mlx(mlx, TRUE);
 	exit (0);
-}
-
-int
-	free_mlx(t_mlx *mlx, int ret)
-{
-	free(mlx->conf.path_no);
-	free(mlx->conf.path_so);
-	free(mlx->conf.path_ea);
-	free(mlx->conf.path_we);
-	free(mlx->conf.path_sp);
-	free(mlx->conf.map_str);
-	return (ret);
 }
 
 int
@@ -1495,7 +1501,10 @@ int
 		return (free_mlx(&mlx, ERROR));
 	check_sprite_info(&mlx);
 	if (ac == 3)
-		create_bmp(&mlx);
+	{
+		if (create_bmp(&mlx) == FALSE)
+			return (free_mlx(&mlx, ERROR));
+	}
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);
