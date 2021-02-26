@@ -162,6 +162,7 @@ typedef struct	s_conf
 	int		map_x;
 	float		pl_y;
 	float		pl_x;
+	int		rays_free_flag;
 }				t_conf;
 
 typedef struct	s_mlx
@@ -176,5 +177,4 @@ typedef struct	s_mlx
 	t_conf		conf;
 	int			sprite_num;
 	t_tex		tex[5];
-	int			flag;
 }				t_mlx;

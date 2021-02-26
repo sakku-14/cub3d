@@ -61,6 +61,13 @@ void
 	mlx->conf.map = NULL;
 }
 
+void
+	free_rays(t_mlx *mlx)
+{
+	free(mlx->rays);
+	mlx->rays = NULL;
+}
+
 int
 	free_mlx(t_mlx *mlx, int ret)
 {
@@ -70,6 +77,8 @@ int
 	free(mlx->conf.path_we);
 	free(mlx->conf.path_sp);
 	free(mlx->conf.map_str);
+	if (mlx->conf.cub_flag[0] == 1)
+		free_rays(mlx);
 	return (ret);
 }
 
@@ -86,7 +95,7 @@ void
 	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
 	mlx->player.width = 4;
 	mlx->player.height = 4;
-	mlx->player.walk_speed = 5;
+	mlx->player.walk_speed = 3;
 	mlx->player.turn_speed = 4 * (PI / 180);
 }
 
@@ -1149,83 +1158,83 @@ int
 		}
 		else if (ft_strnstr(line, "R", 1))
 		{
-			flag++;
-			mlx->conf.cub_flag[0] = 1;
 			if (pack_win_size(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[0] = 1;
 		}
 		else if (ft_strnstr(line, "NO", 2))
 		{
-			flag++;
-			mlx->conf.cub_flag[1] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[1] = 1;
 		}
 		else if (ft_strnstr(line, "SO", 2))
 		{
-			flag++;
-			mlx->conf.cub_flag[2] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[2] = 1;
 		}
 		else if (ft_strnstr(line, "EA", 2))
 		{
-			flag++;
-			mlx->conf.cub_flag[3] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[3] = 1;
 		}
 		else if (ft_strnstr(line, "WE", 2))
 		{
-			flag++;
-			mlx->conf.cub_flag[4] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[4] = 1;
 		}
 		else if (ft_strnstr(line, "S", 1))
 		{
-			flag++;
-			mlx->conf.cub_flag[5] = 1;
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[5] = 1;
 		}
 		else if (ft_strnstr(line, "F", 1))
 		{
-			flag++;
-			mlx->conf.cub_flag[6] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[6] = 1;
 		}
 		else if (ft_strnstr(line, "C", 1))
 		{
-			flag++;
-			mlx->conf.cub_flag[7] = 1;
 			if (pack_rgb(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
 				return (error_mes("Error: invalid configure\n", FALSE));
 			}
+			flag++;
+			mlx->conf.cub_flag[7] = 1;
 		}
 		else
 		{
