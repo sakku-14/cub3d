@@ -1374,6 +1374,8 @@ int
 	int i;
 
 	i = 0;
+	if (!av || !av[i])
+		return (FALSE);
 	while (av[i])
 	{
 		if (av[i] == '.')
