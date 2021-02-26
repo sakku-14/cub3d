@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 13:39:50 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/02/26 10:26:34 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/02/26 10:29:27 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	gnl_overwite(char **save, char **line, char *buf)
 	if (!(*line = malloc(sizeof(char) * (len + 1))))
 		return (gnl_erroract(save, NULL, buf));
 	ft_strlcpy_gnl(*line, *save, len + 1);
-	len_after = ft_strlen(*save + len + 1);
+	len_after = ft_strlen_gnl(*save + len + 1);
 	if (!(tmp = malloc(sizeof(char) * (len_after + 1))))
 		return (gnl_erroract(save, line, buf));
 	ft_strlcpy_gnl(tmp, *save + len + 1, len_after + 1);
@@ -54,7 +54,7 @@ static int	gnl_attach(char *buf, char **save, ssize_t len)
 	size_t	ori_len;
 	char	*tmp;
 
-	ori_len = ft_strlen(*save);
+	ori_len = ft_strlen_gnl(*save);
 	if (!(tmp = malloc(sizeof(char) * (ori_len + len + 1))))
 		return (1);
 	ft_strlcpy_gnl(tmp, *save, ori_len + 1);
@@ -68,7 +68,7 @@ static int	gnl_lastact(char **save, char **line, char *buf)
 {
 	size_t	len;
 
-	len = ft_strlen(*save);
+	len = ft_strlen_gnl(*save);
 	if (!(*line = malloc(sizeof(char) * (len + 1))))
 		return (gnl_erroract(save, NULL, buf));
 	ft_strlcpy_gnl(*line, *save, len + 1);
@@ -92,7 +92,7 @@ int			get_next_line(int fd, char **line)
 			return (-1);
 	if (!(buf = malloc(BUFFER_SIZE)))
 		return (gnl_erroract(&save[fd], NULL, NULL));
-	if (ft_memchr_gnl(save[fd], '\n', ft_strlen(save[fd])))
+	if (ft_memchr_gnl(save[fd], '\n', ft_strlen_gnl(save[fd])))
 		return (gnl_overwite(&save[fd], line, buf));
 	while ((len = read(fd, buf, BUFFER_SIZE)) >= 0)
 	{
