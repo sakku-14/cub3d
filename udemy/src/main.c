@@ -10,13 +10,11 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "constants.h"
 
-/*
 __attribute__((destructor))
 void    end()
 {
     system("leaks raycast");
 }
-*/
 
 int
 	error_mes(char *str, int ret)
@@ -608,13 +606,17 @@ void
 	}
 }
 
-void
+int
 	setting_window(t_mlx *mlx)
 {
 	int x = -1;
 	int y = -1;
 
-	mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w, mlx->conf.win_h);
+	if (!(mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w, mlx->conf.win_h)))
+	{
+		free_mlx_map(mlx);
+		return (FALSE);
+	}
 	mlx->window.data = (int *)mlx_get_data_addr(mlx->window.img_ptr, &(mlx->window.bpp), &(mlx->window.size_l), &(mlx->window.endian));
 	while (++y < mlx->conf.win_h)
 	{
@@ -624,6 +626,7 @@ void
 			mlx->window.data[y * (mlx->window.size_l / 4) + x] = 0x000000;
 		}
 	}
+	return (TRUE);
 }
 
 void
@@ -642,7 +645,6 @@ int
 	rendering_loop(t_mlx *mlx)
 {
 	move(mlx);
-	setting_window(mlx);
 	cast_all_rays(mlx);
 	get_info_sprite(mlx);
 	sort_sprite_structure(mlx);
@@ -660,7 +662,6 @@ int
 	rendering_for_bmp(t_mlx *mlx)
 {
 	move(mlx);
-	setting_window(mlx);
 	cast_all_rays(mlx);
 	get_info_sprite(mlx);
 	sort_sprite_structure(mlx);
@@ -864,6 +865,14 @@ int
 }
 
 int
+	get_ray_size(t_mlx *mlx)
+{
+	if (!(mlx->rays = malloc(sizeof(t_rays) * (mlx->conf.win_w + 1))))
+		return (FALSE);
+	return (TRUE);
+}
+
+int
 	pack_win_size(t_mlx *mlx, char *line)
 {
 	char	**strs;
@@ -883,6 +892,8 @@ int
 		return (free_strs(strs, num, FALSE));
 	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
 	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
+	if (get_ray_size(mlx) == FALSE)
+		return (free_strs(strs, num, FALSE));
 	free_str_safe(line);
 	return (free_strs(strs, num, TRUE));
 }
@@ -1344,18 +1355,18 @@ int
 	int false_checker = -1;
 
 	put_grid_to_container(mlx, cont_p, y, x);
-	printf("\n***origin map packed in container***\n");
-	print_map(cont_p, y, x);
+//	printf("\n***origin map packed in container***\n");
+//	print_map(cont_p, y, x);
 	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
 		return (error_mes("Error: Player does not exist or more than 2 players on the map\n", FALSE));
 	}
-	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
-	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
+//	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
+//	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
 	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
-	printf("***map filled by p***\n");
-	print_map(cont_p, y, x);
+//	printf("***map filled by p***\n");
+//	print_map(cont_p, y, x);
 	if (false_checker == 1)
 	{
 		free_mlx_map(mlx);
@@ -1505,6 +1516,8 @@ int
 //	if (setting_ray_point(&mlx) == FALSE)
 //		return (free_mlx(&mlx, ERROR));
 	if (setting_img(&mlx) == FALSE)
+		return (free_mlx(&mlx, ERROR));
+	if (setting_window(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
 	check_sprite_info(&mlx);
 	if (ac == 3)

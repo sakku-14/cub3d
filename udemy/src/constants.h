@@ -19,7 +19,6 @@
 #define TEXTURE_HEIGHT	64
 
 #define FOV_ANGLE	(60 * (M_PI / 180))
-#define NUM_RAYS	9000
 
 #define X_EVENT_KEY_PRESS	2
 #define X_EVENT_KEY_RELEASE	3
@@ -172,9 +171,10 @@ typedef struct	s_mlx
 	t_player	player;
 	t_window	window;
 	t_map		map;
-	t_rays		rays[NUM_RAYS];
+	t_rays		*rays;
 	t_sprites	*sprite;
 	t_conf		conf;
 	int			sprite_num;
 	t_tex		tex[5];
+	int			flag;
 }				t_mlx;
