@@ -882,6 +882,23 @@ int
 }
 
 int
+	is_all_digit(char *str)
+{
+	int len;
+	int i;
+
+	len = ft_strlen(str);
+	i = 0;
+	while (i < len)
+	{
+		if (!ft_isdigit(str[i]))
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
+
+int
 	pack_win_size(t_mlx *mlx, char *line)
 {
 	char	**strs;
@@ -894,6 +911,8 @@ int
 	if (num != 3)
 		return (free_strs(strs, num, FALSE));
 	if (ft_strlen(strs[0]) != 1)
+		return (free_strs(strs, num, FALSE));
+	if (!is_all_digit(strs[1]) || !is_all_digit(strs[2]))
 		return (free_strs(strs, num, FALSE));
 	mlx->conf.win_w = ft_atoi(strs[1]);
 	mlx->conf.win_h = ft_atoi(strs[2]);
