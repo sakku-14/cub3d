@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 13:43:34 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/02/26 10:26:32 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/02/26 10:55:26 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ size_t	ft_strlen_gnl(const char *s)
 	size_t len;
 
 	len = 0;
-	if (!s && !(*s))
+	if (!s || !(*s))
 		return (len);
 	while (*s++)
 		len++;
