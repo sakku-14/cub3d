@@ -417,7 +417,7 @@ int
 		if (!(mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR)))
 		{
 			free_mlx_map(mlx);
-			return (error_mes("Error: false mlx_new_image for ray image\n", FALSE));
+			return (error_mes("Error\n false mlx_new_image for ray image\n", FALSE));
 		}
 		mlx->rays[i].data = (int *)mlx_get_data_addr(mlx->rays[i].img_ptr, &(mlx->rays[i].bpp), &(mlx->rays[i].size_l), &(mlx->rays[i].endian));
 		y = -1;
@@ -702,7 +702,7 @@ int
 	if(!(mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w / MINIMAP_SCALE_FACTOR, mlx->conf.win_h / MINIMAP_SCALE_FACTOR)))
 	{
 		free_mlx_map(mlx);
-		return (error_mes("Error: false mlx_new_image for map image\n", FALSE));
+		return (error_mes("Error\n false mlx_new_image for map image\n", FALSE));
 	}
 	mlx->map.data = (int *)mlx_get_data_addr(mlx->map.img_ptr, &(mlx->map.bpp), &(mlx->map.size_l), &(mlx->map.endian));
 	while (++y < mlx->conf.win_h / MINIMAP_SCALE_FACTOR)
@@ -731,7 +731,7 @@ int
 	if (!(mlx->player.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width, mlx->player.height)))
 	{
 		free_mlx_map(mlx);
-		return (error_mes("Error: false mlx_new_image for player image\n", FALSE));
+		return (error_mes("Error\n false mlx_new_image for player image\n", FALSE));
 	}
 	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.img_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
 	while (++y < mlx->player.height)
@@ -794,7 +794,7 @@ int
 	if (!check_path_available(mlx))
 	{
 		free_mlx_map(mlx);
-		return (error_mes("Error: invalid path of texture\n", FALSE));
+		return (error_mes("Error\n invalid path of texture\n", FALSE));
 	}
 	//TODO: mlx_xpm_file_to_image leak対応
 	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
@@ -1077,7 +1077,7 @@ int
 	if (mlx->conf.cub_flag[8] == 1)
 	{
 		if (!(mlx->conf.map_str = malloc(sizeof(char))))
-			return (error_mes("Error: could not malloc for map_str\n", FALSE));
+			return (error_mes("Error\n could not malloc for map_str\n", FALSE));
 		*(mlx->conf.map_str) = '\0';
 	}
 	mlx->conf.cub_flag[8]++;
@@ -1149,14 +1149,14 @@ int
 	char *tmp;
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-		return (error_mes("Error: invalid fd\n", FALSE));
+		return (error_mes("Error\n invalid fd\n", FALSE));
 	flag = 0;
 	mlx->conf.map_y = 0;
 	mlx->conf.map_x = 0;
 	while ((res = get_next_line(fd, &line)))
 	{
 		if (res == -1)
-			return (error_mes("Error: some error while gnl working\n", FALSE));
+			return (error_mes("Error\n some error while gnl working\n", FALSE));
 		if (!*line)
 		{
 			free_str_safe(line);
@@ -1173,7 +1173,7 @@ int
 			if (check_is_map(line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: map is not made by map element\n", FALSE));
+				return (error_mes("Error\n map is not made by map element\n", FALSE));
 			}
 			flag = 9;
 			mlx->conf.cub_flag[8]++;
@@ -1189,7 +1189,7 @@ int
 			if (pack_win_size(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[0] = 1;
@@ -1199,7 +1199,7 @@ int
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[1] = 1;
@@ -1209,7 +1209,7 @@ int
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[2] = 1;
@@ -1219,7 +1219,7 @@ int
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[3] = 1;
@@ -1229,7 +1229,7 @@ int
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[4] = 1;
@@ -1239,7 +1239,7 @@ int
 			if (pack_path(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[5] = 1;
@@ -1249,7 +1249,7 @@ int
 			if (pack_rgb(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[6] = 1;
@@ -1259,7 +1259,7 @@ int
 			if (pack_rgb(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
-				return (error_mes("Error: invalid configure\n", FALSE));
+				return (error_mes("Error\n invalid configure\n", FALSE));
 			}
 			flag++;
 			mlx->conf.cub_flag[7] = 1;
@@ -1267,7 +1267,7 @@ int
 		else
 		{
 			free_str_safe(line);
-			return (error_mes("Error: invalid configure\n", FALSE));
+			return (error_mes("Error\n invalid configure\n", FALSE));
 		}
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
@@ -1397,7 +1397,7 @@ int
 	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
-		return (error_mes("Error: Player does not exist or more than 2 players on the map\n", FALSE));
+		return (error_mes("Error\n Player does not exist or more than 2 players on the map\n", FALSE));
 	}
 //	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
 //	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
@@ -1408,7 +1408,7 @@ int
 	{
 		free_mlx_map(mlx);
 		free_str_safe(cont_p);
-		return (error_mes("Error: Map is not sorrounded by wall.\n", FALSE));
+		return (error_mes("Error\n Map is not sorrounded by wall.\n", FALSE));
 	}
 	mlx->conf.pl_y = player_y - 1;
 	mlx->conf.pl_x = player_x - 1;
@@ -1532,11 +1532,11 @@ int
 	t_mlx	mlx;
 
 	if (ac < 1 || ac > 3)
-		return (error_mes("Error: few args or too many args\n", ERROR));
+		return (error_mes("Error\n few args or too many args\n", ERROR));
 	if (ac == 3 && !save_checker(av[2]))
-		return (error_mes("Error: invalid third arg\n", ERROR));
+		return (error_mes("Error\n invalid third arg\n", ERROR));
 	if (!cub_checker(av[1]))
-		return (error_mes("Error: invalid second arg\n", ERROR));
+		return (error_mes("Error\n invalid second arg\n", ERROR));
 	init_vars(&mlx);
 	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
 	if (get_conf(&mlx, av[1]) == FALSE)
