@@ -85,7 +85,7 @@ int
 		free(mlx->conf.path_we);
 	if (mlx->conf.cub_flag[5])
 		free(mlx->conf.path_sp);
-	if (mlx->conf.cub_flag[6])
+	if (mlx->conf.cub_flag[8])
 		free(mlx->conf.map_str);
 	return (ret);
 }
@@ -1080,6 +1080,7 @@ int
 			return (error_mes("Error: could not malloc for map_str\n", FALSE));
 		*(mlx->conf.map_str) = '\0';
 	}
+	mlx->conf.cub_flag[8]++;
 	len = ft_strlen(line);
 	mlx->conf.map_x = max_len(mlx->conf.map_x, len);
 	tmp = mlx->conf.map_str;
@@ -1175,7 +1176,7 @@ int
 				return (error_mes("Error: map is not made by map element\n", FALSE));
 			}
 			flag = 9;
-			mlx->conf.cub_flag[8] += 1;
+			mlx->conf.cub_flag[8]++;
 			if (pack_map_str(mlx, line) == FALSE)
 			{
 				free_str_safe(line);
