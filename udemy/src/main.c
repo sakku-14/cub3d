@@ -10,11 +10,13 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "constants.h"
 
+/*
 __attribute__((destructor))
 void    end()
 {
     system("leaks raycast");
 }
+*/
 
 int
 	error_mes(char *str, int ret)
@@ -71,14 +73,20 @@ void
 int
 	free_mlx(t_mlx *mlx, int ret)
 {
-	free(mlx->conf.path_no);
-	free(mlx->conf.path_so);
-	free(mlx->conf.path_ea);
-	free(mlx->conf.path_we);
-	free(mlx->conf.path_sp);
-	free(mlx->conf.map_str);
 	if (mlx->conf.cub_flag[0] == 1)
 		free_rays(mlx);
+	if (mlx->conf.cub_flag[1])
+		free(mlx->conf.path_no);
+	if (mlx->conf.cub_flag[2])
+		free(mlx->conf.path_so);
+	if (mlx->conf.cub_flag[3])
+		free(mlx->conf.path_ea);
+	if (mlx->conf.cub_flag[4])
+		free(mlx->conf.path_we);
+	if (mlx->conf.cub_flag[5])
+		free(mlx->conf.path_sp);
+	if (mlx->conf.cub_flag[6])
+		free(mlx->conf.map_str);
 	return (ret);
 }
 
