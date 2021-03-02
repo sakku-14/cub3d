@@ -1545,11 +1545,8 @@ int
 	if (setting_window(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
 	check_sprite_info(&mlx);
-	if (ac == 3)
-	{
-		if (create_bmp(&mlx) == FALSE)
-			return (free_mlx(&mlx, ERROR));
-	}
+	if (ac == 3 && create_bmp(&mlx) == FALSE)
+		return (free_mlx(&mlx, ERROR));
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
 	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);
