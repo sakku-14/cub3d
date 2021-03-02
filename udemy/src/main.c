@@ -47,7 +47,6 @@ int
 void
 	free_mlx_map(t_mlx *mlx)
 {
-//	free_strs(mlx->conf.map, mlx->conf.map_y, 1);
 	int i;
 
 	i = mlx->conf.map_y;
@@ -152,6 +151,7 @@ int
 	return (TRUE);
 }
 
+/*
 void
 	put_line(t_mlx *mlx)
 {
@@ -170,7 +170,9 @@ void
 		r++;
 	}
 }
+*/
 
+// TODO: make short
 void
 	move(t_mlx *mlx)
 {
@@ -251,6 +253,7 @@ void
 	}
 }
 
+// TODO: make short
 void 
 	cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 {
@@ -398,6 +401,7 @@ void
 	}
 }
 
+/*
 int
 	setting_ray_point(t_mlx *mlx)
 {
@@ -426,7 +430,9 @@ int
 	}
 	return (TRUE);
 }
+*/
 
+/*
 void
 	put_rays(t_mlx *mlx)
 {
@@ -434,18 +440,19 @@ void
 
 	while (i < mlx->conf.win_w)
 	{
-		/*
+		// all ray put func from here
 		r = 0;
 		while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
 		{
 			mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
 			r++;
 		}
-		*/
+		// till here
 		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, (mlx->rays[i].wall_hit_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->rays[i].wall_hit_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
 		i++;
 	}
 }
+*/
 
 void
 	get_info_sprite(t_mlx *mlx)
@@ -475,10 +482,14 @@ void
 	}
 }
 
+// TODO: make short
 void
 	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
 {
-	int mid, i, j, k;
+	int mid
+	int i
+	int j
+	int k;
 	t_sprites	tmp[mlx->sprite_num];
 
 	if (left >= right)
@@ -513,12 +524,14 @@ void
 	}
 }
 
+// TODO: check if needed
 void
 	sort_sprite_structure(t_mlx *mlx)
 {
 	mergesort_sprite_structure(mlx, 0, mlx->sprite_num - 1);
 }
 
+// TODO: make short
 void
 	generate_3d_projection(t_mlx *mlx)
 {
@@ -685,6 +698,7 @@ int
 	return (TRUE);
 }
 
+/*
 int
 	setting_map(t_mlx *mlx)
 {
@@ -713,7 +727,8 @@ int
 	}
 	return (TRUE);
 }
-
+*/
+/*
 int
 	setting_player(t_mlx *mlx)
 {
@@ -737,6 +752,7 @@ int
 	}
 	return (TRUE);
 }
+*/
 
 int
 	check_path_available(t_mlx *mlx)
@@ -772,6 +788,7 @@ int
 	return (ret);
 }
 
+// TODO: make short
 int
 	setting_img(t_mlx *mlx)
 {
@@ -798,6 +815,7 @@ int
 	return (TRUE);
 }
 
+// TODO: make short
 void
 	check_sprite_info(t_mlx *mlx)
 {
@@ -922,6 +940,7 @@ int
 	return (free_strs(strs, num, TRUE));
 }
 
+// TODO: make short
 int
 	pack_path(t_mlx *mlx, char *line)
 {
@@ -956,6 +975,7 @@ int
 	return (free_strs(strs, num, TRUE));
 }
 
+// TODO: make short
 int
 	check_rgb_available(char **strs, t_mlx *mlx)
 {
@@ -963,7 +983,6 @@ int
 	int j;
 
 	i = 0;
-	j = 0;
 	while (i < 3)
 	{
 		j = 0;
@@ -988,6 +1007,7 @@ int
 	return (TRUE);
 }
 
+// TODO: make short
 int
 	pack_rgb(t_mlx *mlx, char *line)
 {
@@ -1127,6 +1147,7 @@ int
 	return (TRUE);
 }
 
+// TODO: make short
 int
 	get_conf(t_mlx *mlx, char *file_name)
 {
@@ -1336,11 +1357,15 @@ void
 	}
 }
 
+// TODO: make short
 int
 	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_mlx *mlx)
 {
-	int i = 0, j = 0;
-	int player_counter = 0;
+	int i;
+	int j;
+	int player_counter;
+	i = 0;
+	player_counter = 0;
 	while (i < y)
 	{
 		j = 0;
@@ -1380,18 +1405,12 @@ int
 	int false_checker = -1;
 
 	put_grid_to_container(mlx, cont_p, y, x);
-//	printf("\n***origin map packed in container***\n");
-//	print_map(cont_p, y, x);
 	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
 		return (error_mes("Error\n Player does not exist or more than 2 players on the map\n", FALSE));
 	}
-//	printf("\nplayer position:(%d, %d)\n\n", player_y, player_x);
-//	printf("\nmap scale:(%d, %d)\n\n", mlx->conf.map_y, mlx->conf.map_x);
 	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
-//	printf("***map filled by p***\n");
-//	print_map(cont_p, y, x);
 	if (false_checker == 1)
 	{
 		free_mlx_map(mlx);
