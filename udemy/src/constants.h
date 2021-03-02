@@ -158,6 +158,7 @@ typedef struct	s_conf
 	int		cub_flag[9];
 	char	*map_str;
 	char	**map;
+	char	*cont_p;
 	int		map_y;
 	int		map_x;
 	float		pl_y;

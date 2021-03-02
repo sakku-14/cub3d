@@ -1360,7 +1360,7 @@ void
 // TODO: make short
 //	decrease arguments num to under 4
 int
-	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_mlx *mlx)
+	pick_player_pl(char *cont_p, int x, int *player_y, int *player_x, t_mlx *mlx)
 {
 	int i;
 	int j;
@@ -1406,7 +1406,7 @@ int
 	int false_checker = -1;
 
 	put_grid_to_container(mlx, cont_p, y, x);
-	if (!pick_player_pl(cont_p, y, x, &player_y, &player_x, mlx))
+	if (!pick_player_pl(cont_p, x, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
 		return (error_mes("Error\n Player does not exist or more than 2 players on the map\n", FALSE));
