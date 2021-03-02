@@ -10,13 +10,11 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "constants.h"
 
-/*
 __attribute__((destructor))
 void    end()
 {
-    system("leaks raycast");
+    system("leaks cub3D");
 }
-*/
 
 int
 	error_mes(char *str, int ret)
@@ -242,9 +240,6 @@ void
 		return ;
 	x_to_check = floor(x / TILE_SIZE);
 	y_to_check = floor(y / TILE_SIZE);
-	// check below
-//	if ((int)y_to_check < 0 || (int)x_to_check < 0 || (int)y_to_check >= mlx->conf.map_y || (int)x_to_check >= mlx->conf.map_x)
-//		printf("line 171:y:%d, x:%d\n", (int)y_to_check, (int)x_to_check);
 	if (!((int)y_to_check < 0 || (int)x_to_check < 0 || (int)y_to_check >= mlx->conf.map_y || (int)x_to_check >= mlx->conf.map_x))
 	{
 		if ((mlx->conf.map)[(int)y_to_check][(int)x_to_check] == '2')
@@ -298,8 +293,6 @@ void
 			horz_wall_hit_x = next_horz_touch_x;
 			horz_wall_hit_y = next_horz_touch_y;
 			// TODO: check below
-//			if ((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x)
-//				printf("line 223(horz): y:%d, x:%d\n", (int)floor(y_to_check / TILE_SIZE), (int)floor(x_to_check / TILE_SIZE));
 			if (!((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
 				horz_wall_content = (mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
 			else
@@ -769,20 +762,14 @@ int
 		i++;
 	}
 	return (TRUE);
+}
 
-	/*
-	if (open(mlx->conf.path_no, O_RDONLY) == -1)
-		return (FALSE);
-	if (open(mlx->conf.path_so, O_RDONLY) == -1)
-		return (FALSE);
-	if (open(mlx->conf.path_ea, O_RDONLY) == -1)
-		return (FALSE);
-	if (open(mlx->conf.path_we, O_RDONLY) == -1)
-		return (FALSE);
-	if (open(mlx->conf.path_sp, O_RDONLY) == -1)
-		return (FALSE);
-	return (TRUE);
-	*/
+int
+	free_map_ret_error(t_mlx *mlx, char *str, int ret)
+{
+	free_mlx_map(mlx);
+	error_mes(str, ret);
+	return (ret);
 }
 
 int
@@ -792,20 +779,21 @@ int
 	int height = TEXTURE_HEIGHT;
 
 	if (!check_path_available(mlx))
-	{
-		free_mlx_map(mlx);
-		return (error_mes("Error\n invalid path of texture\n", FALSE));
-	}
-	//TODO: mlx_xpm_file_to_image leak対応
-	mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height);
+		return (free_map_ret_error(mlx, "Error\n invalid path of texture\n", FALSE));
+	if (!(mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
 	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
-	mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height);
+	if (!(mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
 	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
-	mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_ea, &width, &height);
+	if (!(mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_ea, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
 	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
-	mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_we, &width, &height);
+	if (!(mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_we, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
 	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
-	mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_sp, &width, &height);
+	if (!(mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_sp, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
 	mlx->tex[4].data = (int *)mlx_get_data_addr(mlx->tex[4].img_ptr, &(mlx->tex[4].bpp), &(mlx->tex[4].size_l), &(mlx->tex[4].endian));
 	return (TRUE);
 }
