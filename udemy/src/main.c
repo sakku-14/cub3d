@@ -1519,12 +1519,10 @@ int
 {
 	t_mlx	mlx;
 
-	if (ac < 1 || ac > 3)
+	if (ac <= 1 || ac > 3)
 		return (error_mes("Error\n few args or too many args\n", ERROR));
-	if (ac == 3 && !save_checker(av[2]))
-		return (error_mes("Error\n invalid third arg\n", ERROR));
-	if (!cub_checker(av[1]))
-		return (error_mes("Error\n invalid second arg\n", ERROR));
+	if ((ac == 3 && !save_checker(av[2])) || (ac == 3 && !save_checker(av[2])))
+		return (error_mes("Error\n invalid args\n", ERROR));
 	init_vars(&mlx);
 	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
 	if (get_conf(&mlx, av[1]) == FALSE)
@@ -1532,18 +1530,17 @@ int
 	if (check_map(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
 	mlx_conf(&mlx);
-	if (!(initialize_window(&mlx)))
+	if (!(initialize_window(&mlx)) || setting_img(&mlx) == FALSE \
+		|| setting_window(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
+/*
 //	if (setting_map(&mlx) == FALSE)
 //		return (free_mlx(&mlx, ERROR));
 //	if (setting_player(&mlx) == FALSE)
 //		return (free_mlx(&mlx, ERROR));
 //	if (setting_ray_point(&mlx) == FALSE)
 //		return (free_mlx(&mlx, ERROR));
-	if (setting_img(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
-	if (setting_window(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
+*/
 	check_sprite_info(&mlx);
 	if (ac == 3 && create_bmp(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
