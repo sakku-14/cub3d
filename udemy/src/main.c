@@ -486,9 +486,9 @@ void
 void
 	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
 {
-	int mid
-	int i
-	int j
+	int mid;
+	int i;
+	int j;
 	int k;
 	t_sprites	tmp[mlx->sprite_num];
 
