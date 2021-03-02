@@ -1358,6 +1358,7 @@ void
 }
 
 // TODO: make short
+//	decrease arguments num to under 4
 int
 	pick_player_pl(char *cont_p, int y, int x, int *player_y, int *player_x, t_mlx *mlx)
 {
