@@ -1318,7 +1318,6 @@ void
 	printf("\n");
 }
 
-//	decrease arguments num to under 4
 void
 	check_fill(char *map_p, int p_y, int p_x, t_mlx *mlx)
 {
@@ -1340,20 +1339,23 @@ void
 }
 
 void
-	put_grid_to_container(t_mlx *mlx, char *cont_p, int y, int x)
+	put_grid_to_container(t_mlx *mlx, char *cont_p)
 {
-	int i = 0, j = 0;
-	while (i < y)
+	int i;
+	int j;
+
+	i = 0;
+	while (i < mlx->conf.map_y + 2)
 	{
 		j = 0;
-		while (j < x)
+		while (j < mlx->conf.map_x + 2)
 		{
-			if (i == 0 || i == y - 1 || j == 0 || j == x - 1)
-				cont_p[i * x + j] = 'X';
-			else if (i > y - 2 || j > x - 2 || (mlx->conf.map)[i - 1][j - 1] == ' ')
-				cont_p[i * x + j] = 's';
+			if (i == 0 || i == mlx->conf.map_y + 1 || j == 0 || j == mlx->conf.map_x + 1)
+				cont_p[i * (mlx->conf.map_x + 2) + j] = 'X';
+			else if (i > mlx->conf.map_y || j > mlx->conf.map_x || (mlx->conf.map)[i - 1][j - 1] == ' ')
+				cont_p[i * (mlx->conf.map_x + 2) + j] = 's';
 			else
-				cont_p[i * x + j] = (mlx->conf.map)[i - 1][j - 1];
+				cont_p[i * (mlx->conf.map_x + 2) + j] = (mlx->conf.map)[i - 1][j - 1];
 			j++;
 		}
 		i++;
@@ -1404,12 +1406,12 @@ int
 int
 	check_map(t_mlx *mlx)
 {
-	int player_x, player_y;
-	int y = mlx->conf.map_y + 2;
-	int x = mlx->conf.map_x + 2;
-	char *cont_p = malloc(sizeof(char) * (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
+	int player_x;
+	int player_y;
+	char *cont_p;
 
-	put_grid_to_container(mlx, cont_p, y, x);
+	cont_p = malloc(sizeof(char) * (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
+	put_grid_to_container(mlx, cont_p);
 	if (!pick_player_pl(cont_p, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
