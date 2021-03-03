@@ -1321,14 +1321,18 @@ void
 void
 	check_fill(char *map_p, int p_y, int p_x, t_mlx *mlx)
 {
-	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'p' || map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '1' || map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '3' || mlx->conf.map_check_flag == 1)
+	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'p' \
+			|| map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '1' \
+			|| map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '3' \
+			|| mlx->conf.map_check_flag == 1)
 		return ;
 	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'X')
 	{
 		mlx->conf.map_check_flag = 1;
 		return ;
 	}
-	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '0' || map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 's')
+	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '0' \
+			|| map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 's')
 		map_p[p_y * (mlx->conf.map_x + 2) + p_x] = 'p';
 	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '2')
 		map_p[p_y * (mlx->conf.map_x + 2) + p_x] = '3';
@@ -1350,12 +1354,15 @@ void
 		j = 0;
 		while (j < mlx->conf.map_x + 2)
 		{
-			if (i == 0 || i == mlx->conf.map_y + 1 || j == 0 || j == mlx->conf.map_x + 1)
+			if (i == 0 || i == mlx->conf.map_y + 1 || j == 0 \
+					|| j == mlx->conf.map_x + 1)
 				cont_p[i * (mlx->conf.map_x + 2) + j] = 'X';
-			else if (i > mlx->conf.map_y || j > mlx->conf.map_x || (mlx->conf.map)[i - 1][j - 1] == ' ')
+			else if (i > mlx->conf.map_y || j > mlx->conf.map_x \
+					|| (mlx->conf.map)[i - 1][j - 1] == ' ')
 				cont_p[i * (mlx->conf.map_x + 2) + j] = 's';
 			else
-				cont_p[i * (mlx->conf.map_x + 2) + j] = (mlx->conf.map)[i - 1][j - 1];
+				cont_p[i * (mlx->conf.map_x + 2) + j] \
+					= (mlx->conf.map)[i - 1][j - 1];
 			j++;
 		}
 		i++;
