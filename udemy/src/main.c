@@ -1009,6 +1009,19 @@ int
 	return (TRUE);
 }
 
+int
+	count_strs(char **strs, int i)
+{
+	int counter;
+
+	counter = i;
+	if (!strs || !strs[counter])
+		return (counter);
+	while (strs[counter])
+		counter++;
+	return (counter);
+}
+
 // TODO: make short
 int
 	pack_rgb(t_mlx *mlx, char *line)
@@ -1018,15 +1031,17 @@ int
 	int		num;
 
 	sub_strs = ft_split(line, ' ');
-	num = 0;
+	num = count_strs(sub_strs, 0);
+/*	num = 0;
 	while (sub_strs[num])
-		num++;
+		num++;*/
 	if (num != 2)
 		return (free_strs(sub_strs, num, FALSE));
 	strs = ft_split(sub_strs[1], ',');
-	num = 0;
+	num = count_strs(strs, 0);
+/*	num = 0;
 	while (strs[num])
-		num++;
+		num++;*/
 	if (num != 3)
 	{
 		free_strs(sub_strs, 2, 0);
@@ -1087,7 +1102,8 @@ int
 	if (mlx->conf.cub_flag[8] == 1)
 	{
 		if (!(mlx->conf.map_str = malloc(sizeof(char))))
-			return (error_mes("Error\n could not malloc for map_str\n", FALSE));
+			return (error_mes("Error\n could not malloc for map_str\n"\
+			, FALSE));
 		*(mlx->conf.map_str) = '\0';
 	}
 	mlx->conf.cub_flag[8]++;
