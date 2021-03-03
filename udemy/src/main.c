@@ -10,11 +10,13 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "constants.h"
 
+/*
 __attribute__((destructor))
 void    end()
 {
     system("leaks cub3D");
 }
+*/
 
 int
 	error_mes(char *str, int ret)
@@ -1047,7 +1049,7 @@ int
 		free_strs(sub_strs, 2, 0);
 		return (free_strs(strs, num, FALSE));
 	}
-	if (!check_rgb_available(strs, mlx))
+	if ((mlx->conf.cub_flag[6] || mlx->conf.cub_flag[7]) && !check_rgb_available(strs, mlx))
 	{
 		free_strs(sub_strs, 2, 0);
 		return (free_strs(strs, num, FALSE));
@@ -1316,6 +1318,7 @@ void
 	printf("\n");
 }
 
+//	decrease arguments num to under 4
 void
 	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
 {
@@ -1358,16 +1361,18 @@ void
 }
 
 // TODO: make short
-//	decrease arguments num to under 4
 int
-	pick_player_pl(char *cont_p, int x, int *player_y, int *player_x, t_mlx *mlx)
+	pick_player_pl(char *cont_p, int *player_y, int *player_x, t_mlx *mlx)
 {
 	int i;
 	int j;
+	int x;
 	int player_counter;
+
+	x = mlx->conf.map_x + 2;
 	i = 0;
 	player_counter = 0;
-	while (i < y)
+	while (i < mlx->conf.map_y + 2)
 	{
 		j = 0;
 		while (j < x)
@@ -1402,11 +1407,11 @@ int
 	int player_x, player_y;
 	int y = mlx->conf.map_y + 2;
 	int x = mlx->conf.map_x + 2;
-	char *cont_p = malloc(sizeof(char) * y * x);
+	char *cont_p = malloc(sizeof(char) * (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
 	int false_checker = -1;
 
 	put_grid_to_container(mlx, cont_p, y, x);
-	if (!pick_player_pl(cont_p, x, &player_y, &player_x, mlx))
+	if (!pick_player_pl(cont_p, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
 		return (error_mes("Error\n Player does not exist or more than 2 players on the map\n", FALSE));
@@ -1460,6 +1465,7 @@ void
 {
 	int i;
 
+	ft_bzero(mlx, sizeof(t_mlx));
 	i = 0;
 	while (i < 9)
 		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
