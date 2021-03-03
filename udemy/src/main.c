@@ -1362,42 +1362,49 @@ void
 	}
 }
 
-// TODO: make short
+int
+	check_player_exist(char spot, t_mlx *mlx)
+{
+	if (spot == 'N' || spot == 'S' || spot == 'E' || spot == 'W')
+	{
+		if (spot == 'N')
+			mlx->player.rotation_angle = 270 * (PI / 180);
+		else if (spot == 'S')
+			mlx->player.rotation_angle = 90 * (PI / 180);
+		else if (spot == 'E')
+			mlx->player.rotation_angle = 0 * (PI / 180);
+		else if (spot == 'W')
+			mlx->player.rotation_angle = 180 * (PI / 180);
+		mlx->conf.pl_counter++;
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
 int
 	pick_player_pl(char *cont_p, int *player_y, int *player_x, t_mlx *mlx)
 {
 	int i;
 	int j;
 	int x;
-	int player_counter;
 
 	x = mlx->conf.map_x + 2;
 	i = 0;
-	player_counter = 0;
 	while (i < mlx->conf.map_y + 2)
 	{
 		j = 0;
 		while (j < x)
 		{
-			if (cont_p[i * x + j] == 'N' || cont_p[i * x + j] == 'S' || cont_p[i * x + j] == 'E' || cont_p[i * x + j] == 'W')
+			if (check_player_exist(cont_p[i * x + j], mlx) == TRUE)
 			{
-				if (cont_p[i * x + j] == 'N')
-					mlx->player.rotation_angle = 270 * (PI / 180);
-				else if (cont_p[i * x + j] == 'S')
-					mlx->player.rotation_angle = 90 * (PI / 180);
-				else if (cont_p[i * x + j] == 'E')
-					mlx->player.rotation_angle = 0 * (PI / 180);
-				else if (cont_p[i * x + j] == 'W')
-					mlx->player.rotation_angle = 180 * (PI / 180);
 				*player_y = i;
 				*player_x = j;
-				player_counter++;
 			}
 			j++;
 		}
 		i++;
 	}
-	if (player_counter == 1)
+	if (mlx->conf.pl_counter == 1)
 		return (TRUE);
 	free_str_safe(cont_p);
 	return (FALSE);

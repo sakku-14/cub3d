@@ -164,6 +164,7 @@ typedef struct	s_conf
 	int		map_check_flag;
 	float		pl_y;
 	float		pl_x;
+	int		pl_counter;
 	int		rays_free_flag;
 }				t_conf;
 
