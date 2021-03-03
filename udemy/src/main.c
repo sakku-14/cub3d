@@ -1150,6 +1150,7 @@ int
 }
 
 // TODO: make short
+// later..
 int
 	get_conf(t_mlx *mlx, char *file_name)
 {
