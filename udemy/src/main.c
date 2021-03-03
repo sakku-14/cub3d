@@ -1410,12 +1410,14 @@ int
 	int player_y;
 	char *cont_p;
 
-	cont_p = malloc(sizeof(char) * (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
+	cont_p = malloc(sizeof(char) \
+		* (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
 	put_grid_to_container(mlx, cont_p);
 	if (!pick_player_pl(cont_p, &player_y, &player_x, mlx))
 	{
 		free_mlx_map(mlx);
-		return (error_mes("Error\n Player does not exist or more than 2 players on the map\n", FALSE));
+		return (error_mes("Error\n No player or more than 2 players\n" \
+			, FALSE));
 	}
 	check_fill(cont_p, player_y, player_x, mlx);
 	if (mlx->conf.map_check_flag == 1)
