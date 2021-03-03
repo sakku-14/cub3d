@@ -1553,10 +1553,9 @@ int
 	if ((ac == 3 && !save_checker(av[2])) || (ac == 3 && !save_checker(av[2])))
 		return (error_mes("Error\n invalid args\n", ERROR));
 	init_vars(&mlx);
-	mlx_get_screen_size(mlx.mlx_ptr, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
-	if (get_conf(&mlx, av[1]) == FALSE)
-		return (free_mlx(&mlx, ERROR));
-	if (check_map(&mlx) == FALSE)
+	mlx_get_screen_size(mlx.mlx_ptr \
+		, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
+	if (get_conf(&mlx, av[1]) == FALSE || check_map(&mlx) == FALSE)
 		return (free_mlx(&mlx, ERROR));
 	mlx_conf(&mlx);
 	if (!(initialize_window(&mlx)) || setting_img(&mlx) == FALSE \
