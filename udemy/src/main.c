@@ -1028,24 +1028,15 @@ int
 {
 	char	**sub_strs;
 	char	**strs;
-	int		num;
 
 	sub_strs = ft_split(line, ' ');
-	num = count_strs(sub_strs, 0);
-/*	num = 0;
-	while (sub_strs[num])
-		num++;*/
-	if (num != 2)
-		return (free_strs(sub_strs, num, FALSE));
+	if (count_strs(sub_strs, 0) != 2)
+		return (free_strs(sub_strs, count_strs(sub_strs, 0), FALSE));
 	strs = ft_split(sub_strs[1], ',');
-	num = count_strs(strs, 0);
-/*	num = 0;
-	while (strs[num])
-		num++;*/
-	if (num != 3)
+	if (count_strs(strs, 0) != 3)
 	{
 		free_strs(sub_strs, 2, 0);
-		return (free_strs(strs, num, FALSE));
+		return (free_strs(strs, count_strs(strs, 0), FALSE));
 	}
 	if (ft_strnstr(sub_strs[0], "F", 1) && ft_strlen(sub_strs[0]) == 1)
 	{
@@ -1062,12 +1053,12 @@ int
 	else
 	{
 		free_strs(sub_strs, 2, 0);
-		return (free_strs(strs, num, FALSE));
+		return (free_strs(strs, count_strs(strs, 0), FALSE));
 	}
 	if ((mlx->conf.cub_flag[6] || mlx->conf.cub_flag[7]) && !check_rgb_available(strs, mlx))
 	{
 		free_strs(sub_strs, 2, 0);
-		return (free_strs(strs, num, FALSE));
+		return (free_strs(strs, count_strs(strs, 0), FALSE));
 	}
 	mlx->conf.floor_c = mlx->conf.floor_colors[0];
 	mlx->conf.floor_c = mlx->conf.floor_c << 8;
@@ -1081,7 +1072,7 @@ int
 	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
 	free_strs(sub_strs, 2, 0);
 	free_str_safe(line);
-	return (free_strs(strs, num, TRUE));
+	return (free_strs(strs, count_strs(strs, 0), TRUE));
 }
 
 int
