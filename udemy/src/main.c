@@ -1534,7 +1534,8 @@ int
 		free_mlx_map(mlx);
 		return (FALSE);
 	}
-	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h) * (mlx->window.bpp / 8);
+	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h) \
+		* (mlx->window.bpp / 8);
 	header_size = 54;
 	make_header(mlx, fd, header_size, img_size);
 	make_img(mlx, fd);
