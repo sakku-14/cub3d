@@ -161,6 +161,7 @@ typedef struct	s_conf
 	char	*cont_p;
 	int		map_y;
 	int		map_x;
+	int		map_check_flag;
 	float		pl_y;
 	float		pl_x;
 	int		rays_free_flag;

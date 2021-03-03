@@ -1320,23 +1320,23 @@ void
 
 //	decrease arguments num to under 4
 void
-	check_fill(char *map_p, int y, int x, int p_y, int p_x, int *false_checker)
+	check_fill(char *map_p, int p_y, int p_x, t_mlx *mlx)
 {
-	if (map_p[p_y * x + p_x] == 'p' || map_p[p_y * x + p_x] == '1' || map_p[p_y * x + p_x] == '3' || *false_checker == 1)
+	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'p' || map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '1' || map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '3' || mlx->conf.map_check_flag == 1)
 		return ;
-	if (map_p[p_y * x + p_x] == 'X')
+	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'X')
 	{
-		*false_checker = 1;
+		mlx->conf.map_check_flag = 1;
 		return ;
 	}
-	if (map_p[p_y * x + p_x] == '0' || map_p[p_y * x + p_x] == 's')
-		map_p[p_y * x + p_x] = 'p';
-	if (map_p[p_y * x + p_x] == '2')
-		map_p[p_y * x + p_x] = '3';
-	check_fill(map_p, y, x, p_y - 1, p_x, false_checker);
-	check_fill(map_p, y, x, p_y, p_x + 1, false_checker);
-	check_fill(map_p, y, x, p_y + 1, p_x, false_checker);
-	check_fill(map_p, y, x, p_y, p_x - 1, false_checker);
+	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '0' || map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 's')
+		map_p[p_y * (mlx->conf.map_x + 2) + p_x] = 'p';
+	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '2')
+		map_p[p_y * (mlx->conf.map_x + 2) + p_x] = '3';
+	check_fill(map_p, p_y - 1, p_x, mlx);
+	check_fill(map_p, p_y, p_x + 1, mlx);
+	check_fill(map_p, p_y + 1, p_x, mlx);
+	check_fill(map_p, p_y, p_x - 1, mlx);
 }
 
 void
@@ -1408,7 +1408,6 @@ int
 	int y = mlx->conf.map_y + 2;
 	int x = mlx->conf.map_x + 2;
 	char *cont_p = malloc(sizeof(char) * (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
-	int false_checker = -1;
 
 	put_grid_to_container(mlx, cont_p, y, x);
 	if (!pick_player_pl(cont_p, &player_y, &player_x, mlx))
@@ -1416,8 +1415,8 @@ int
 		free_mlx_map(mlx);
 		return (error_mes("Error\n Player does not exist or more than 2 players on the map\n", FALSE));
 	}
-	check_fill(cont_p, y, x, player_y, player_x, &false_checker);
-	if (false_checker == 1)
+	check_fill(cont_p, player_y, player_x, mlx);
+	if (mlx->conf.map_check_flag == 1)
 	{
 		free_mlx_map(mlx);
 		free_str_safe(cont_p);
