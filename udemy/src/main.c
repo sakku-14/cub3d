@@ -1402,6 +1402,38 @@ void
 		*flag = 10;
 }
 
+int
+	pack_line_each_info(t_mlx *mlx, int *flag, char *line, int *index)
+{
+	if (!*line)
+		pass_empty_line(line, flag);
+	else if (*flag >= 8)
+	{
+		if (check_pack_map_str(mlx, flag, line) == FALSE)
+			return (FALSE);
+	}
+	else if (ft_strnstr(line, "R", 1))
+	{
+		if (pack_win_size(mlx, line) == FALSE)
+			return (free_line_ret_mes(line));
+		(*flag)++;
+		mlx->conf.cub_flag[0] = 1;
+	}
+	else if ((*index = check_texture_line(line)) != FALSE )
+	{
+		if (pack_path_update_flag(mlx, line, flag, *index) == FALSE)
+			return (FALSE);
+	}
+	else if ((*index = check_rgb_line(line)) != FALSE )
+	{
+		if (pack_rgb_update_flag(mlx, line, flag, *index) == FALSE)
+			return (FALSE);
+	}
+	else
+		return (free_line_ret_mes(line));
+	return (TRUE);
+}
+
 // TODO: make short
 // later..
 int
@@ -1420,32 +1452,8 @@ int
 	{
 		if (res == -1)
 			return (error_mes("Error\n some error while gnl working\n", FALSE));
-		if (!*line)
-			pass_empty_line(line, &flag);
-		else if (flag >= 8)
-		{
-			if (check_pack_map_str(mlx, &flag, line) == FALSE)
-				return (FALSE);
-		}
-		else if (ft_strnstr(line, "R", 1))
-		{
-			if (pack_win_size(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[0] = 1;
-		}
-		else if ((index = check_texture_line(line)) != FALSE )
-		{
-			if (pack_path_update_flag(mlx, line, &flag, index) == FALSE)
-				return (FALSE);
-		}
-		else if ((index = check_rgb_line(line)) != FALSE )
-		{
-			if (pack_rgb_update_flag(mlx, line, &flag, index) == FALSE)
-				return (FALSE);
-		}
-		else
-			return (free_line_ret_mes(line));
+		if (pack_line_each_info(mlx, &flag, line, &index) == FALSE)
+			return (FALSE);
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
 	fill_map_space(mlx);
