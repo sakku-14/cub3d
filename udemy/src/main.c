@@ -1000,9 +1000,8 @@ int
 	i = 0;
 	while (i < 3)
 	{
-		if (mlx->conf.floor_colors[i] < 0 || mlx->conf.floor_colors[i] > 255)
-			return (FALSE);
-		if (mlx->conf.ceil_colors[i] < 0 || mlx->conf.ceil_colors[i] > 255)
+		if (mlx->conf.floor_colors[i] < 0 || mlx->conf.floor_colors[i] > 255 \
+			|| mlx->conf.ceil_colors[i] < 0 || mlx->conf.ceil_colors[i] > 255)
 			return (FALSE);
 		i++;
 	}
