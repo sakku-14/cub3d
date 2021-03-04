@@ -1326,6 +1326,74 @@ int
 	return (error_mes("Error\n invalid configure\n", FALSE));
 }
 
+int
+	check_pack_map_str(t_mlx *mlx, int *flag, char *line)
+{
+	if ((mlx->conf.cub_flag[8] == 0 \
+				&& conf_fill_checker(mlx) == FALSE) || *flag == 10)
+		return (free_line_ret_mes(line));
+	if (check_is_map(line) == FALSE)
+	{
+		free_str_safe(line);
+		return (error_mes("Error\n map is not made by map element\n", FALSE));
+	}
+	*flag = 9;
+	mlx->conf.cub_flag[8]++;
+	if (pack_map_str(mlx, line) == FALSE)
+	{
+		free_str_safe(line);
+		return (FALSE);
+	}
+	free_str_safe(line);
+	return (TRUE);
+}
+
+int
+	pack_path_update_flag(t_mlx *mlx, char *line, int *flag, int index)
+{
+	if (pack_path(mlx, line) == FALSE)
+		return (free_line_ret_mes(line));
+	(*flag)++;
+	mlx->conf.cub_flag[index] = 1;
+	return (TRUE);
+}
+
+int
+	pack_rgb_update_flag(t_mlx *mlx, char *line, int *flag, int index)
+{
+	if (pack_rgb(mlx, line) == FALSE)
+		return (free_line_ret_mes(line));
+	(*flag)++;
+	mlx->conf.cub_flag[index] = 1;
+	return (TRUE);
+}
+
+int
+	check_texture_line(char *line)
+{
+	if (ft_strnstr(line, "NO", 2))
+		return (1);
+	else if (ft_strnstr(line, "SO", 2))
+		return (2);
+	else if (ft_strnstr(line, "EA", 2))
+		return (3);
+	else if (ft_strnstr(line, "WE", 2))
+		return (4);
+	else if (ft_strnstr(line, "S", 1))
+		return (5);
+	return (FALSE);
+}
+
+int
+	check_rgb_line(char *line)
+{
+	if (ft_strnstr(line, "F", 1))
+		return (6);
+	else if (ft_strnstr(line, "C", 1))
+		return (7);
+	return (FALSE);
+}
+
 // TODO: make short
 // later..
 int
@@ -1334,6 +1402,7 @@ int
 	int fd;
 	int res;
 	int flag;
+	int index;
 	char *line;
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
@@ -1351,21 +1420,8 @@ int
 		}
 		else if (flag >= 8)
 		{
-			if ((mlx->conf.cub_flag[8] == 0 && conf_fill_checker(mlx) == FALSE) || flag == 10)
-				return (free_line_ret_mes(line));
-			if (check_is_map(line) == FALSE)
-			{
-				free_str_safe(line);
-				return (error_mes("Error\n map is not made by map element\n", FALSE));
-			}
-			flag = 9;
-			mlx->conf.cub_flag[8]++;
-			if (pack_map_str(mlx, line) == FALSE)
-			{
-				free_str_safe(line);
+			if (check_pack_map_str(mlx, &flag, line) == FALSE)
 				return (FALSE);
-			}
-			free_str_safe(line);
 		}
 		else if (ft_strnstr(line, "R", 1))
 		{
@@ -1374,54 +1430,15 @@ int
 			flag++;
 			mlx->conf.cub_flag[0] = 1;
 		}
-		else if (ft_strnstr(line, "NO", 2))
+		else if ((index = check_texture_line(line)) != FALSE )
 		{
-			if (pack_path(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[1] = 1;
+			if (pack_path_update_flag(mlx, line, &flag, index) == FALSE)
+				return (FALSE);
 		}
-		else if (ft_strnstr(line, "SO", 2))
+		else if ((index = check_rgb_line(line)) != FALSE )
 		{
-			if (pack_path(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[2] = 1;
-		}
-		else if (ft_strnstr(line, "EA", 2))
-		{
-			if (pack_path(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[3] = 1;
-		}
-		else if (ft_strnstr(line, "WE", 2))
-		{
-			if (pack_path(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[4] = 1;
-		}
-		else if (ft_strnstr(line, "S", 1))
-		{
-			if (pack_path(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[5] = 1;
-		}
-		else if (ft_strnstr(line, "F", 1))
-		{
-			if (pack_rgb(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[6] = 1;
-		}
-		else if (ft_strnstr(line, "C", 1))
-		{
-			if (pack_rgb(mlx, line) == FALSE)
-				return (free_line_ret_mes(line));
-			flag++;
-			mlx->conf.cub_flag[7] = 1;
+			if (pack_rgb_update_flag(mlx, line, &flag, index) == FALSE)
+				return (FALSE);
 		}
 		else
 			return (free_line_ret_mes(line));
