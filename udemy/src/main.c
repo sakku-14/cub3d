@@ -790,30 +790,68 @@ int
 	return (ret);
 }
 
-// TODO: make short
 int
-	setting_img(t_mlx *mlx)
+	get_wall_img_ptr(t_mlx *mlx)
 {
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
 
+	width = TEXTURE_WIDTH;
+	height = TEXTURE_HEIGHT;
+	if (!(mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
+					, mlx->conf.path_no, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+					, FALSE));
+	if (!(mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
+					, mlx->conf.path_so, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+					, FALSE));
+	if (!(mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
+					, mlx->conf.path_ea, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+					, FALSE));
+	if (!(mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
+					, mlx->conf.path_we, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+					, FALSE));
+	return (TRUE);
+}
+
+int
+	get_sprite_img_ptr(t_mlx *mlx)
+{
+	int width;
+	int height;
+
+	width = TEXTURE_WIDTH;
+	height = TEXTURE_HEIGHT;
+	if (!(mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
+					, mlx->conf.path_sp, &width, &height)))
+		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+					, FALSE));
+	return (TRUE);
+}
+
+int
+	setting_img(t_mlx *mlx)
+{
 	if (!check_path_available(mlx))
-		return (free_map_ret_error(mlx, "Error\n invalid path of texture\n", FALSE));
-	if (!(mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_no, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
-	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
-	if (!(mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_so, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
-	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
-	if (!(mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_ea, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
-	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
-	if (!(mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_we, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
-	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
-	if (!(mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, mlx->conf.path_sp, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" , FALSE));
-	mlx->tex[4].data = (int *)mlx_get_data_addr(mlx->tex[4].img_ptr, &(mlx->tex[4].bpp), &(mlx->tex[4].size_l), &(mlx->tex[4].endian));
+		return (free_map_ret_error(mlx, "Error\n invalid path of texture\n" \
+			, FALSE));
+	if (get_wall_img_ptr(mlx) == FALSE)
+		return (FALSE);
+	if (get_sprite_img_ptr(mlx) == FALSE)
+		return (FALSE);
+	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr \
+			, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
+	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr \
+			, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
+	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr \
+			, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
+	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr \
+			, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
+	mlx->tex[4].data = (int *)mlx_get_data_addr(mlx->tex[4].img_ptr \
+			, &(mlx->tex[4].bpp), &(mlx->tex[4].size_l), &(mlx->tex[4].endian));
 	return (TRUE);
 }
 
