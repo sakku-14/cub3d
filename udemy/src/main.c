@@ -720,6 +720,19 @@ void
 	}
 }
 
+void
+	describe_floor(t_mlx *mlx, int x)
+{
+	int y;
+
+	y = mlx->window.wall_bottom_pixel;
+	while (y < mlx->conf.win_h && y >= 0)
+	{
+		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.floor_c;
+		y++;
+	}
+}
+
 // TODO: make short
 //  should do later
 void
@@ -737,15 +750,9 @@ void
 		set_window_vars(mlx, i);
 		set_sprite_vars(mlx);
 		describe_ceil(mlx, x);
-		// describe about wall(texture)
 		describe_wall(mlx, i, x);
 		// describe about floor
-		y = mlx->window.wall_bottom_pixel;
-		while (y < mlx->conf.win_h && y >= 0)
-		{
-			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.floor_c;
-			y++;
-		}
+		describe_floor(mlx, x);
 		// describe about sprite
 		j = 0;
 		while (j < mlx->sprite_num)
