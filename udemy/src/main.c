@@ -679,7 +679,7 @@ void
 }
 
 void
-	set_tex_index(t_mlx *mlx, int i, int *tex_index, int y)
+	set_vars_for_wall(t_mlx *mlx, int i, int *tex_index, int y)
 {
 	if (mlx->rays[i].was_hit_vertical)
 		*tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
@@ -702,7 +702,7 @@ void
 	y = mlx->window.wall_top_pixel;
 	while (y < mlx->window.wall_bottom_pixel)
 	{
-		set_tex_index(mlx, i, &tex_index, y);
+		set_vars_for_wall(mlx, i, &tex_index, y);
 		if (tex_index == 0 || tex_index == 2)
 			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
 				mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) \
@@ -728,8 +728,79 @@ void
 	y = mlx->window.wall_bottom_pixel;
 	while (y < mlx->conf.win_h && y >= 0)
 	{
-		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.floor_c;
+		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
+			mlx->conf.floor_c;
 		y++;
+	}
+}
+
+int
+	check_sprite_visible(t_mlx *mlx, int i, int j, int x)
+{
+	if (!(mlx->sprite[j].distance < mlx->rays[i].distance))
+		return (FALSE);
+	if (!(mlx->sprite[j].visible == 1))
+		return (FALSE);
+	if (!(x >= ((normalize_angle((mlx->sprite[j].angle_from_player \
+				- mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
+				* mlx->conf.win_w) \
+				- (mlx->sprite[j].projected_sprite_height / 2)))
+		return (FALSE);
+	if (!(x <= ((normalize_angle((mlx->sprite[j].angle_from_player \
+				- mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
+				* mlx->conf.win_w) \
+				+ (mlx->sprite[j].projected_sprite_height / 2)))
+		return (FALSE);
+	return (TRUE);
+}
+
+void
+	set_tex_offset_x_sprite(t_mlx *mlx, int j, int x)
+{
+	mlx->sprite[j].texture_offset_x = \
+		(int)((x - (((normalize_angle((mlx->sprite[j].angle_from_player \
+		- mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
+		* mlx->conf.win_w) - (mlx->sprite[j].projected_sprite_height / 2))) \
+		/ mlx->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
+}
+
+void
+	set_vars_for_sprite(t_mlx *mlx, int j, int y)
+{
+	mlx->sprite[j].distance_from_top = \
+		y + (mlx->sprite[j].sprite_strip_height / 2) - (mlx->conf.win_h / 2);
+	mlx->sprite[j].texture_offset_y = \
+		mlx->sprite[j].distance_from_top \
+		* ((float)64 / mlx->sprite[j].sprite_strip_height);
+}
+
+void
+	describe_sprite(t_mlx *mlx, int i, int x)
+{
+	int y;
+	int j;
+
+	j = 0;
+	while (j < mlx->sprite_num)
+	{
+		if (check_sprite_visible(mlx, i, j, x) == TRUE)
+		{
+			set_tex_offset_x_sprite(mlx, j, x);
+			y = mlx->sprite[j].sprite_top_pixel;
+			while (y < mlx->sprite[j].sprite_bottom_pixel)
+			{
+				set_vars_for_sprite(mlx, j, y);
+				if ((mlx->tex[4].data[((mlx->tex[4].size_l / 4) * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
+				{
+					mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
+						mlx->tex[4].data[((mlx->tex[4].size_l / 4) \
+						* mlx->sprite[j].texture_offset_y) \
+						+ mlx->sprite[j].texture_offset_x];
+				}
+				y++;
+			}
+		}
+		j++;
 	}
 }
 
@@ -740,8 +811,6 @@ void
 {
 	int x;
 	int i;
-	int j;
-	int y;
 
 	x = 0;
 	while (x < mlx->conf.win_w)
@@ -751,29 +820,8 @@ void
 		set_sprite_vars(mlx);
 		describe_ceil(mlx, x);
 		describe_wall(mlx, i, x);
-		// describe about floor
 		describe_floor(mlx, x);
-		// describe about sprite
-		j = 0;
-		while (j < mlx->sprite_num)
-		{
-			if (mlx->sprite[j].distance < mlx->rays[i].distance && mlx->sprite[j].visible == 1 && x >= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * mlx->conf.win_w) - (mlx->sprite[j].projected_sprite_height / 2) && x <= ((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * mlx->conf.win_w) + (mlx->sprite[j].projected_sprite_height / 2))
-			{
-				mlx->sprite[j].texture_offset_x = (int)((x - (((normalize_angle((mlx->sprite[j].angle_from_player - mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) * mlx->conf.win_w) - (mlx->sprite[j].projected_sprite_height / 2))) / mlx->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
-				y = mlx->sprite[j].sprite_top_pixel;
-				while (y < mlx->sprite[j].sprite_bottom_pixel)
-				{
-					mlx->sprite[j].distance_from_top = y + (mlx->sprite[j].sprite_strip_height / 2) - (mlx->conf.win_h / 2);
-					mlx->sprite[j].texture_offset_y = mlx->sprite[j].distance_from_top * ((float)64 / mlx->sprite[j].sprite_strip_height);
-					if ((mlx->tex[4].data[((mlx->tex[4].size_l / 4) * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
-					{
-						mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->tex[4].data[((mlx->tex[4].size_l / 4) * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x];
-					}
-					y++;
-				}
-			}
-			j++;
-		}
+		describe_sprite(mlx, i, x);
 		x++;
 	}
 }
