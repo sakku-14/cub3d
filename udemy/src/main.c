@@ -1300,6 +1300,25 @@ int
 	return (TRUE);
 }
 
+void
+	fill_map_space(t_mlx *mlx)
+{
+	int index;
+	char *tmp;
+
+	index = 0;
+	while (index < mlx->conf.map_y)
+	{
+		while ((int)ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
+		{
+			tmp = mlx->conf.map[index];
+			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
+			free_str_safe(tmp);
+		}
+		index++;
+	}
+}
+
 // TODO: make short
 // later..
 int
@@ -1309,13 +1328,10 @@ int
 	int res;
 	int flag;
 	char *line;
-	char *tmp;
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
 		return (error_mes("Error\n invalid fd\n", FALSE));
 	flag = 0;
-	mlx->conf.map_y = 0;
-	mlx->conf.map_x = 0;
 	while ((res = get_next_line(fd, &line)))
 	{
 		if (res == -1)
@@ -1434,18 +1450,7 @@ int
 		}
 	}
 	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
-	int index = 0;
-	// mapの幅を空白で埋める
-	while (index < mlx->conf.map_y)
-	{
-		while ((int)ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
-		{
-			tmp = mlx->conf.map[index];
-			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
-			free_str_safe(tmp);
-		}
-		index++;
-	}
+	fill_map_space(mlx);
 	free_str_safe(line);
 	return (TRUE);
 }
