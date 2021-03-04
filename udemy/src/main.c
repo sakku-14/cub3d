@@ -817,15 +817,22 @@ int
 	return (TRUE);
 }
 
-// TODO: make short
 void
-	check_sprite_info(t_mlx *mlx)
+	set_last_sprite(t_mlx *mlx, int k)
 {
-	int i, j, k;
+	mlx->sprite[k].sprite_x =  -1;
+	mlx->sprite[k].sprite_y = -1;
+	mlx->sprite[k].visible = -1;
+}
 
-	mlx->sprite_num = 0;
+void
+	count_sprite_num(t_mlx *mlx)
+{
+	int i;
+	int j;
+
 	i = 0;
-	j = 0;
+	mlx->sprite_num = 0;
 	while (i < mlx->conf.map_y)
 	{
 		j = 0;
@@ -837,28 +844,45 @@ void
 		}
 		i++;
 	}
-	mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1));
+}
+
+int
+	set_sprites(t_mlx *mlx)
+{
+	int i;
+	int j;
+	int num;
+
 	i = 0;
-	k = 0;
+	num = 0;
 	while (i < mlx->conf.map_y)
 	{
 		j = 0;
-		while (j < mlx->conf.map_x && k < mlx->sprite_num)
+		while (j < mlx->conf.map_x && num < mlx->sprite_num)
 		{
 			if ((mlx->conf.map)[i][j] == '2')
 			{
-				mlx->sprite[k].sprite_y = i;
-				mlx->sprite[k].sprite_x = j;
-				mlx->sprite[k].visible = 0;
-				k++;
+				mlx->sprite[num].sprite_y = i;
+				mlx->sprite[num].sprite_x = j;
+				mlx->sprite[num].visible = 0;
+				num++;
 			}
 			j++;
 		}
 		i++;
 	}
-	mlx->sprite[k].sprite_x =  -1;
-	mlx->sprite[k].sprite_y = -1;
-	mlx->sprite[k].visible = -1;
+	return (num);
+}
+
+void
+	check_sprite_info(t_mlx *mlx)
+{
+	int num;
+
+	count_sprite_num(mlx);
+	mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1));
+	num = set_sprites(mlx);
+	set_last_sprite(mlx, num);
 }
 
 int
@@ -955,7 +979,6 @@ int
 	return (counter);
 }
 
-// TODO: make short
 int
 	pack_path(t_mlx *mlx, char *line)
 {
