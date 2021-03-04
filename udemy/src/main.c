@@ -617,32 +617,40 @@ void
 }
 
 void
-	set_sprite_vars(t_mlx *mlx, int j)
+	set_sprite_var(t_mlx *mlx, int j)
 {
-	if (mlx->sprite[j].visible == 1)
+	mlx->sprite[j].perp_distance = mlx->sprite[j].distance \
+		* cos(mlx->sprite[j].angle_from_player \
+		- mlx->player.rotation_angle);
+	mlx->sprite[j].distance_proj_plane = \
+		(mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
+	mlx->sprite[j].projected_sprite_height = (TILE_SIZE \
+		/ mlx->sprite[j].perp_distance) \
+		* mlx->sprite[j].distance_proj_plane;
+	mlx->sprite[j].sprite_strip_height = \
+		(int)mlx->sprite[j].projected_sprite_height;
+	mlx->sprite[j].sprite_top_pixel = (mlx->conf.win_h / 2) \
+		- (mlx->sprite[j].sprite_strip_height / 2);
+	mlx->sprite[j].sprite_top_pixel = mlx->sprite[j].sprite_top_pixel \
+		< 0 ? 0 : mlx->sprite[j].sprite_top_pixel;
+	mlx->sprite[j].sprite_bottom_pixel = (mlx->conf.win_h / 2) \
+		+ (mlx->sprite[j].sprite_strip_height / 2);
+	mlx->sprite[j].sprite_bottom_pixel = \
+		mlx->sprite[j].sprite_bottom_pixel > mlx->conf.win_h ? \
+		mlx->conf.win_h : mlx->sprite[j].sprite_bottom_pixel;
+}
+
+void
+	set_sprite_vars(t_mlx *mlx)
+{
+	int j;
+
+	j = 0;
+	while (j < mlx->sprite_num)
 	{
-		mlx->sprite[j].perp_distance = mlx->sprite[j].distance \
-			* cos(mlx->sprite[j].angle_from_player \
-					- mlx->player.rotation_angle);
-		mlx->sprite[j].distance_proj_plane = \
-					(mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
-		mlx->sprite[j].projected_sprite_height = \
-					(TILE_SIZE / mlx->sprite[j].perp_distance) \
-							* mlx->sprite[j].distance_proj_plane;
-		mlx->sprite[j].sprite_strip_height = \
-					(int)mlx->sprite[j].projected_sprite_height;
-		mlx->sprite[j].sprite_top_pixel = \
-					(mlx->conf.win_h / 2) \
-							- (mlx->sprite[j].sprite_strip_height / 2);
-		mlx->sprite[j].sprite_top_pixel = \
-					mlx->sprite[j].sprite_top_pixel < 0 ? \
-							0 : mlx->sprite[j].sprite_top_pixel;
-		mlx->sprite[j].sprite_bottom_pixel = \
-					(mlx->conf.win_h / 2) \
-							+ (mlx->sprite[j].sprite_strip_height / 2);
-		mlx->sprite[j].sprite_bottom_pixel = \
-					mlx->sprite[j].sprite_bottom_pixel > mlx->conf.win_h ? \
-						mlx->conf.win_h : mlx->sprite[j].sprite_bottom_pixel;
+		if (mlx->sprite[j].visible == 1)
+			set_sprite_var(mlx, j);
+		j++;
 	}
 }
 
@@ -674,11 +682,7 @@ void
 	{
 		i = x / ceil((double)mlx->conf.win_w / (double)mlx->conf.win_w);
 		set_window_vars(mlx, i);
-		// for sprite
-		j = 0;
-		while (j < mlx->sprite_num)
-			set_sprite_vars(mlx, j++);
-		// describe about ceil
+		set_sprite_vars(mlx);
 		describe_ceil(mlx, x);
 		// describe about wall(texture)
 		if (mlx->rays[i].was_hit_vertical)
