@@ -1723,7 +1723,8 @@ int
 //	if (setting_ray_point(&mlx) == FALSE)
 //		return (free_mlx(&mlx, ERROR));
 */
-	if (check_sprite_info(&mlx) == FALSE || (ac == 3 && create_bmp(&mlx) == FALSE))
+	if (check_sprite_info(&mlx) == FALSE \
+			|| (ac == 3 && create_bmp(&mlx) == FALSE))
 		return (free_mlx(&mlx, ERROR));
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
