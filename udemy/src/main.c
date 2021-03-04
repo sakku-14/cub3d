@@ -679,12 +679,17 @@ void
 }
 
 void
-	set_tex_index(t_mlx *mlx, int i, int *tex_index)
+	set_tex_index(t_mlx *mlx, int i, int *tex_index, int y)
 {
 	if (mlx->rays[i].was_hit_vertical)
 		*tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
 	else
 		*tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
+	mlx->window.distance_from_top = \
+		y + (mlx->window.wall_strip_height / 2) - (mlx->conf.win_h / 2);
+	mlx->window.texture_offset_y = \
+		mlx->window.distance_from_top \
+		* ((float)64 / mlx->window.wall_strip_height);
 }
 
 void
@@ -697,12 +702,7 @@ void
 	y = mlx->window.wall_top_pixel;
 	while (y < mlx->window.wall_bottom_pixel)
 	{
-		set_tex_index(mlx, i, &tex_index);
-		mlx->window.distance_from_top = \
-			y + (mlx->window.wall_strip_height / 2) - (mlx->conf.win_h / 2);
-		mlx->window.texture_offset_y = \
-			mlx->window.distance_from_top \
-			* ((float)64 / mlx->window.wall_strip_height);
+		set_tex_index(mlx, i, &tex_index, y);
 		if (tex_index == 0 || tex_index == 2)
 			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
 				mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) \
@@ -739,31 +739,6 @@ void
 		describe_ceil(mlx, x);
 		// describe about wall(texture)
 		describe_wall(mlx, i, x);
-/*
-		if (mlx->rays[i].was_hit_vertical)
-			mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_y % TEXTURE_HEIGHT;
-		else
-			mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_x % TEXTURE_WIDTH;
-		y = mlx->window.wall_top_pixel;
-		while (y < mlx->window.wall_bottom_pixel)
-		{
-			int tex_index;
-			if (mlx->rays[i].was_hit_vertical)
-				tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
-			else
-				tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
-			mlx->window.distance_from_top = y + (mlx->window.wall_strip_height / 2) - (mlx->conf.win_h / 2);
-			mlx->window.texture_offset_y = mlx->window.distance_from_top * ((float)64 / mlx->window.wall_strip_height);
-			if (tex_index == 0 || tex_index == 2)
-				mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) * mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
-			else
-			{
-				mlx->window.texture_offset_x_rev = TEXTURE_WIDTH - mlx->window.texture_offset_x - 1;
-				mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) * mlx->window.texture_offset_y) + mlx->window.texture_offset_x_rev];
-			}
-			y++;
-		}
-*/
 		// describe about floor
 		y = mlx->window.wall_bottom_pixel;
 		while (y < mlx->conf.win_h && y >= 0)
