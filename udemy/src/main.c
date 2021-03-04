@@ -1403,6 +1403,16 @@ void
 }
 
 int
+	pack_wsize_update_flag(t_mlx *mlx, char *line, int *flag)
+{
+		if (pack_win_size(mlx, line) == FALSE)
+			return (free_line_ret_mes(line));
+		(*flag)++;
+		mlx->conf.cub_flag[0] = 1;
+		return (TRUE);
+}
+
+int
 	pack_line_each_info(t_mlx *mlx, int *flag, char *line, int *index)
 {
 	if (!*line)
@@ -1414,10 +1424,8 @@ int
 	}
 	else if (ft_strnstr(line, "R", 1))
 	{
-		if (pack_win_size(mlx, line) == FALSE)
-			return (free_line_ret_mes(line));
-		(*flag)++;
-		mlx->conf.cub_flag[0] = 1;
+		if (pack_wsize_update_flag(mlx, line, flag) == FALSE)
+			return (FALSE);
 	}
 	else if ((*index = check_texture_line(line)) != FALSE )
 	{
