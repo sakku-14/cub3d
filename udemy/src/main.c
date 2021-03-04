@@ -455,6 +455,23 @@ void
 */
 
 void
+	add_some_pi(t_mlx *mlx, float base, float height, int i)
+{
+	if (base < 0 && height < 0)
+		mlx->sprite[i].angle_from_player = \
+			PI + mlx->sprite[i].angle_from_player;
+	else if (base >= 0 && height < 0)
+		mlx->sprite[i].angle_from_player = \
+			2 * PI + mlx->sprite[i].angle_from_player;
+	else if (base >= 0 && height >= 0)
+		mlx->sprite[i].angle_from_player = \
+			mlx->sprite[i].angle_from_player;
+	else
+		mlx->sprite[i].angle_from_player = \
+			PI + mlx->sprite[i].angle_from_player;
+}
+
+void
 	get_info_sprite(t_mlx *mlx)
 {
 	int i = 0;
@@ -465,18 +482,17 @@ void
 	{
 		if (mlx->sprite[i].visible == 1)
 		{
-			base = (mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE - mlx->conf.pl_x;
-			height = (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE - mlx->conf.pl_y;
-			mlx->sprite[i].distance = dist_between_points((mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE, (mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE, mlx->conf.pl_x, mlx->conf.pl_y);
+			base = (mlx->sprite[i].sprite_x + 0.5) \
+					* TILE_SIZE - mlx->conf.pl_x;
+			height = (mlx->sprite[i].sprite_y + 0.5) \
+					* TILE_SIZE - mlx->conf.pl_y;
+			mlx->sprite[i].distance = dist_between_points( \
+					(mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE, \
+					(mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE, \
+					mlx->conf.pl_x, \
+					mlx->conf.pl_y);
 			mlx->sprite[i].angle_from_player = atanf(height / base);
-			if (base < 0 && height < 0)
-				mlx->sprite[i].angle_from_player = PI + mlx->sprite[i].angle_from_player;
-			else if (base >= 0 && height < 0)
-				mlx->sprite[i].angle_from_player = 2 * PI + mlx->sprite[i].angle_from_player;
-			else if (base >= 0 && height >= 0)
-				mlx->sprite[i].angle_from_player = mlx->sprite[i].angle_from_player;
-			else
-				mlx->sprite[i].angle_from_player = PI + mlx->sprite[i].angle_from_player;
+			add_some_pi(mlx, base, height, i);
 		}
 		i++;
 	}
