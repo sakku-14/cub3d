@@ -942,23 +942,32 @@ int
 	return (free_strs(strs, num, TRUE));
 }
 
+int
+	count_strs(char **strs, int i)
+{
+	int counter;
+
+	counter = i;
+	if (!strs || !strs[counter])
+		return (counter);
+	while (strs[counter])
+		counter++;
+	return (counter);
+}
+
 // TODO: make short
 int
 	pack_path(t_mlx *mlx, char *line)
 {
 	char	**strs;
-	int		num;
 	int		len;
 
 	strs = ft_split(line, ' ');
-	num = 0;
-	while (strs[num])
-		num++;
-	if (num != 2)
-		return (free_strs(strs, num, FALSE));
+	if (count_strs(strs, 0) != 2)
+		return (free_strs(strs, count_strs(strs, 0), FALSE));
 	if (ft_strlen(strs[0]) != 2 \
 			&& (ft_strlen(strs[0]) != 1 && ft_strncmp(strs[0], "S", 1)))
-		return (free_strs(strs, num, FALSE));
+		return (free_strs(strs, 2, FALSE));
 	len = ft_strlen(strs[1]);
 	if (strs[1])
 	{
@@ -974,10 +983,9 @@ int
 			mlx->conf.path_sp = ft_substr(strs[1], 0, len);
 	}
 	free_str_safe(line);
-	return (free_strs(strs, num, TRUE));
+	return (free_strs(strs, 2, TRUE));
 }
 
-// TODO: make short
 int
 	check_rgb_available(char **strs, t_mlx *mlx)
 {
@@ -1006,19 +1014,6 @@ int
 		i++;
 	}
 	return (TRUE);
-}
-
-int
-	count_strs(char **strs, int i)
-{
-	int counter;
-
-	counter = i;
-	if (!strs || !strs[counter])
-		return (counter);
-	while (strs[counter])
-		counter++;
-	return (counter);
 }
 
 void
