@@ -646,6 +646,19 @@ void
 	}
 }
 
+void
+	describe_ceil(t_mlx *mlx, int x)
+{
+	int y;
+
+	y = 0;
+	while (y < mlx->window.wall_top_pixel && y < mlx->conf.win_h)
+	{
+		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.ceil_c;
+		y++;
+	}
+}
+
 // TODO: make short
 //  should do later
 void
@@ -664,17 +677,9 @@ void
 		// for sprite
 		j = 0;
 		while (j < mlx->sprite_num)
-		{
-			set_sprite_vars(mlx, j);
-			j++;
-		}
+			set_sprite_vars(mlx, j++);
 		// describe about ceil
-		y = 0;
-		while (y < mlx->window.wall_top_pixel && y < mlx->conf.win_h)
-		{
-			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.ceil_c;
-			y++;
-		}
+		describe_ceil(mlx, x);
 		// describe about wall(texture)
 		if (mlx->rays[i].was_hit_vertical)
 			mlx->window.texture_offset_x = (int)mlx->rays[i].wall_hit_y % TEXTURE_HEIGHT;
