@@ -1394,6 +1394,14 @@ int
 	return (FALSE);
 }
 
+void
+	pass_empty_line(char *line, int *flag)
+{
+	free_str_safe(line);
+	if (*flag == 9)
+		*flag = 10;
+}
+
 // TODO: make short
 // later..
 int
@@ -1413,11 +1421,7 @@ int
 		if (res == -1)
 			return (error_mes("Error\n some error while gnl working\n", FALSE));
 		if (!*line)
-		{
-			free_str_safe(line);
-			if (flag == 9)
-				flag = 10;
-		}
+			pass_empty_line(line, &flag);
 		else if (flag >= 8)
 		{
 			if (check_pack_map_str(mlx, &flag, line) == FALSE)
