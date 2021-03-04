@@ -10,13 +10,11 @@
 #include "../../minilibx_opengl_20191021/mlx.h"
 #include "constants.h"
 
-/*
 __attribute__((destructor))
 void    end()
 {
     system("leaks cub3D");
 }
-*/
 
 int
 	error_mes(char *str, int ret)
@@ -484,52 +482,73 @@ void
 	}
 }
 
-// TODO: make short
+void
+	copy_sprite_first_half(t_mlx *mlx, int mid, int i)
+{
+	while (i <= mid)
+	{
+		mlx->tmp[i] = mlx->sprite[i];
+		i++;
+	}
+}
+
+void
+	copy_sprite_second_half(t_mlx *mlx, int right, int i, int j)
+{
+	while (i <= right)
+	{
+		mlx->tmp[i] = mlx->sprite[j];
+		i++;
+		j--;
+	}
+}
+
+void
+	sort_by_dist(t_mlx *mlx, int left, int right)
+{
+	int i;
+	int j;
+	int k;
+
+	i = left;
+	j = right;
+	k = left;
+	while (k <= right)
+	{
+		if (mlx->tmp[i].distance >= mlx->tmp[j].distance)
+		{
+			mlx->sprite[k] = mlx->tmp[i];
+			i++;
+		}
+		else
+		{
+			mlx->sprite[k] = mlx->tmp[j];
+			j--;
+		}
+		k++;
+	}
+}
+
 void
 	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
 {
 	int mid;
-	int i;
-	int j;
-	int k;
-	t_sprites	tmp[mlx->sprite_num];
 
 	if (left >= right)
 		return ;
 	mid = (left + right) / 2;
 	mergesort_sprite_structure(mlx, left, mid);
 	mergesort_sprite_structure(mlx, mid + 1, right);
-	i = left;
-	while (i <= mid)
-	{
-		tmp[i] = mlx->sprite[i];
-		i++;
-	}
-	i = mid + 1;
-	j = right;
-	while (i <= right)
-	{
-		tmp[i] = mlx->sprite[j];
-		i++;
-		j--;
-	}
-	i = left;
-	j = right;
-	k = left;
-	while (k <= right)
-	{
-		if (tmp[i].distance >= tmp[j].distance)
-			mlx->sprite[k] = tmp[i++];
-		else
-			mlx->sprite[k] = tmp[j--];
-		k++;
-	}
+	copy_sprite_first_half(mlx, mid, left);
+	copy_sprite_second_half(mlx, right, mid + 1, right);
+	sort_by_dist(mlx, left, right);
 }
 
 // TODO: check if needed
 void
 	sort_sprite_structure(t_mlx *mlx)
 {
+	ft_bzero(mlx->tmp, sizeof(t_sprites) * (mlx->sprite_num + 1));
 	mergesort_sprite_structure(mlx, 0, mlx->sprite_num - 1);
 }
 
@@ -915,15 +934,24 @@ int
 	return (num);
 }
 
-void
+int
 	check_sprite_info(t_mlx *mlx)
 {
 	int num;
 
 	count_sprite_num(mlx);
-	mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1));
+	if (!(mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1))))
+		return (FALSE);
+	ft_bzero(mlx->sprite, sizeof(t_sprites) * (mlx->sprite_num + 1));
+	if (!(mlx->tmp = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1))))
+	{
+		free(mlx->sprite);
+		mlx->sprite = NULL;
+		return (FALSE);
+	}
 	num = set_sprites(mlx);
 	set_last_sprite(mlx, num);
+	return (TRUE);
 }
 
 int
@@ -1662,8 +1690,7 @@ int
 //	if (setting_ray_point(&mlx) == FALSE)
 //		return (free_mlx(&mlx, ERROR));
 */
-	check_sprite_info(&mlx);
-	if (ac == 3 && create_bmp(&mlx) == FALSE)
+	if (check_sprite_info(&mlx) == FALSE || (ac == 3 && create_bmp(&mlx) == FALSE))
 		return (free_mlx(&mlx, ERROR));
 	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
 	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);

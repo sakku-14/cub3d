@@ -177,6 +177,7 @@ typedef struct	s_mlx
 	t_map		map;
 	t_rays		*rays;
 	t_sprites	*sprite;
+	t_sprites	*tmp;
 	t_conf		conf;
 	int			sprite_num;
 	t_tex		tex[5];
