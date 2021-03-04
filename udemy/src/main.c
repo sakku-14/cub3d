@@ -1022,7 +1022,45 @@ int
 	return (counter);
 }
 
-// TODO: make short
+void
+	add_color(t_mlx *mlx)
+{
+	mlx->conf.floor_c = mlx->conf.floor_colors[0];
+	mlx->conf.floor_c = mlx->conf.floor_c << 8;
+	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[1];
+	mlx->conf.floor_c = mlx->conf.floor_c << 8;
+	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[2];
+	mlx->conf.ceil_c = mlx->conf.ceil_colors[0];
+	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
+	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[1];
+	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
+	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
+}
+
+int
+	free_for_pack_rgb(char **sub_strs, char **strs, int len, int ret)
+{
+	free_strs(sub_strs, 2, 0);
+	return (free_strs(strs, len, ret));
+}
+
+void
+	pack_rgb_atoi(char c, t_mlx *mlx, char **strs)
+{
+	if (c == 'F')
+	{
+		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
+		mlx->conf.floor_colors[1] = ft_atoi(strs[1]);
+		mlx->conf.floor_colors[2] = ft_atoi(strs[2]);
+	}
+	if (c == 'C')
+	{
+		mlx->conf.ceil_colors[0] = ft_atoi(strs[0]);
+		mlx->conf.ceil_colors[1] = ft_atoi(strs[1]);
+		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
+	}
+}
+
 int
 	pack_rgb(t_mlx *mlx, char *line)
 {
@@ -1034,45 +1072,19 @@ int
 		return (free_strs(sub_strs, count_strs(sub_strs, 0), FALSE));
 	strs = ft_split(sub_strs[1], ',');
 	if (count_strs(strs, 0) != 3)
-	{
-		free_strs(sub_strs, 2, 0);
-		return (free_strs(strs, count_strs(strs, 0), FALSE));
-	}
+		return (free_for_pack_rgb(sub_strs, strs, count_strs(strs, 0), FALSE));
 	if (ft_strnstr(sub_strs[0], "F", 1) && ft_strlen(sub_strs[0]) == 1)
-	{
-		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
-		mlx->conf.floor_colors[1] = ft_atoi(strs[1]);
-		mlx->conf.floor_colors[2] = ft_atoi(strs[2]);
-	}
+		pack_rgb_atoi('F', mlx, strs);
 	else if (ft_strnstr(sub_strs[0], "C", 1) && ft_strlen(sub_strs[0]) == 1)
-	{
-		mlx->conf.ceil_colors[0] = ft_atoi(strs[0]);
-		mlx->conf.ceil_colors[1] = ft_atoi(strs[1]);
-		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
-	}
+		pack_rgb_atoi('C', mlx, strs);
 	else
-	{
-		free_strs(sub_strs, 2, 0);
-		return (free_strs(strs, count_strs(strs, 0), FALSE));
-	}
-	if ((mlx->conf.cub_flag[6] || mlx->conf.cub_flag[7]) && !check_rgb_available(strs, mlx))
-	{
-		free_strs(sub_strs, 2, 0);
-		return (free_strs(strs, count_strs(strs, 0), FALSE));
-	}
-	mlx->conf.floor_c = mlx->conf.floor_colors[0];
-	mlx->conf.floor_c = mlx->conf.floor_c << 8;
-	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[1];
-	mlx->conf.floor_c = mlx->conf.floor_c << 8;
-	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[2];
-	mlx->conf.ceil_c = mlx->conf.ceil_colors[0];
-	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
-	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[1];
-	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
-	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
-	free_strs(sub_strs, 2, 0);
+		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
+	if ((mlx->conf.cub_flag[6] || mlx->conf.cub_flag[7]) \
+			&& !check_rgb_available(strs, mlx))
+		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
+	add_color(mlx);
 	free_str_safe(line);
-	return (free_strs(strs, count_strs(strs, 0), TRUE));
+	return (free_for_pack_rgb(sub_strs, strs, 3, TRUE));
 }
 
 int
