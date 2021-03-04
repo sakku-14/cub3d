@@ -804,8 +804,6 @@ void
 	}
 }
 
-// TODO: make short
-//  should do later
 void
 	generate_3d_projection(t_mlx *mlx)
 {
