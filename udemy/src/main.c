@@ -177,26 +177,34 @@ void
 	set_new_player_x(t_mlx *mlx, float *new_player_x)
 {
 	if (mlx->player.side_direction == 1)
-		*new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		*new_player_x = mlx->conf.pl_x \
+			+ cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.side_direction == -1)
-		*new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		*new_player_x = mlx->conf.pl_x \
+			- cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == 1)
-		*new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		*new_player_x = mlx->conf.pl_x \
+			+ cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == -1)
-		*new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		*new_player_x = mlx->conf.pl_x \
+			- cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
 }
 
 void
 	set_new_player_y(t_mlx *mlx, float *new_player_y)
 {
 	if (mlx->player.side_direction == 1)
-		*new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		*new_player_y = mlx->conf.pl_y \
+			+ sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.side_direction == -1)
-		*new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+		*new_player_y = mlx->conf.pl_y \
+			- sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == 1)
-		*new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		*new_player_y = mlx->conf.pl_y \
+			+ sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 	else if (mlx->player.walk_direction == -1)
-		*new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+		*new_player_y = mlx->conf.pl_y \
+			- sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
 }
 
 void
@@ -254,11 +262,14 @@ void
 	int		index;
 
 	// TODO: ここでエラー処理必要か確認
-	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE || y < 0 || y > mlx->conf.map_y * TILE_SIZE)
+	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE \
+			|| y < 0 || y > mlx->conf.map_y * TILE_SIZE)
 		return ;
 	x_to_check = floor(x / TILE_SIZE);
 	y_to_check = floor(y / TILE_SIZE);
-	if (!((int)y_to_check < 0 || (int)x_to_check < 0 || (int)y_to_check >= mlx->conf.map_y || (int)x_to_check >= mlx->conf.map_x))
+	if (!((int)y_to_check < 0 || (int)x_to_check < 0 \
+				|| (int)y_to_check >= mlx->conf.map_y \
+				|| (int)x_to_check >= mlx->conf.map_x))
 	{
 		if ((mlx->conf.map)[(int)y_to_check][(int)x_to_check] == '2')
 		{
@@ -577,7 +588,6 @@ void
 	sort_by_dist(mlx, left, right);
 }
 
-// TODO: check if needed
 void
 	sort_sprite_structure(t_mlx *mlx)
 {
@@ -992,7 +1002,8 @@ int
 {
 	if (!(mlx->mlx_ptr = mlx_init()))
 		return (FALSE);
-	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, mlx->conf.win_w, mlx->conf.win_h, "cub3d_window")))
+	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, mlx->conf.win_w \
+								, mlx->conf.win_h, "cub3d_window")))
 		return (FALSE);
 	return (TRUE);
 }
@@ -1060,8 +1071,10 @@ int
 	mlx->conf.win_h = ft_atoi(strs[2]);
 	if (mlx->conf.win_w <= 0 || mlx->conf.win_h <= 0)
 		return (free_strs(strs, num, FALSE));
-	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? mlx->conf.win_max_w : mlx->conf.win_w;
-	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? mlx->conf.win_max_h : mlx->conf.win_h;
+	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? \
+								mlx->conf.win_max_w : mlx->conf.win_w;
+	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? \
+								mlx->conf.win_max_h : mlx->conf.win_h;
 	if (get_ray_size(mlx) == FALSE)
 		return (free_strs(strs, num, FALSE));
 	free_str_safe(line);
@@ -1649,7 +1662,8 @@ void
 }
 
 void
-	make_header(t_mlx *mlx, int fd, unsigned int header_size, unsigned int img_size)
+	make_header(t_mlx *mlx, int fd, unsigned int header_size \
+			, unsigned int img_size)
 {
 	unsigned int	file_header_size;
 	unsigned int	info_header_size;
