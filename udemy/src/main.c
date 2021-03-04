@@ -637,12 +637,14 @@ int
 	int x = -1;
 	int y = -1;
 
-	if (!(mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w, mlx->conf.win_h)))
+	if (!(mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w \
+					, mlx->conf.win_h)))
 	{
 		free_mlx_map(mlx);
 		return (FALSE);
 	}
-	mlx->window.data = (int *)mlx_get_data_addr(mlx->window.img_ptr, &(mlx->window.bpp), &(mlx->window.size_l), &(mlx->window.endian));
+	mlx->window.data = (int *)mlx_get_data_addr(mlx->window.img_ptr \
+			, &(mlx->window.bpp), &(mlx->window.size_l), &(mlx->window.endian));
 	while (++y < mlx->conf.win_h)
 	{
 		x = -1;
