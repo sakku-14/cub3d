@@ -109,7 +109,8 @@ int
 {
 	int map_grid_index_x;
 	int map_grid_index_y;
-	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE || y < 0 || y >= mlx->conf.map_y * TILE_SIZE)
+	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE \
+			|| y < 0 || y >= mlx->conf.map_y * TILE_SIZE)
 		return (TRUE);
 	map_grid_index_x = floor(x / TILE_SIZE);
 	map_grid_index_y = floor(y / TILE_SIZE);
@@ -207,7 +208,6 @@ void
 		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
 }
 
-// TODO: make short
 void
 	move(t_mlx *mlx)
 {
