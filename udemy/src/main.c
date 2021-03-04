@@ -172,6 +172,41 @@ void
 }
 */
 
+void
+	set_new_player_x(t_mlx *mlx, float *new_player_x)
+{
+	if (mlx->player.side_direction == 1)
+		*new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+	else if (mlx->player.side_direction == -1)
+		*new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+	else if (mlx->player.walk_direction == 1)
+		*new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	else if (mlx->player.walk_direction == -1)
+		*new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+}
+
+void
+	set_new_player_y(t_mlx *mlx, float *new_player_y)
+{
+	if (mlx->player.side_direction == 1)
+		*new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+	else if (mlx->player.side_direction == -1)
+		*new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
+	else if (mlx->player.walk_direction == 1)
+		*new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	else if (mlx->player.walk_direction == -1)
+		*new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+}
+
+void
+	set_new_rotation_angle(t_mlx *mlx)
+{
+	if (mlx->player.turn_direction == 1)
+		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
+	else if (mlx->player.turn_direction == -1)
+		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
+}
+
 // TODO: make short
 void
 	move(t_mlx *mlx)
@@ -179,28 +214,9 @@ void
 	float new_player_x = mlx->conf.pl_x;
 	float new_player_y = mlx->conf.pl_y;
 
-	if (mlx->player.side_direction == -1)
-		new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.side_direction == 1)
-		new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == 1)
-		new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == -1)
-		new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
-	if (mlx->player.side_direction == -1)
-		new_player_y = mlx->conf.pl_y - sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.side_direction == 1)
-		new_player_y = mlx->conf.pl_y + sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == 1)
-		new_player_x = mlx->conf.pl_x + cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == -1)
-		new_player_x = mlx->conf.pl_x - cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
-
-	if (mlx->player.turn_direction == 1)
-		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
-	else if (mlx->player.turn_direction == -1)
-		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
-
+	set_new_player_x(mlx, &new_player_x);
+	set_new_player_y(mlx, &new_player_y);
+	set_new_rotation_angle(mlx);
 	if (!map_has_wall_at(mlx, new_player_x, new_player_y))
 	{
 		mlx->conf.pl_x = new_player_x;
