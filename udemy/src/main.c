@@ -254,6 +254,7 @@ void
 }
 
 // TODO: make short
+//  should do later
 void 
 	cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 {
