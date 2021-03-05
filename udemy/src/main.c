@@ -316,6 +316,13 @@ void
 		(mlx->cast.is_ray_facing_right && mlx->cast.x_step < 0) ? -1 : 1;
 }
 
+void
+	set_horz_next_touch(t_mlx *mlx)
+{
+	mlx->cast.next_horz_touch_x = mlx->cast.x_intercept;
+	mlx->cast.next_horz_touch_y = mlx->cast.y_intercept;
+}
+
 // TODO: make short
 //  should do later
 void 
@@ -329,29 +336,17 @@ void
 	///////////////////////////////////////////
 	init_horz_wall_hit(mlx);
 	set_horz_intercept_step(mlx, ray_angle);
-/*
-	mlx->cast.y_intercept = floor(mlx->conf.pl_y / TILE_SIZE) * TILE_SIZE;
-	mlx->cast.y_intercept += mlx->cast.is_ray_facing_down ? TILE_SIZE : 0;
-	mlx->cast.x_intercept = mlx->conf.pl_x + (mlx->cast.y_intercept - mlx->conf.pl_y) / tan(ray_angle);
-	mlx->cast.y_step = TILE_SIZE;
-	mlx->cast.y_step *= mlx->cast.is_ray_facing_up ? -1 : 1;
-	mlx->cast.x_step = TILE_SIZE / tan(ray_angle);
-	mlx->cast.x_step *= (mlx->cast.is_ray_facing_left && mlx->cast.x_step > 0) ? -1 : 1;
-	mlx->cast.x_step *= (mlx->cast.is_ray_facing_right && mlx->cast.x_step < 0) ? -1 : 1;
-*/
-	float next_horz_touch_x = mlx->cast.x_intercept;
-	float next_horz_touch_y = mlx->cast.y_intercept;
+	set_horz_next_touch(mlx);
 
-	while (next_horz_touch_x >= 0 && next_horz_touch_x <= mlx->conf.map_x * TILE_SIZE && next_horz_touch_y >= 0 && next_horz_touch_y <= mlx->conf.map_y * TILE_SIZE)
+	while (mlx->cast.next_horz_touch_x >= 0 && mlx->cast.next_horz_touch_x <= mlx->conf.map_x * TILE_SIZE && mlx->cast.next_horz_touch_y >= 0 && mlx->cast.next_horz_touch_y <= mlx->conf.map_y * TILE_SIZE)
 	{
-		float x_to_check = next_horz_touch_x;
-		float y_to_check = next_horz_touch_y + (mlx->cast.is_ray_facing_up ? -1 : 0);
+		float x_to_check = mlx->cast.next_horz_touch_x;
+		float y_to_check = mlx->cast.next_horz_touch_y + (mlx->cast.is_ray_facing_up ? -1 : 0);
 		map_has_sprite_at(x_to_check, y_to_check, mlx);
 		if (map_has_wall_at(mlx, x_to_check, y_to_check))
 		{
-			mlx->cast.horz_wall_hit_x = next_horz_touch_x;
-			mlx->cast.horz_wall_hit_y = next_horz_touch_y;
-			// TODO: check below
+			mlx->cast.horz_wall_hit_x = mlx->cast.next_horz_touch_x;
+			mlx->cast.horz_wall_hit_y = mlx->cast.next_horz_touch_y;
 			if (!((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
 				mlx->cast.horz_wall_content = (mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
 			else
@@ -361,8 +356,8 @@ void
 		}
 		else
 		{
-			next_horz_touch_x += mlx->cast.x_step;
-			next_horz_touch_y += mlx->cast.y_step;
+			mlx->cast.next_horz_touch_x += mlx->cast.x_step;
+			mlx->cast.next_horz_touch_y += mlx->cast.y_step;
 		}
 	}
 
