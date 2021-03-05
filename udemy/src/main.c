@@ -45,45 +45,45 @@ int
 }
 
 void
-	free_mlx_map(t_mlx *mlx)
+	free_cub_map(t_cub *cub)
 {
 	int i;
 
-	i = mlx->conf.map_y;
+	i = cub->conf.map_y;
 	while (--i >= 0)
 	{
-		free_str_safe(mlx->conf.map[i]);
+		free_str_safe(cub->conf.map[i]);
 		if (i == 0)
 			break ;
 	}
-	free(mlx->conf.map);
-	mlx->conf.map = NULL;
+	free(cub->conf.map);
+	cub->conf.map = NULL;
 }
 
 void
-	free_rays(t_mlx *mlx)
+	free_rays(t_cub *cub)
 {
-	free(mlx->rays);
-	mlx->rays = NULL;
+	free(cub->rays);
+	cub->rays = NULL;
 }
 
 int
-	free_mlx(t_mlx *mlx, int ret)
+	free_cub(t_cub *cub, int ret)
 {
-	if (mlx->conf.cub_flag[0] == 1)
-		free_rays(mlx);
-	if (mlx->conf.cub_flag[1])
-		free(mlx->conf.path_no);
-	if (mlx->conf.cub_flag[2])
-		free(mlx->conf.path_so);
-	if (mlx->conf.cub_flag[3])
-		free(mlx->conf.path_ea);
-	if (mlx->conf.cub_flag[4])
-		free(mlx->conf.path_we);
-	if (mlx->conf.cub_flag[5])
-		free(mlx->conf.path_sp);
-	if (mlx->conf.cub_flag[8])
-		free(mlx->conf.map_str);
+	if (cub->conf.cub_flag[0] == 1)
+		free_rays(cub);
+	if (cub->conf.cub_flag[1])
+		free(cub->conf.path_no);
+	if (cub->conf.cub_flag[2])
+		free(cub->conf.path_so);
+	if (cub->conf.cub_flag[3])
+		free(cub->conf.path_ea);
+	if (cub->conf.cub_flag[4])
+		free(cub->conf.path_we);
+	if (cub->conf.cub_flag[5])
+		free(cub->conf.path_sp);
+	if (cub->conf.cub_flag[8])
+		free(cub->conf.map_str);
 	return (ret);
 }
 
@@ -94,78 +94,78 @@ float
 }
 
 void
-	mlx_conf(t_mlx *mlx)
+	cub_conf(t_cub *cub)
 {
-	mlx->conf.pl_x = (mlx->conf.pl_x + 0.5) * TILE_SIZE;
-	mlx->conf.pl_y = (mlx->conf.pl_y + 0.5) * TILE_SIZE;
-	mlx->player.width = 4;
-	mlx->player.height = 4;
-	mlx->player.walk_speed = 3;
-	mlx->player.turn_speed = 4 * (PI / 180);
+	cub->conf.pl_x = (cub->conf.pl_x + 0.5) * TILE_SIZE;
+	cub->conf.pl_y = (cub->conf.pl_y + 0.5) * TILE_SIZE;
+	cub->player.width = 4;
+	cub->player.height = 4;
+	cub->player.walk_speed = 3;
+	cub->player.turn_speed = 4 * (PI / 180);
 }
 
 int
-	map_has_wall_at(t_mlx *mlx, float x, float y)
+	map_has_wall_at(t_cub *cub, float x, float y)
 {
 	int map_grid_index_x;
 	int map_grid_index_y;
-	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE \
-			|| y < 0 || y >= mlx->conf.map_y * TILE_SIZE)
+	if (x < 0 || x >= cub->conf.map_x * TILE_SIZE \
+			|| y < 0 || y >= cub->conf.map_y * TILE_SIZE)
 		return (TRUE);
 	map_grid_index_x = floor(x / TILE_SIZE);
 	map_grid_index_y = floor(y / TILE_SIZE);
-	return ((mlx->conf.map)[map_grid_index_y][map_grid_index_x] == '1');
+	return ((cub->conf.map)[map_grid_index_y][map_grid_index_x] == '1');
 }
 
 int
-	key_press(int key, t_mlx *mlx)
+	key_press(int key, t_cub *cub)
 {
 	if (key == KEY_ESC)
 	{
-		mlx_destroy_window(mlx->mlx_ptr, mlx->win);
-		free_mlx_map(mlx);
-		free_mlx(mlx, TRUE);
+		mlx_destroy_window(cub->cub_ptr, cub->win);
+		free_cub_map(cub);
+		free_cub(cub, TRUE);
 		exit(0);
 	}
 	if (key == KEY_W)
-		mlx->player.walk_direction = +1;
+		cub->player.walk_direction = +1;
 	if (key == KEY_S)
-		mlx->player.walk_direction = -1;
+		cub->player.walk_direction = -1;
 	if (key == KEY_D)
-		mlx->player.side_direction = +1;
+		cub->player.side_direction = +1;
 	if (key == KEY_A)
-		mlx->player.side_direction = -1;
+		cub->player.side_direction = -1;
 	if (key == KEY_RIGHT)
-		mlx->player.turn_direction = +1;
+		cub->player.turn_direction = +1;
 	if (key == KEY_LEFT)
-		mlx->player.turn_direction = -1;
+		cub->player.turn_direction = -1;
 	return (TRUE);
 }
 
 int
-	close_button_press(t_mlx *mlx)
+	close_button_press(t_cub *cub)
 {
-	mlx_destroy_window(mlx->mlx_ptr, mlx->win);
-	free_mlx_map(mlx);
-	free_mlx(mlx, TRUE);
+	mlx_destroy_window(cub->cub_ptr, cub->win);
+	free_cub_map(cub);
+	free_cub(cub, TRUE);
 	exit(0);
 	return (TRUE);
 }
 
 /*
 void
-	put_line(t_mlx *mlx)
+	put_line(t_cub *cub)
 {
 	int r = 0;
 	while (r < 150 / MINIMAP_SCALE_FACTOR)
 	{
 		mlx_pixel_put(
-				mlx->mlx_ptr,
-				mlx->win,
-				((mlx->conf.pl_x + r * cos(mlx->player.rotation_angle)) * mlx->conf.win_w)
-				/ (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR),
-				((mlx->conf.pl_y + r * sin(mlx->player.rotation_angle)) * mlx->conf.win_h)
-				/ (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR),
+				cub->cub_ptr,
+				cub->win,
+				((cub->conf.pl_x + r * cos(cub->player.rotation_angle)) * cub->conf.win_w)
+				/ (cub->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR),
+				((cub->conf.pl_y + r * sin(cub->player.rotation_angle)) * cub->conf.win_h)
+				/ (cub->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR),
 				0x00FF00
 				);
 		r++;
@@ -174,61 +174,61 @@ void
 */
 
 void
-	set_new_player_x(t_mlx *mlx, float *new_player_x)
+	set_new_player_x(t_cub *cub, float *new_player_x)
 {
-	if (mlx->player.side_direction == 1)
-		*new_player_x = mlx->conf.pl_x \
-			+ cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.side_direction == -1)
-		*new_player_x = mlx->conf.pl_x \
-			- cos(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == 1)
-		*new_player_x = mlx->conf.pl_x \
-			+ cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == -1)
-		*new_player_x = mlx->conf.pl_x \
-			- cos(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	if (cub->player.side_direction == 1)
+		*new_player_x = cub->conf.pl_x \
+			+ cos(cub->player.rotation_angle + PI / 2) * cub->player.walk_speed;
+	else if (cub->player.side_direction == -1)
+		*new_player_x = cub->conf.pl_x \
+			- cos(cub->player.rotation_angle + PI / 2) * cub->player.walk_speed;
+	else if (cub->player.walk_direction == 1)
+		*new_player_x = cub->conf.pl_x \
+			+ cos(cub->player.rotation_angle) * cub->player.walk_speed;
+	else if (cub->player.walk_direction == -1)
+		*new_player_x = cub->conf.pl_x \
+			- cos(cub->player.rotation_angle) * cub->player.walk_speed;
 }
 
 void
-	set_new_player_y(t_mlx *mlx, float *new_player_y)
+	set_new_player_y(t_cub *cub, float *new_player_y)
 {
-	if (mlx->player.side_direction == 1)
-		*new_player_y = mlx->conf.pl_y \
-			+ sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.side_direction == -1)
-		*new_player_y = mlx->conf.pl_y \
-			- sin(mlx->player.rotation_angle + PI / 2) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == 1)
-		*new_player_y = mlx->conf.pl_y \
-			+ sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
-	else if (mlx->player.walk_direction == -1)
-		*new_player_y = mlx->conf.pl_y \
-			- sin(mlx->player.rotation_angle) * mlx->player.walk_speed;
+	if (cub->player.side_direction == 1)
+		*new_player_y = cub->conf.pl_y \
+			+ sin(cub->player.rotation_angle + PI / 2) * cub->player.walk_speed;
+	else if (cub->player.side_direction == -1)
+		*new_player_y = cub->conf.pl_y \
+			- sin(cub->player.rotation_angle + PI / 2) * cub->player.walk_speed;
+	else if (cub->player.walk_direction == 1)
+		*new_player_y = cub->conf.pl_y \
+			+ sin(cub->player.rotation_angle) * cub->player.walk_speed;
+	else if (cub->player.walk_direction == -1)
+		*new_player_y = cub->conf.pl_y \
+			- sin(cub->player.rotation_angle) * cub->player.walk_speed;
 }
 
 void
-	set_new_rotation_angle(t_mlx *mlx)
+	set_new_rotation_angle(t_cub *cub)
 {
-	if (mlx->player.turn_direction == 1)
-		mlx->player.rotation_angle += 1 * mlx->player.turn_speed;
-	else if (mlx->player.turn_direction == -1)
-		mlx->player.rotation_angle -= 1 * mlx->player.turn_speed;
+	if (cub->player.turn_direction == 1)
+		cub->player.rotation_angle += 1 * cub->player.turn_speed;
+	else if (cub->player.turn_direction == -1)
+		cub->player.rotation_angle -= 1 * cub->player.turn_speed;
 }
 
 void
-	move(t_mlx *mlx)
+	move(t_cub *cub)
 {
-	float new_player_x = mlx->conf.pl_x;
-	float new_player_y = mlx->conf.pl_y;
+	float new_player_x = cub->conf.pl_x;
+	float new_player_y = cub->conf.pl_y;
 
-	set_new_player_x(mlx, &new_player_x);
-	set_new_player_y(mlx, &new_player_y);
-	set_new_rotation_angle(mlx);
-	if (!map_has_wall_at(mlx, new_player_x, new_player_y))
+	set_new_player_x(cub, &new_player_x);
+	set_new_player_y(cub, &new_player_y);
+	set_new_rotation_angle(cub);
+	if (!map_has_wall_at(cub, new_player_x, new_player_y))
 	{
-		mlx->conf.pl_x = new_player_x;
-		mlx->conf.pl_y = new_player_y;
+		cub->conf.pl_x = new_player_x;
+		cub->conf.pl_y = new_player_y;
 	}
 }
 
@@ -242,12 +242,12 @@ float
 }
 
 int
-	search_sprite_index(int x, int y, t_mlx *mlx)
+	search_sprite_index(int x, int y, t_cub *cub)
 {
 	int i = 0;
-	while (i < mlx->sprite_num)
+	while (i < cub->sprite_num)
 	{
-		if (mlx->sprite[i].sprite_x == x && mlx->sprite[i].sprite_y == y)
+		if (cub->sprite[i].sprite_x == x && cub->sprite[i].sprite_y == y)
 			return (i);
 		i++;
 	}
@@ -255,298 +255,298 @@ int
 }
 
 void
-	map_has_sprite_at(float x, float y, t_mlx *mlx)
+	map_has_sprite_at(float x, float y, t_cub *cub)
 {
 	float	x_to_check;
 	float	y_to_check;
 	int		index;
 
 	// TODO: ここでエラー処理必要か確認
-	if (x < 0 || x >= mlx->conf.map_x * TILE_SIZE \
-			|| y < 0 || y > mlx->conf.map_y * TILE_SIZE)
+	if (x < 0 || x >= cub->conf.map_x * TILE_SIZE \
+			|| y < 0 || y > cub->conf.map_y * TILE_SIZE)
 		return ;
 	x_to_check = floor(x / TILE_SIZE);
 	y_to_check = floor(y / TILE_SIZE);
 	if (!((int)y_to_check < 0 || (int)x_to_check < 0 \
-				|| (int)y_to_check >= mlx->conf.map_y \
-				|| (int)x_to_check >= mlx->conf.map_x))
+				|| (int)y_to_check >= cub->conf.map_y \
+				|| (int)x_to_check >= cub->conf.map_x))
 	{
-		if ((mlx->conf.map)[(int)y_to_check][(int)x_to_check] == '2')
+		if ((cub->conf.map)[(int)y_to_check][(int)x_to_check] == '2')
 		{
-			index = search_sprite_index((int)x_to_check, (int)y_to_check, mlx);
+			index = search_sprite_index((int)x_to_check, (int)y_to_check, cub);
 			if (index >= 0)
-				mlx->sprite[index].visible = 1;
+				cub->sprite[index].visible = 1;
 		}
 	}
 }
 
 void
-	set_ray_facing(t_mlx *mlx, float ray_angle)
+	set_ray_facing(t_cub *cub, float ray_angle)
 {
-	mlx->cast.is_ray_facing_down = ray_angle > 0 && ray_angle < PI;
-	mlx->cast.is_ray_facing_up = !mlx->cast.is_ray_facing_down;
-	mlx->cast.is_ray_facing_right = \
+	cub->cast.is_ray_facing_down = ray_angle > 0 && ray_angle < PI;
+	cub->cast.is_ray_facing_up = !cub->cast.is_ray_facing_down;
+	cub->cast.is_ray_facing_right = \
 		ray_angle < PI / 2 || ray_angle > PI * 3 / 2;
-	mlx->cast.is_ray_facing_left = !mlx->cast.is_ray_facing_right;
+	cub->cast.is_ray_facing_left = !cub->cast.is_ray_facing_right;
 }
 
 void
-	init_horz_wall_hit(t_mlx *mlx)
+	init_horz_wall_hit(t_cub *cub)
 {
-	mlx->cast.found_horz_wall_hit = FALSE;
-	mlx->cast.horz_wall_hit_x = 0;
-	mlx->cast.horz_wall_hit_y = 0;
-	mlx->cast.horz_wall_content = '\0';
+	cub->cast.found_horz_wall_hit = FALSE;
+	cub->cast.horz_wall_hit_x = 0;
+	cub->cast.horz_wall_hit_y = 0;
+	cub->cast.horz_wall_content = '\0';
 }
 
 void
-	set_horz_intercept_step(t_mlx *mlx, float ray_angle)
+	set_horz_intercept_step(t_cub *cub, float ray_angle)
 {
-	mlx->cast.y_intercept = floor(mlx->conf.pl_y / TILE_SIZE) * TILE_SIZE;
-	mlx->cast.y_intercept += mlx->cast.is_ray_facing_down ? TILE_SIZE : 0;
-	mlx->cast.x_intercept = \
-		mlx->conf.pl_x + (mlx->cast.y_intercept - mlx->conf.pl_y) \
+	cub->cast.y_intercept = floor(cub->conf.pl_y / TILE_SIZE) * TILE_SIZE;
+	cub->cast.y_intercept += cub->cast.is_ray_facing_down ? TILE_SIZE : 0;
+	cub->cast.x_intercept = \
+		cub->conf.pl_x + (cub->cast.y_intercept - cub->conf.pl_y) \
 		/ tan(ray_angle);
-	mlx->cast.y_step = TILE_SIZE;
-	mlx->cast.y_step *= mlx->cast.is_ray_facing_up ? -1 : 1;
-	mlx->cast.x_step = TILE_SIZE / tan(ray_angle);
-	mlx->cast.x_step *= \
-		(mlx->cast.is_ray_facing_left && mlx->cast.x_step > 0) ? -1 : 1;
-	mlx->cast.x_step *= \
-		(mlx->cast.is_ray_facing_right && mlx->cast.x_step < 0) ? -1 : 1;
+	cub->cast.y_step = TILE_SIZE;
+	cub->cast.y_step *= cub->cast.is_ray_facing_up ? -1 : 1;
+	cub->cast.x_step = TILE_SIZE / tan(ray_angle);
+	cub->cast.x_step *= \
+		(cub->cast.is_ray_facing_left && cub->cast.x_step > 0) ? -1 : 1;
+	cub->cast.x_step *= \
+		(cub->cast.is_ray_facing_right && cub->cast.x_step < 0) ? -1 : 1;
 }
 
 void
-	set_horz_next_touch(t_mlx *mlx)
+	set_horz_next_touch(t_cub *cub)
 {
-	mlx->cast.next_horz_touch_x = mlx->cast.x_intercept;
-	mlx->cast.next_horz_touch_y = mlx->cast.y_intercept;
+	cub->cast.next_horz_touch_x = cub->cast.x_intercept;
+	cub->cast.next_horz_touch_y = cub->cast.y_intercept;
 }
 
 int
-	check_horz_wall_set(t_mlx *mlx, float x_to_check, float y_to_check)
+	check_horz_wall_set(t_cub *cub, float x_to_check, float y_to_check)
 {
-	if (map_has_wall_at(mlx, x_to_check, y_to_check))
+	if (map_has_wall_at(cub, x_to_check, y_to_check))
 	{
-		mlx->cast.horz_wall_hit_x = mlx->cast.next_horz_touch_x;
-		mlx->cast.horz_wall_hit_y = mlx->cast.next_horz_touch_y;
+		cub->cast.horz_wall_hit_x = cub->cast.next_horz_touch_x;
+		cub->cast.horz_wall_hit_y = cub->cast.next_horz_touch_y;
 		if (!((int)floor(y_to_check / TILE_SIZE) < 0 \
 			|| (int)floor(x_to_check / TILE_SIZE) < 0 \
-			||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y \
-			|| (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
-			mlx->cast.horz_wall_content = \
-				(mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)]\
+			||(int)floor(y_to_check / TILE_SIZE) >= cub->conf.map_y \
+			|| (int)floor(x_to_check / TILE_SIZE) >= cub->conf.map_x))
+			cub->cast.horz_wall_content = \
+				(cub->conf.map)[(int)floor(y_to_check / TILE_SIZE)]\
 				[(int)floor(x_to_check / TILE_SIZE)];
 		else
-			mlx->cast.horz_wall_content = '1';
-		mlx->cast.found_horz_wall_hit = TRUE;
+			cub->cast.horz_wall_content = '1';
+		cub->cast.found_horz_wall_hit = TRUE;
 		return (TRUE);
 	}
 	else
 	{
-		mlx->cast.next_horz_touch_x += mlx->cast.x_step;
-		mlx->cast.next_horz_touch_y += mlx->cast.y_step;
+		cub->cast.next_horz_touch_x += cub->cast.x_step;
+		cub->cast.next_horz_touch_y += cub->cast.y_step;
 		return (FALSE);
 	}
 }
 
 void
-	set_horz_wall_hit(t_mlx *mlx)
+	set_horz_wall_hit(t_cub *cub)
 {
 	float x_to_check;
 	float y_to_check;
 
-	while (mlx->cast.next_horz_touch_x >= 0 \
-			&& mlx->cast.next_horz_touch_x <= mlx->conf.map_x * TILE_SIZE \
-			&& mlx->cast.next_horz_touch_y >= 0 \
-			&& mlx->cast.next_horz_touch_y <= mlx->conf.map_y * TILE_SIZE)
+	while (cub->cast.next_horz_touch_x >= 0 \
+			&& cub->cast.next_horz_touch_x <= cub->conf.map_x * TILE_SIZE \
+			&& cub->cast.next_horz_touch_y >= 0 \
+			&& cub->cast.next_horz_touch_y <= cub->conf.map_y * TILE_SIZE)
 	{
-		x_to_check = mlx->cast.next_horz_touch_x;
-		y_to_check = mlx->cast.next_horz_touch_y + (mlx->cast.is_ray_facing_up ? -1 : 0);
-		map_has_sprite_at(x_to_check, y_to_check, mlx);
-		if (check_horz_wall_set(mlx, x_to_check, y_to_check) == TRUE)
+		x_to_check = cub->cast.next_horz_touch_x;
+		y_to_check = cub->cast.next_horz_touch_y + (cub->cast.is_ray_facing_up ? -1 : 0);
+		map_has_sprite_at(x_to_check, y_to_check, cub);
+		if (check_horz_wall_set(cub, x_to_check, y_to_check) == TRUE)
 			break ;
 	}
 }
 
 void
-	init_vert_wall_hit(t_mlx *mlx)
+	init_vert_wall_hit(t_cub *cub)
 {
-	mlx->cast.found_vert_wall_hit = FALSE;
-	mlx->cast.vert_wall_hit_x = 0;
-	mlx->cast.vert_wall_hit_y = 0;
-	mlx->cast.vert_wall_content = '\0';
+	cub->cast.found_vert_wall_hit = FALSE;
+	cub->cast.vert_wall_hit_x = 0;
+	cub->cast.vert_wall_hit_y = 0;
+	cub->cast.vert_wall_content = '\0';
 }
 
 void
-	set_vert_intercept_step(t_mlx *mlx, float ray_angle)
+	set_vert_intercept_step(t_cub *cub, float ray_angle)
 {
-	mlx->cast.x_intercept = floor(mlx->conf.pl_x / TILE_SIZE) * TILE_SIZE;
-	mlx->cast.x_intercept += mlx->cast.is_ray_facing_right ? TILE_SIZE : 0;
-	mlx->cast.y_intercept = \
-		mlx->conf.pl_y + (mlx->cast.x_intercept - mlx->conf.pl_x) \
+	cub->cast.x_intercept = floor(cub->conf.pl_x / TILE_SIZE) * TILE_SIZE;
+	cub->cast.x_intercept += cub->cast.is_ray_facing_right ? TILE_SIZE : 0;
+	cub->cast.y_intercept = \
+		cub->conf.pl_y + (cub->cast.x_intercept - cub->conf.pl_x) \
 		* tan(ray_angle);
-	mlx->cast.x_step = TILE_SIZE;
-	mlx->cast.x_step *= mlx->cast.is_ray_facing_left ? -1 : 1;
-	mlx->cast.y_step = TILE_SIZE * tan(ray_angle);
-	mlx->cast.y_step *= \
-		(mlx->cast.is_ray_facing_up && mlx->cast.y_step > 0) ? -1 : 1;
-	mlx->cast.y_step *= \
-		(mlx->cast.is_ray_facing_down && mlx->cast.y_step < 0) ? -1 : 1;
+	cub->cast.x_step = TILE_SIZE;
+	cub->cast.x_step *= cub->cast.is_ray_facing_left ? -1 : 1;
+	cub->cast.y_step = TILE_SIZE * tan(ray_angle);
+	cub->cast.y_step *= \
+		(cub->cast.is_ray_facing_up && cub->cast.y_step > 0) ? -1 : 1;
+	cub->cast.y_step *= \
+		(cub->cast.is_ray_facing_down && cub->cast.y_step < 0) ? -1 : 1;
 }
 
 void
-	set_vert_next_touch(t_mlx *mlx)
+	set_vert_next_touch(t_cub *cub)
 {
-	mlx->cast.next_vert_touch_x = mlx->cast.x_intercept;
-	mlx->cast.next_vert_touch_y = mlx->cast.y_intercept;
+	cub->cast.next_vert_touch_x = cub->cast.x_intercept;
+	cub->cast.next_vert_touch_y = cub->cast.y_intercept;
 }
 
 int
-	check_vert_wall_set(t_mlx *mlx, float x_to_check, float y_to_check)
+	check_vert_wall_set(t_cub *cub, float x_to_check, float y_to_check)
 {
-	if (map_has_wall_at(mlx, x_to_check, y_to_check))
+	if (map_has_wall_at(cub, x_to_check, y_to_check))
 	{
-		mlx->cast.vert_wall_hit_x = mlx->cast.next_vert_touch_x;
-		mlx->cast.vert_wall_hit_y = mlx->cast.next_vert_touch_y;
+		cub->cast.vert_wall_hit_x = cub->cast.next_vert_touch_x;
+		cub->cast.vert_wall_hit_y = cub->cast.next_vert_touch_y;
 		if (!(\
 			(int)floor(y_to_check / TILE_SIZE) < 0 \
 			|| (int)floor(x_to_check / TILE_SIZE) < 0 \
-			||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y \
-			|| (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
-			mlx->cast.vert_wall_content = \
-				(mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)]\
+			||(int)floor(y_to_check / TILE_SIZE) >= cub->conf.map_y \
+			|| (int)floor(x_to_check / TILE_SIZE) >= cub->conf.map_x))
+			cub->cast.vert_wall_content = \
+				(cub->conf.map)[(int)floor(y_to_check / TILE_SIZE)]\
 				[(int)floor(x_to_check / TILE_SIZE)];
 		else
-			mlx->cast.vert_wall_content = '1';
-		mlx->cast.found_vert_wall_hit = TRUE;
+			cub->cast.vert_wall_content = '1';
+		cub->cast.found_vert_wall_hit = TRUE;
 		return (TRUE);
 	}
 	else
 	{
-		mlx->cast.next_vert_touch_x += mlx->cast.x_step;
-		mlx->cast.next_vert_touch_y += mlx->cast.y_step;
+		cub->cast.next_vert_touch_x += cub->cast.x_step;
+		cub->cast.next_vert_touch_y += cub->cast.y_step;
 		return (FALSE);
 	}
 }
 
 void
-	set_vert_wall_hit(t_mlx *mlx)
+	set_vert_wall_hit(t_cub *cub)
 {
 	float x_to_check;
 	float y_to_check;
 
-	while (mlx->cast.next_vert_touch_x >= 0 \
-			&& mlx->cast.next_vert_touch_x <= mlx->conf.map_x * TILE_SIZE \
-			&& mlx->cast.next_vert_touch_y >= 0 \
-			&& mlx->cast.next_vert_touch_y <= mlx->conf.map_y * TILE_SIZE)
+	while (cub->cast.next_vert_touch_x >= 0 \
+			&& cub->cast.next_vert_touch_x <= cub->conf.map_x * TILE_SIZE \
+			&& cub->cast.next_vert_touch_y >= 0 \
+			&& cub->cast.next_vert_touch_y <= cub->conf.map_y * TILE_SIZE)
 	{
-		x_to_check = mlx->cast.next_vert_touch_x + (mlx->cast.is_ray_facing_left ? -1 : 0);
-		y_to_check = mlx->cast.next_vert_touch_y;
-		map_has_sprite_at(x_to_check, y_to_check, mlx);
-		if (check_vert_wall_set(mlx, x_to_check, y_to_check) == TRUE)
+		x_to_check = cub->cast.next_vert_touch_x + (cub->cast.is_ray_facing_left ? -1 : 0);
+		y_to_check = cub->cast.next_vert_touch_y;
+		map_has_sprite_at(x_to_check, y_to_check, cub);
+		if (check_vert_wall_set(cub, x_to_check, y_to_check) == TRUE)
 			break ;
 	}
 }
 
 void
-	set_hit_distance(t_mlx *mlx)
+	set_hit_distance(t_cub *cub)
 {
-	mlx->cast.horz_hit_distance = mlx->cast.found_horz_wall_hit
-		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y\
-			, mlx->cast.horz_wall_hit_x, mlx->cast.horz_wall_hit_y)
+	cub->cast.horz_hit_distance = cub->cast.found_horz_wall_hit
+		? dist_between_points(cub->conf.pl_x, cub->conf.pl_y\
+			, cub->cast.horz_wall_hit_x, cub->cast.horz_wall_hit_y)
 		: FLT_MAX;
-	mlx->cast.vert_hit_distance = mlx->cast.found_vert_wall_hit
-		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y\
-			, mlx->cast.vert_wall_hit_x, mlx->cast.vert_wall_hit_y)
+	cub->cast.vert_hit_distance = cub->cast.found_vert_wall_hit
+		? dist_between_points(cub->conf.pl_x, cub->conf.pl_y\
+			, cub->cast.vert_wall_hit_x, cub->cast.vert_wall_hit_y)
 		: FLT_MAX;
 }
 
 void
-	set_ray_info(t_mlx *mlx, int strip_id, float ray_angle)
+	set_ray_info(t_cub *cub, int strip_id, float ray_angle)
 {
-	if (mlx->cast.vert_hit_distance < mlx->cast.horz_hit_distance)
+	if (cub->cast.vert_hit_distance < cub->cast.horz_hit_distance)
 	{
-		mlx->rays[strip_id].distance = mlx->cast.vert_hit_distance;
-		mlx->rays[strip_id].wall_hit_x = mlx->cast.vert_wall_hit_x;
-		mlx->rays[strip_id].wall_hit_y = mlx->cast.vert_wall_hit_y;
-		mlx->rays[strip_id].wall_hit_content = mlx->cast.vert_wall_content;
-		mlx->rays[strip_id].was_hit_vertical = TRUE;
+		cub->rays[strip_id].distance = cub->cast.vert_hit_distance;
+		cub->rays[strip_id].wall_hit_x = cub->cast.vert_wall_hit_x;
+		cub->rays[strip_id].wall_hit_y = cub->cast.vert_wall_hit_y;
+		cub->rays[strip_id].wall_hit_content = cub->cast.vert_wall_content;
+		cub->rays[strip_id].was_hit_vertical = TRUE;
 	}
 	else
 	{
-		mlx->rays[strip_id].distance = mlx->cast.horz_hit_distance;
-		mlx->rays[strip_id].wall_hit_x = mlx->cast.horz_wall_hit_x;
-		mlx->rays[strip_id].wall_hit_y = mlx->cast.horz_wall_hit_y;
-		mlx->rays[strip_id].wall_hit_content = mlx->cast.horz_wall_content;
-		mlx->rays[strip_id].was_hit_vertical = FALSE;
+		cub->rays[strip_id].distance = cub->cast.horz_hit_distance;
+		cub->rays[strip_id].wall_hit_x = cub->cast.horz_wall_hit_x;
+		cub->rays[strip_id].wall_hit_y = cub->cast.horz_wall_hit_y;
+		cub->rays[strip_id].wall_hit_content = cub->cast.horz_wall_content;
+		cub->rays[strip_id].was_hit_vertical = FALSE;
 	}
-	mlx->rays[strip_id].ray_angle = ray_angle;
-	mlx->rays[strip_id].is_ray_facing_down = mlx->cast.is_ray_facing_down;
-	mlx->rays[strip_id].is_ray_facing_up = mlx->cast.is_ray_facing_up;
-	mlx->rays[strip_id].is_ray_facing_left = mlx->cast.is_ray_facing_left;
-	mlx->rays[strip_id].is_ray_facing_right = mlx->cast.is_ray_facing_right;
+	cub->rays[strip_id].ray_angle = ray_angle;
+	cub->rays[strip_id].is_ray_facing_down = cub->cast.is_ray_facing_down;
+	cub->rays[strip_id].is_ray_facing_up = cub->cast.is_ray_facing_up;
+	cub->rays[strip_id].is_ray_facing_left = cub->cast.is_ray_facing_left;
+	cub->rays[strip_id].is_ray_facing_right = cub->cast.is_ray_facing_right;
 }
 
 void 
-	cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
+	cast_ray(float ray_angle, int strip_id, t_cub *cub)
 {
 	ray_angle = normalize_angle(ray_angle);
-	set_ray_facing(mlx, ray_angle);
+	set_ray_facing(cub, ray_angle);
 
 	// horizontal ray_grid intersection code
-	init_horz_wall_hit(mlx);
-	set_horz_intercept_step(mlx, ray_angle);
-	set_horz_next_touch(mlx);
-	set_horz_wall_hit(mlx);
+	init_horz_wall_hit(cub);
+	set_horz_intercept_step(cub, ray_angle);
+	set_horz_next_touch(cub);
+	set_horz_wall_hit(cub);
 	// vertical ray_grid intersection code
-	init_vert_wall_hit(mlx);
-	set_vert_intercept_step(mlx, ray_angle);
-	set_vert_next_touch(mlx);
-	set_vert_wall_hit(mlx);
-	set_hit_distance(mlx);
-	set_ray_info(mlx, strip_id, ray_angle);
+	init_vert_wall_hit(cub);
+	set_vert_intercept_step(cub, ray_angle);
+	set_vert_next_touch(cub);
+	set_vert_wall_hit(cub);
+	set_hit_distance(cub);
+	set_ray_info(cub, strip_id, ray_angle);
 }
 
 void
-	cast_all_rays(t_mlx *mlx)
+	cast_all_rays(t_cub *cub)
 {
 	int		strip_id;
 	float	ray_angle;
 
 	strip_id = 0;
-	ray_angle = mlx->player.rotation_angle - (FOV_ANGLE / 2);
-	while (strip_id < mlx->conf.win_w)
+	ray_angle = cub->player.rotation_angle - (FOV_ANGLE / 2);
+	while (strip_id < cub->conf.win_w)
 	{
-		cast_ray(ray_angle, strip_id, mlx);
+		cast_ray(ray_angle, strip_id, cub);
 		strip_id++;
-		ray_angle += FOV_ANGLE / mlx->conf.win_w;
+		ray_angle += FOV_ANGLE / cub->conf.win_w;
 	}
 }
 
 /*
 int
-	setting_ray_point(t_mlx *mlx)
+	setting_ray_point(t_cub *cub)
 {
 	int x = -1;
 	int y = -1;
 	int i = 0;
 
-	while (i < mlx->conf.win_w)
+	while (i < cub->conf.win_w)
 	{
-		if (!(mlx->rays[i].img_ptr = mlx_new_image(mlx->mlx_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR)))
+		if (!(cub->rays[i].img_ptr = mlx_new_image(cub->cub_ptr, 20 / MINIMAP_SCALE_FACTOR, 20 / MINIMAP_SCALE_FACTOR)))
 		{
-			free_mlx_map(mlx);
-			return (error_mes("Error\n false mlx_new_image for ray image\n", FALSE));
+			free_cub_map(cub);
+			return (error_mes("Error\n false cub_new_image for ray image\n", FALSE));
 		}
-		mlx->rays[i].data = (int *)mlx_get_data_addr(mlx->rays[i].img_ptr, &(mlx->rays[i].bpp), &(mlx->rays[i].size_l), &(mlx->rays[i].endian));
+		cub->rays[i].data = (int *)mlx_get_data_addr(cub->rays[i].img_ptr, &(cub->rays[i].bpp), &(cub->rays[i].size_l), &(cub->rays[i].endian));
 		y = -1;
 		while (++y < 20 / MINIMAP_SCALE_FACTOR)
 		{
 			x = -1;
 			while (++x < 20 / MINIMAP_SCALE_FACTOR)
 			{
-				mlx->rays[i].data[y * (mlx->rays[i].size_l / 4) + x] = 0xff0000;
+				cub->rays[i].data[y * (cub->rays[i].size_l / 4) + x] = 0xff0000;
 			}
 		}
 		i++;
@@ -557,93 +557,93 @@ int
 
 /*
 void
-	put_rays(t_mlx *mlx)
+	put_rays(t_cub *cub)
 {
 	int i = 0;
 
-	while (i < mlx->conf.win_w)
+	while (i < cub->conf.win_w)
 	{
 		// all ray put func from here
 		r = 0;
-		while (r < mlx->rays[i].distance / MINIMAP_SCALE_FACTOR)
+		while (r < cub->rays[i].distance / MINIMAP_SCALE_FACTOR)
 		{
-			mlx_pixel_put(mlx->mlx_ptr, mlx->win, mlx->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(mlx->rays[i].ray_angle)), mlx->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(mlx->rays[i].ray_angle)), 0x00FF00);
+			mlx_pixel_put(cub->cub_ptr, cub->win, cub->conf.pl_x / MINIMAP_SCALE_FACTOR + (r * cos(cub->rays[i].ray_angle)), cub->conf.pl_y / MINIMAP_SCALE_FACTOR + (r * sin(cub->rays[i].ray_angle)), 0x00FF00);
 			r++;
 		}
 		// till here
-		mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->rays[i].img_ptr, (mlx->rays[i].wall_hit_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->rays[i].wall_hit_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
+		mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->rays[i].img_ptr, (cub->rays[i].wall_hit_x * cub->conf.win_w) / (cub->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (cub->rays[i].wall_hit_y * cub->conf.win_h) / (cub->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
 		i++;
 	}
 }
 */
 
 void
-	add_some_pi(t_mlx *mlx, float base, float height, int i)
+	add_some_pi(t_cub *cub, float base, float height, int i)
 {
 	if (base < 0 && height < 0)
-		mlx->sprite[i].angle_from_player = \
-			PI + mlx->sprite[i].angle_from_player;
+		cub->sprite[i].angle_from_player = \
+			PI + cub->sprite[i].angle_from_player;
 	else if (base >= 0 && height < 0)
-		mlx->sprite[i].angle_from_player = \
-			2 * PI + mlx->sprite[i].angle_from_player;
+		cub->sprite[i].angle_from_player = \
+			2 * PI + cub->sprite[i].angle_from_player;
 	else if (base >= 0 && height >= 0)
-		mlx->sprite[i].angle_from_player = \
-			mlx->sprite[i].angle_from_player;
+		cub->sprite[i].angle_from_player = \
+			cub->sprite[i].angle_from_player;
 	else
-		mlx->sprite[i].angle_from_player = \
-			PI + mlx->sprite[i].angle_from_player;
+		cub->sprite[i].angle_from_player = \
+			PI + cub->sprite[i].angle_from_player;
 }
 
 void
-	get_info_sprite(t_mlx *mlx)
+	get_info_sprite(t_cub *cub)
 {
 	int i = 0;
 	float	base;
 	float	height;
 
-	while (i < mlx->sprite_num)
+	while (i < cub->sprite_num)
 	{
-		if (mlx->sprite[i].visible == 1)
+		if (cub->sprite[i].visible == 1)
 		{
-			base = (mlx->sprite[i].sprite_x + 0.5) \
-					* TILE_SIZE - mlx->conf.pl_x;
-			height = (mlx->sprite[i].sprite_y + 0.5) \
-					* TILE_SIZE - mlx->conf.pl_y;
-			mlx->sprite[i].distance = dist_between_points( \
-					(mlx->sprite[i].sprite_x + 0.5) * TILE_SIZE, \
-					(mlx->sprite[i].sprite_y + 0.5) * TILE_SIZE, \
-					mlx->conf.pl_x, \
-					mlx->conf.pl_y);
-			mlx->sprite[i].angle_from_player = atanf(height / base);
-			add_some_pi(mlx, base, height, i);
+			base = (cub->sprite[i].sprite_x + 0.5) \
+					* TILE_SIZE - cub->conf.pl_x;
+			height = (cub->sprite[i].sprite_y + 0.5) \
+					* TILE_SIZE - cub->conf.pl_y;
+			cub->sprite[i].distance = dist_between_points( \
+					(cub->sprite[i].sprite_x + 0.5) * TILE_SIZE, \
+					(cub->sprite[i].sprite_y + 0.5) * TILE_SIZE, \
+					cub->conf.pl_x, \
+					cub->conf.pl_y);
+			cub->sprite[i].angle_from_player = atanf(height / base);
+			add_some_pi(cub, base, height, i);
 		}
 		i++;
 	}
 }
 
 void
-	copy_sprite_first_half(t_mlx *mlx, int mid, int i)
+	copy_sprite_first_half(t_cub *cub, int mid, int i)
 {
 	while (i <= mid)
 	{
-		mlx->tmp[i] = mlx->sprite[i];
+		cub->tmp[i] = cub->sprite[i];
 		i++;
 	}
 }
 
 void
-	copy_sprite_second_half(t_mlx *mlx, int right, int i, int j)
+	copy_sprite_second_half(t_cub *cub, int right, int i, int j)
 {
 	while (i <= right)
 	{
-		mlx->tmp[i] = mlx->sprite[j];
+		cub->tmp[i] = cub->sprite[j];
 		i++;
 		j--;
 	}
 }
 
 void
-	sort_by_dist(t_mlx *mlx, int left, int right)
+	sort_by_dist(t_cub *cub, int left, int right)
 {
 	int i;
 	int j;
@@ -654,14 +654,14 @@ void
 	k = left;
 	while (k <= right)
 	{
-		if (mlx->tmp[i].distance >= mlx->tmp[j].distance)
+		if (cub->tmp[i].distance >= cub->tmp[j].distance)
 		{
-			mlx->sprite[k] = mlx->tmp[i];
+			cub->sprite[k] = cub->tmp[i];
 			i++;
 		}
 		else
 		{
-			mlx->sprite[k] = mlx->tmp[j];
+			cub->sprite[k] = cub->tmp[j];
 			j--;
 		}
 		k++;
@@ -669,237 +669,237 @@ void
 }
 
 void
-	mergesort_sprite_structure(t_mlx *mlx, int left, int right)
+	mergesort_sprite_structure(t_cub *cub, int left, int right)
 {
 	int mid;
 
 	if (left >= right)
 		return ;
 	mid = (left + right) / 2;
-	mergesort_sprite_structure(mlx, left, mid);
-	mergesort_sprite_structure(mlx, mid + 1, right);
-	copy_sprite_first_half(mlx, mid, left);
-	copy_sprite_second_half(mlx, right, mid + 1, right);
-	sort_by_dist(mlx, left, right);
+	mergesort_sprite_structure(cub, left, mid);
+	mergesort_sprite_structure(cub, mid + 1, right);
+	copy_sprite_first_half(cub, mid, left);
+	copy_sprite_second_half(cub, right, mid + 1, right);
+	sort_by_dist(cub, left, right);
 }
 
 void
-	sort_sprite_structure(t_mlx *mlx)
+	sort_sprite_structure(t_cub *cub)
 {
-	ft_bzero(mlx->tmp, sizeof(t_sprites) * (mlx->sprite_num + 1));
-	mergesort_sprite_structure(mlx, 0, mlx->sprite_num - 1);
+	ft_bzero(cub->tmp, sizeof(t_sprites) * (cub->sprite_num + 1));
+	mergesort_sprite_structure(cub, 0, cub->sprite_num - 1);
 }
 
 void
-	set_window_vars(t_mlx *mlx, int i)
+	set_window_vars(t_cub *cub, int i)
 {
-	mlx->window.perp_distance = mlx->rays[i].distance \
-				* cos(mlx->rays[i].ray_angle - mlx->player.rotation_angle);
-	mlx->window.distance_proj_plane = \
-				(mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
-	mlx->window.projected_wall_height = (TILE_SIZE \
-			/ mlx->window.perp_distance) * mlx->window.distance_proj_plane;
-	mlx->window.wall_strip_height = (int)mlx->window.projected_wall_height;
-	mlx->window.wall_top_pixel = (mlx->conf.win_h / 2) \
-				- (mlx->window.wall_strip_height / 2);
-	mlx->window.wall_top_pixel = mlx->window.wall_top_pixel < 0 ? \
-				 0 : mlx->window.wall_top_pixel;
-	mlx->window.wall_bottom_pixel = (mlx->conf.win_h / 2) \
-				+ (mlx->window.wall_strip_height / 2);
-	mlx->window.wall_bottom_pixel = \
-			mlx->window.wall_bottom_pixel > mlx->conf.win_h ? \
-					mlx->conf.win_h : mlx->window.wall_bottom_pixel;
+	cub->window.perp_distance = cub->rays[i].distance \
+				* cos(cub->rays[i].ray_angle - cub->player.rotation_angle);
+	cub->window.distance_proj_plane = \
+				(cub->conf.win_w / 2) / tan(FOV_ANGLE / 2);
+	cub->window.projected_wall_height = (TILE_SIZE \
+			/ cub->window.perp_distance) * cub->window.distance_proj_plane;
+	cub->window.wall_strip_height = (int)cub->window.projected_wall_height;
+	cub->window.wall_top_pixel = (cub->conf.win_h / 2) \
+				- (cub->window.wall_strip_height / 2);
+	cub->window.wall_top_pixel = cub->window.wall_top_pixel < 0 ? \
+				 0 : cub->window.wall_top_pixel;
+	cub->window.wall_bottom_pixel = (cub->conf.win_h / 2) \
+				+ (cub->window.wall_strip_height / 2);
+	cub->window.wall_bottom_pixel = \
+			cub->window.wall_bottom_pixel > cub->conf.win_h ? \
+					cub->conf.win_h : cub->window.wall_bottom_pixel;
 }
 
 void
-	set_sprite_var(t_mlx *mlx, int j)
+	set_sprite_var(t_cub *cub, int j)
 {
-	mlx->sprite[j].perp_distance = mlx->sprite[j].distance \
-		* cos(mlx->sprite[j].angle_from_player \
-		- mlx->player.rotation_angle);
-	mlx->sprite[j].distance_proj_plane = \
-		(mlx->conf.win_w / 2) / tan(FOV_ANGLE / 2);
-	mlx->sprite[j].projected_sprite_height = (TILE_SIZE \
-		/ mlx->sprite[j].perp_distance) \
-		* mlx->sprite[j].distance_proj_plane;
-	mlx->sprite[j].sprite_strip_height = \
-		(int)mlx->sprite[j].projected_sprite_height;
-	mlx->sprite[j].sprite_top_pixel = (mlx->conf.win_h / 2) \
-		- (mlx->sprite[j].sprite_strip_height / 2);
-	mlx->sprite[j].sprite_top_pixel = mlx->sprite[j].sprite_top_pixel \
-		< 0 ? 0 : mlx->sprite[j].sprite_top_pixel;
-	mlx->sprite[j].sprite_bottom_pixel = (mlx->conf.win_h / 2) \
-		+ (mlx->sprite[j].sprite_strip_height / 2);
-	mlx->sprite[j].sprite_bottom_pixel = \
-		mlx->sprite[j].sprite_bottom_pixel > mlx->conf.win_h ? \
-		mlx->conf.win_h : mlx->sprite[j].sprite_bottom_pixel;
+	cub->sprite[j].perp_distance = cub->sprite[j].distance \
+		* cos(cub->sprite[j].angle_from_player \
+		- cub->player.rotation_angle);
+	cub->sprite[j].distance_proj_plane = \
+		(cub->conf.win_w / 2) / tan(FOV_ANGLE / 2);
+	cub->sprite[j].projected_sprite_height = (TILE_SIZE \
+		/ cub->sprite[j].perp_distance) \
+		* cub->sprite[j].distance_proj_plane;
+	cub->sprite[j].sprite_strip_height = \
+		(int)cub->sprite[j].projected_sprite_height;
+	cub->sprite[j].sprite_top_pixel = (cub->conf.win_h / 2) \
+		- (cub->sprite[j].sprite_strip_height / 2);
+	cub->sprite[j].sprite_top_pixel = cub->sprite[j].sprite_top_pixel \
+		< 0 ? 0 : cub->sprite[j].sprite_top_pixel;
+	cub->sprite[j].sprite_bottom_pixel = (cub->conf.win_h / 2) \
+		+ (cub->sprite[j].sprite_strip_height / 2);
+	cub->sprite[j].sprite_bottom_pixel = \
+		cub->sprite[j].sprite_bottom_pixel > cub->conf.win_h ? \
+		cub->conf.win_h : cub->sprite[j].sprite_bottom_pixel;
 }
 
 void
-	set_sprite_vars(t_mlx *mlx)
+	set_sprite_vars(t_cub *cub)
 {
 	int j;
 
 	j = 0;
-	while (j < mlx->sprite_num)
+	while (j < cub->sprite_num)
 	{
-		if (mlx->sprite[j].visible == 1)
-			set_sprite_var(mlx, j);
+		if (cub->sprite[j].visible == 1)
+			set_sprite_var(cub, j);
 		j++;
 	}
 }
 
 void
-	describe_ceil(t_mlx *mlx, int x)
+	describe_ceil(t_cub *cub, int x)
 {
 	int y;
 
 	y = 0;
-	while (y < mlx->window.wall_top_pixel && y < mlx->conf.win_h)
+	while (y < cub->window.wall_top_pixel && y < cub->conf.win_h)
 	{
-		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = mlx->conf.ceil_c;
+		cub->window.data[((cub->window.size_l / 4) * y) + x] = cub->conf.ceil_c;
 		y++;
 	}
 }
 
 void
-	set_tex_offset_x_wall(t_mlx *mlx, int i)
+	set_tex_offset_x_wall(t_cub *cub, int i)
 {
-	if (mlx->rays[i].was_hit_vertical)
-		mlx->window.texture_offset_x = \
-			(int)mlx->rays[i].wall_hit_y % TEXTURE_HEIGHT;
+	if (cub->rays[i].was_hit_vertical)
+		cub->window.texture_offset_x = \
+			(int)cub->rays[i].wall_hit_y % TEXTURE_HEIGHT;
 	else
-		mlx->window.texture_offset_x = \
-			(int)mlx->rays[i].wall_hit_x % TEXTURE_WIDTH;
+		cub->window.texture_offset_x = \
+			(int)cub->rays[i].wall_hit_x % TEXTURE_WIDTH;
 }
 
 void
-	set_vars_for_wall(t_mlx *mlx, int i, int *tex_index, int y)
+	set_vars_for_wall(t_cub *cub, int i, int *tex_index, int y)
 {
-	if (mlx->rays[i].was_hit_vertical)
-		*tex_index = mlx->rays[i].is_ray_facing_right ? 2 : 3;
+	if (cub->rays[i].was_hit_vertical)
+		*tex_index = cub->rays[i].is_ray_facing_right ? 2 : 3;
 	else
-		*tex_index = mlx->rays[i].is_ray_facing_up ? 0 : 1;
-	mlx->window.distance_from_top = \
-		y + (mlx->window.wall_strip_height / 2) - (mlx->conf.win_h / 2);
-	mlx->window.texture_offset_y = \
-		mlx->window.distance_from_top \
-		* ((float)64 / mlx->window.wall_strip_height);
+		*tex_index = cub->rays[i].is_ray_facing_up ? 0 : 1;
+	cub->window.distance_from_top = \
+		y + (cub->window.wall_strip_height / 2) - (cub->conf.win_h / 2);
+	cub->window.texture_offset_y = \
+		cub->window.distance_from_top \
+		* ((float)64 / cub->window.wall_strip_height);
 }
 
 void
-	describe_wall(t_mlx *mlx, int i, int x)
+	describe_wall(t_cub *cub, int i, int x)
 {
 	int y;
 	int tex_index;
 
-	set_tex_offset_x_wall(mlx, i);
-	y = mlx->window.wall_top_pixel;
-	while (y < mlx->window.wall_bottom_pixel)
+	set_tex_offset_x_wall(cub, i);
+	y = cub->window.wall_top_pixel;
+	while (y < cub->window.wall_bottom_pixel)
 	{
-		set_vars_for_wall(mlx, i, &tex_index, y);
+		set_vars_for_wall(cub, i, &tex_index, y);
 		if (tex_index == 0 || tex_index == 2)
-			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
-				mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) \
-				* mlx->window.texture_offset_y) + mlx->window.texture_offset_x];
+			cub->window.data[((cub->window.size_l / 4) * y) + x] = \
+				cub->tex[tex_index].data[((cub->tex[tex_index].size_l / 4) \
+				* cub->window.texture_offset_y) + cub->window.texture_offset_x];
 		else
 		{
-			mlx->window.texture_offset_x_rev = \
-				TEXTURE_WIDTH - mlx->window.texture_offset_x - 1;
-			mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
-				mlx->tex[tex_index].data[((mlx->tex[tex_index].size_l / 4) \
-				* mlx->window.texture_offset_y) \
-				+ mlx->window.texture_offset_x_rev];
+			cub->window.texture_offset_x_rev = \
+				TEXTURE_WIDTH - cub->window.texture_offset_x - 1;
+			cub->window.data[((cub->window.size_l / 4) * y) + x] = \
+				cub->tex[tex_index].data[((cub->tex[tex_index].size_l / 4) \
+				* cub->window.texture_offset_y) \
+				+ cub->window.texture_offset_x_rev];
 		}
 		y++;
 	}
 }
 
 void
-	describe_floor(t_mlx *mlx, int x)
+	describe_floor(t_cub *cub, int x)
 {
 	int y;
 
-	y = mlx->window.wall_bottom_pixel;
-	while (y < mlx->conf.win_h && y >= 0)
+	y = cub->window.wall_bottom_pixel;
+	while (y < cub->conf.win_h && y >= 0)
 	{
-		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
-			mlx->conf.floor_c;
+		cub->window.data[((cub->window.size_l / 4) * y) + x] = \
+			cub->conf.floor_c;
 		y++;
 	}
 }
 
 int
-	check_sprite_visible(t_mlx *mlx, int i, int j, int x)
+	check_sprite_visible(t_cub *cub, int i, int j, int x)
 {
-	if (!(mlx->sprite[j].distance < mlx->rays[i].distance))
+	if (!(cub->sprite[j].distance < cub->rays[i].distance))
 		return (FALSE);
-	if (!(mlx->sprite[j].visible == 1))
+	if (!(cub->sprite[j].visible == 1))
 		return (FALSE);
-	if (!(x >= ((normalize_angle((mlx->sprite[j].angle_from_player \
-				- mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
-				* mlx->conf.win_w) \
-				- (mlx->sprite[j].projected_sprite_height / 2)))
+	if (!(x >= ((normalize_angle((cub->sprite[j].angle_from_player \
+				- cub->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
+				* cub->conf.win_w) \
+				- (cub->sprite[j].projected_sprite_height / 2)))
 		return (FALSE);
-	if (!(x <= ((normalize_angle((mlx->sprite[j].angle_from_player \
-				- mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
-				* mlx->conf.win_w) \
-				+ (mlx->sprite[j].projected_sprite_height / 2)))
+	if (!(x <= ((normalize_angle((cub->sprite[j].angle_from_player \
+				- cub->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
+				* cub->conf.win_w) \
+				+ (cub->sprite[j].projected_sprite_height / 2)))
 		return (FALSE);
 	return (TRUE);
 }
 
 void
-	set_tex_offset_x_sprite(t_mlx *mlx, int j, int x)
+	set_tex_offset_x_sprite(t_cub *cub, int j, int x)
 {
-	mlx->sprite[j].texture_offset_x = \
-		(int)((x - (((normalize_angle((mlx->sprite[j].angle_from_player \
-		- mlx->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
-		* mlx->conf.win_w) - (mlx->sprite[j].projected_sprite_height / 2))) \
-		/ mlx->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
+	cub->sprite[j].texture_offset_x = \
+		(int)((x - (((normalize_angle((cub->sprite[j].angle_from_player \
+		- cub->player.rotation_angle) + (FOV_ANGLE / 2)) / FOV_ANGLE) \
+		* cub->conf.win_w) - (cub->sprite[j].projected_sprite_height / 2))) \
+		/ cub->sprite[j].projected_sprite_height * TEXTURE_WIDTH); 
 }
 
 void
-	set_vars_for_sprite(t_mlx *mlx, int j, int y)
+	set_vars_for_sprite(t_cub *cub, int j, int y)
 {
-	mlx->sprite[j].distance_from_top = \
-		y + (mlx->sprite[j].sprite_strip_height / 2) - (mlx->conf.win_h / 2);
-	mlx->sprite[j].texture_offset_y = \
-		mlx->sprite[j].distance_from_top \
-		* ((float)64 / mlx->sprite[j].sprite_strip_height);
+	cub->sprite[j].distance_from_top = \
+		y + (cub->sprite[j].sprite_strip_height / 2) - (cub->conf.win_h / 2);
+	cub->sprite[j].texture_offset_y = \
+		cub->sprite[j].distance_from_top \
+		* ((float)64 / cub->sprite[j].sprite_strip_height);
 }
 
 void
-	set_color_for_sprite(t_mlx *mlx, int j, int y, int x)
+	set_color_for_sprite(t_cub *cub, int j, int y, int x)
 {
-	if ((mlx->tex[4].data[((mlx->tex[4].size_l / 4) \
-		* mlx->sprite[j].texture_offset_y) \
-		+ mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
+	if ((cub->tex[4].data[((cub->tex[4].size_l / 4) \
+		* cub->sprite[j].texture_offset_y) \
+		+ cub->sprite[j].texture_offset_x] & 0xffffff) != 0 )
 	{
-		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
-			mlx->tex[4].data[((mlx->tex[4].size_l / 4) \
-			* mlx->sprite[j].texture_offset_y) \
-			+ mlx->sprite[j].texture_offset_x];
+		cub->window.data[((cub->window.size_l / 4) * y) + x] = \
+			cub->tex[4].data[((cub->tex[4].size_l / 4) \
+			* cub->sprite[j].texture_offset_y) \
+			+ cub->sprite[j].texture_offset_x];
 	}
 }
 
 void
-	describe_sprite(t_mlx *mlx, int i, int x)
+	describe_sprite(t_cub *cub, int i, int x)
 {
 	int y;
 	int j;
 
 	j = 0;
-	while (j < mlx->sprite_num)
+	while (j < cub->sprite_num)
 	{
-		if (check_sprite_visible(mlx, i, j, x) == TRUE)
+		if (check_sprite_visible(cub, i, j, x) == TRUE)
 		{
-			set_tex_offset_x_sprite(mlx, j, x);
-			y = mlx->sprite[j].sprite_top_pixel;
-			while (y < mlx->sprite[j].sprite_bottom_pixel)
+			set_tex_offset_x_sprite(cub, j, x);
+			y = cub->sprite[j].sprite_top_pixel;
+			while (y < cub->sprite[j].sprite_bottom_pixel)
 			{
-				set_vars_for_sprite(mlx, j, y);
-				set_color_for_sprite(mlx, j, y, x);
+				set_vars_for_sprite(cub, j, y);
+				set_color_for_sprite(cub, j, y, x);
 				y++;
 			}
 		}
@@ -908,121 +908,121 @@ void
 }
 
 void
-	generate_3d_projection(t_mlx *mlx)
+	generate_3d_projection(t_cub *cub)
 {
 	int x;
 	int i;
 
 	x = 0;
-	while (x < mlx->conf.win_w)
+	while (x < cub->conf.win_w)
 	{
-		i = x / ceil((double)mlx->conf.win_w / (double)mlx->conf.win_w);
-		set_window_vars(mlx, i);
-		set_sprite_vars(mlx);
-		describe_ceil(mlx, x);
-		describe_wall(mlx, i, x);
-		describe_floor(mlx, x);
-		describe_sprite(mlx, i, x);
+		i = x / ceil((double)cub->conf.win_w / (double)cub->conf.win_w);
+		set_window_vars(cub, i);
+		set_sprite_vars(cub);
+		describe_ceil(cub, x);
+		describe_wall(cub, i, x);
+		describe_floor(cub, x);
+		describe_sprite(cub, i, x);
 		x++;
 	}
 }
 
 int
-	setting_window(t_mlx *mlx)
+	setting_window(t_cub *cub)
 {
 	int x = -1;
 	int y = -1;
 
-	if (!(mlx->window.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w \
-					, mlx->conf.win_h)))
+	if (!(cub->window.img_ptr = mlx_new_image(cub->cub_ptr, cub->conf.win_w \
+					, cub->conf.win_h)))
 	{
-		free_mlx_map(mlx);
+		free_cub_map(cub);
 		return (FALSE);
 	}
-	mlx->window.data = (int *)mlx_get_data_addr(mlx->window.img_ptr \
-			, &(mlx->window.bpp), &(mlx->window.size_l), &(mlx->window.endian));
-	while (++y < mlx->conf.win_h)
+	cub->window.data = (int *)mlx_get_data_addr(cub->window.img_ptr \
+			, &(cub->window.bpp), &(cub->window.size_l), &(cub->window.endian));
+	while (++y < cub->conf.win_h)
 	{
 		x = -1;
-		while (++x < mlx->conf.win_w)
+		while (++x < cub->conf.win_w)
 		{
-			mlx->window.data[y * (mlx->window.size_l / 4) + x] = 0x000000;
+			cub->window.data[y * (cub->window.size_l / 4) + x] = 0x000000;
 		}
 	}
 	return (TRUE);
 }
 
 void
-	reset_sprite_info(t_mlx *mlx)
+	reset_sprite_info(t_cub *cub)
 {
 	int i = 0;
-	while (i < mlx->sprite_num)
+	while (i < cub->sprite_num)
 	{
-		mlx->sprite[i].visible = 0;
-		mlx->sprite[i].distance = 0;
+		cub->sprite[i].visible = 0;
+		cub->sprite[i].distance = 0;
 		i++;
 	}
 }
 
 int
-	rendering_loop(t_mlx *mlx)
+	rendering_loop(t_cub *cub)
 {
-	move(mlx);
-	cast_all_rays(mlx);
-	get_info_sprite(mlx);
-	sort_sprite_structure(mlx);
-	generate_3d_projection(mlx);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
-//	put_line(mlx);
-//	put_rays(mlx);
-	reset_sprite_info(mlx);
+	move(cub);
+	cast_all_rays(cub);
+	get_info_sprite(cub);
+	sort_sprite_structure(cub);
+	generate_3d_projection(cub);
+	mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->window.img_ptr, 0, 0);
+//	mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->map.img_ptr, 0, 0);
+//	mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->player.img_ptr, (cub->conf.pl_x * cub->conf.win_w) / (cub->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (cub->conf.pl_y * cub->conf.win_h) / (cub->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
+//	put_line(cub);
+//	put_rays(cub);
+	reset_sprite_info(cub);
 	return (TRUE);
 }
 
 int
-	rendering_for_bmp(t_mlx *mlx)
+	rendering_for_bmp(t_cub *cub)
 {
-	move(mlx);
-	cast_all_rays(mlx);
-	get_info_sprite(mlx);
-	sort_sprite_structure(mlx);
-	generate_3d_projection(mlx);
-	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->window.img_ptr, 0, 0);
-//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->map.img_ptr, 0, 0);
-//	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win, mlx->player.img_ptr, (mlx->conf.pl_x * mlx->conf.win_w) / (mlx->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (mlx->conf.pl_y * mlx->conf.win_h) / (mlx->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
-//	put_line(mlx);
-//	put_rays(mlx);
-//	reset_sprite_info(mlx);
+	move(cub);
+	cast_all_rays(cub);
+	get_info_sprite(cub);
+	sort_sprite_structure(cub);
+	generate_3d_projection(cub);
+	mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->window.img_ptr, 0, 0);
+//	mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->map.img_ptr, 0, 0);
+//	mlx_put_image_to_window(cub->cub_ptr, cub->win, cub->player.img_ptr, (cub->conf.pl_x * cub->conf.win_w) / (cub->conf.map_x * TILE_SIZE * MINIMAP_SCALE_FACTOR), (cub->conf.pl_y * cub->conf.win_h) / (cub->conf.map_y * TILE_SIZE * MINIMAP_SCALE_FACTOR));
+//	put_line(cub);
+//	put_rays(cub);
+//	reset_sprite_info(cub);
 	return (TRUE);
 }
 
 /*
 int
-	setting_map(t_mlx *mlx)
+	setting_map(t_cub *cub)
 {
 	int x = -1;
 	int y = -1;
 
 	//TODO: leak check again
-	if(!(mlx->map.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->conf.win_w / MINIMAP_SCALE_FACTOR, mlx->conf.win_h / MINIMAP_SCALE_FACTOR)))
+	if(!(cub->map.img_ptr = mlx_new_image(cub->cub_ptr, cub->conf.win_w / MINIMAP_SCALE_FACTOR, cub->conf.win_h / MINIMAP_SCALE_FACTOR)))
 	{
-		free_mlx_map(mlx);
-		return (error_mes("Error\n false mlx_new_image for map image\n", FALSE));
+		free_cub_map(cub);
+		return (error_mes("Error\n false cub_new_image for map image\n", FALSE));
 	}
-	mlx->map.data = (int *)mlx_get_data_addr(mlx->map.img_ptr, &(mlx->map.bpp), &(mlx->map.size_l), &(mlx->map.endian));
-	while (++y < mlx->conf.win_h / MINIMAP_SCALE_FACTOR)
+	cub->map.data = (int *)mlx_get_data_addr(cub->map.img_ptr, &(cub->map.bpp), &(cub->map.size_l), &(cub->map.endian));
+	while (++y < cub->conf.win_h / MINIMAP_SCALE_FACTOR)
 	{
 		x = -1;
-		while (++x < mlx->conf.win_w / MINIMAP_SCALE_FACTOR)
+		while (++x < cub->conf.win_w / MINIMAP_SCALE_FACTOR)
 		{
-			mlx->map.tile_x = (x * mlx->conf.map_x) / (mlx->conf.win_w / MINIMAP_SCALE_FACTOR);
-			mlx->map.tile_y = (y * mlx->conf.map_y) / (mlx->conf.win_h / MINIMAP_SCALE_FACTOR);
-			if ((mlx->conf.map)[mlx->map.tile_y][mlx->map.tile_x] == '0')
-				mlx->map.data[y * (mlx->map.size_l / 4) + x] = 0x020202;
-			else if ((mlx->conf.map)[mlx->map.tile_y][mlx->map.tile_x] == '1')
-				mlx->map.data[y * (mlx->map.size_l / 4) + x] = 0xffffff;
+			cub->map.tile_x = (x * cub->conf.map_x) / (cub->conf.win_w / MINIMAP_SCALE_FACTOR);
+			cub->map.tile_y = (y * cub->conf.map_y) / (cub->conf.win_h / MINIMAP_SCALE_FACTOR);
+			if ((cub->conf.map)[cub->map.tile_y][cub->map.tile_x] == '0')
+				cub->map.data[y * (cub->map.size_l / 4) + x] = 0x020202;
+			else if ((cub->conf.map)[cub->map.tile_y][cub->map.tile_x] == '1')
+				cub->map.data[y * (cub->map.size_l / 4) + x] = 0xffffff;
 		}
 	}
 	return (TRUE);
@@ -1030,24 +1030,24 @@ int
 */
 /*
 int
-	setting_player(t_mlx *mlx)
+	setting_player(t_cub *cub)
 {
 	int x = -1;
 	int y = -1;
 
 	//TODO: leak check again
-	if (!(mlx->player.img_ptr = mlx_new_image(mlx->mlx_ptr, mlx->player.width, mlx->player.height)))
+	if (!(cub->player.img_ptr = mlx_new_image(cub->cub_ptr, cub->player.width, cub->player.height)))
 	{
-		free_mlx_map(mlx);
-		return (error_mes("Error\n false mlx_new_image for player image\n", FALSE));
+		free_cub_map(cub);
+		return (error_mes("Error\n false cub_new_image for player image\n", FALSE));
 	}
-	mlx->player.data = (int *)mlx_get_data_addr(mlx->player.img_ptr, &(mlx->player.bpp), &(mlx->player.size_l), &(mlx->player.endian));
-	while (++y < mlx->player.height)
+	cub->player.data = (int *)mlx_get_data_addr(cub->player.img_ptr, &(cub->player.bpp), &(cub->player.size_l), &(cub->player.endian));
+	while (++y < cub->player.height)
 	{
 		x = -1;
-		while (++x < mlx->player.width)
+		while (++x < cub->player.width)
 		{
-			mlx->player.data[y * (mlx->player.size_l / 4) + x] = 0xFFFF00;
+			cub->player.data[y * (cub->player.size_l / 4) + x] = 0xFFFF00;
 		}
 	}
 	return (TRUE);
@@ -1055,20 +1055,20 @@ int
 */
 
 int
-	check_path_available(t_mlx *mlx)
+	check_path_available(t_cub *cub)
 {
 	int fd[5];
 	int i;
 
-	fd[0] = open(mlx->conf.path_no, O_RDONLY);
+	fd[0] = open(cub->conf.path_no, O_RDONLY);
 	close(fd[0]);
-	fd[1] = open(mlx->conf.path_so, O_RDONLY);
+	fd[1] = open(cub->conf.path_so, O_RDONLY);
 	close(fd[1]);
-	fd[2] = open(mlx->conf.path_ea, O_RDONLY);
+	fd[2] = open(cub->conf.path_ea, O_RDONLY);
 	close(fd[2]);
-	fd[3] = open(mlx->conf.path_we, O_RDONLY);
+	fd[3] = open(cub->conf.path_we, O_RDONLY);
 	close(fd[3]);
-	fd[4] = open(mlx->conf.path_sp, O_RDONLY);
+	fd[4] = open(cub->conf.path_sp, O_RDONLY);
 	close(fd[4]);
 	i = 0;
 	while (i < 5)
@@ -1081,101 +1081,101 @@ int
 }
 
 int
-	free_map_ret_error(t_mlx *mlx, char *str, int ret)
+	free_map_ret_error(t_cub *cub, char *str, int ret)
 {
-	free_mlx_map(mlx);
+	free_cub_map(cub);
 	error_mes(str, ret);
 	return (ret);
 }
 
 int
-	get_wall_img_ptr(t_mlx *mlx)
+	get_wall_img_ptr(t_cub *cub)
 {
 	int width = TEXTURE_WIDTH;
 	int height = TEXTURE_HEIGHT;
 
 	width = TEXTURE_WIDTH;
 	height = TEXTURE_HEIGHT;
-	if (!(mlx->tex[0].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
-					, mlx->conf.path_no, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+	if (!(cub->tex[0].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr \
+					, cub->conf.path_no, &width, &height)))
+		return (free_map_ret_error(cub,"Error\n invalid texture file\n" \
 					, FALSE));
-	if (!(mlx->tex[1].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
-					, mlx->conf.path_so, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+	if (!(cub->tex[1].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr \
+					, cub->conf.path_so, &width, &height)))
+		return (free_map_ret_error(cub,"Error\n invalid texture file\n" \
 					, FALSE));
-	if (!(mlx->tex[2].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
-					, mlx->conf.path_ea, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+	if (!(cub->tex[2].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr \
+					, cub->conf.path_ea, &width, &height)))
+		return (free_map_ret_error(cub,"Error\n invalid texture file\n" \
 					, FALSE));
-	if (!(mlx->tex[3].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
-					, mlx->conf.path_we, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+	if (!(cub->tex[3].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr \
+					, cub->conf.path_we, &width, &height)))
+		return (free_map_ret_error(cub,"Error\n invalid texture file\n" \
 					, FALSE));
 	return (TRUE);
 }
 
 int
-	get_sprite_img_ptr(t_mlx *mlx)
+	get_sprite_img_ptr(t_cub *cub)
 {
 	int width;
 	int height;
 
 	width = TEXTURE_WIDTH;
 	height = TEXTURE_HEIGHT;
-	if (!(mlx->tex[4].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr \
-					, mlx->conf.path_sp, &width, &height)))
-		return (free_map_ret_error(mlx,"Error\n invalid texture file\n" \
+	if (!(cub->tex[4].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr \
+					, cub->conf.path_sp, &width, &height)))
+		return (free_map_ret_error(cub,"Error\n invalid texture file\n" \
 					, FALSE));
 	return (TRUE);
 }
 
 int
-	setting_img(t_mlx *mlx)
+	setting_img(t_cub *cub)
 {
-	if (!check_path_available(mlx))
-		return (free_map_ret_error(mlx, "Error\n invalid path of texture\n" \
+	if (!check_path_available(cub))
+		return (free_map_ret_error(cub, "Error\n invalid path of texture\n" \
 			, FALSE));
-	if (get_wall_img_ptr(mlx) == FALSE)
+	if (get_wall_img_ptr(cub) == FALSE)
 		return (FALSE);
-	if (get_sprite_img_ptr(mlx) == FALSE)
+	if (get_sprite_img_ptr(cub) == FALSE)
 		return (FALSE);
-	mlx->tex[0].data = (int *)mlx_get_data_addr(mlx->tex[0].img_ptr \
-			, &(mlx->tex[0].bpp), &(mlx->tex[0].size_l), &(mlx->tex[0].endian));
-	mlx->tex[1].data = (int *)mlx_get_data_addr(mlx->tex[1].img_ptr \
-			, &(mlx->tex[1].bpp), &(mlx->tex[1].size_l), &(mlx->tex[1].endian));
-	mlx->tex[2].data = (int *)mlx_get_data_addr(mlx->tex[2].img_ptr \
-			, &(mlx->tex[2].bpp), &(mlx->tex[2].size_l), &(mlx->tex[2].endian));
-	mlx->tex[3].data = (int *)mlx_get_data_addr(mlx->tex[3].img_ptr \
-			, &(mlx->tex[3].bpp), &(mlx->tex[3].size_l), &(mlx->tex[3].endian));
-	mlx->tex[4].data = (int *)mlx_get_data_addr(mlx->tex[4].img_ptr \
-			, &(mlx->tex[4].bpp), &(mlx->tex[4].size_l), &(mlx->tex[4].endian));
+	cub->tex[0].data = (int *)mlx_get_data_addr(cub->tex[0].img_ptr \
+			, &(cub->tex[0].bpp), &(cub->tex[0].size_l), &(cub->tex[0].endian));
+	cub->tex[1].data = (int *)mlx_get_data_addr(cub->tex[1].img_ptr \
+			, &(cub->tex[1].bpp), &(cub->tex[1].size_l), &(cub->tex[1].endian));
+	cub->tex[2].data = (int *)mlx_get_data_addr(cub->tex[2].img_ptr \
+			, &(cub->tex[2].bpp), &(cub->tex[2].size_l), &(cub->tex[2].endian));
+	cub->tex[3].data = (int *)mlx_get_data_addr(cub->tex[3].img_ptr \
+			, &(cub->tex[3].bpp), &(cub->tex[3].size_l), &(cub->tex[3].endian));
+	cub->tex[4].data = (int *)mlx_get_data_addr(cub->tex[4].img_ptr \
+			, &(cub->tex[4].bpp), &(cub->tex[4].size_l), &(cub->tex[4].endian));
 	return (TRUE);
 }
 
 void
-	set_last_sprite(t_mlx *mlx, int k)
+	set_last_sprite(t_cub *cub, int k)
 {
-	mlx->sprite[k].sprite_x =  -1;
-	mlx->sprite[k].sprite_y = -1;
-	mlx->sprite[k].visible = -1;
+	cub->sprite[k].sprite_x =  -1;
+	cub->sprite[k].sprite_y = -1;
+	cub->sprite[k].visible = -1;
 }
 
 void
-	count_sprite_num(t_mlx *mlx)
+	count_sprite_num(t_cub *cub)
 {
 	int i;
 	int j;
 
 	i = 0;
-	mlx->sprite_num = 0;
-	while (i < mlx->conf.map_y)
+	cub->sprite_num = 0;
+	while (i < cub->conf.map_y)
 	{
 		j = 0;
-		while (j < mlx->conf.map_x)
+		while (j < cub->conf.map_x)
 		{
-			if ((mlx->conf.map)[i][j] == '2')
-				mlx->sprite_num++;
+			if ((cub->conf.map)[i][j] == '2')
+				cub->sprite_num++;
 			j++;
 		}
 		i++;
@@ -1183,7 +1183,7 @@ void
 }
 
 int
-	set_sprites(t_mlx *mlx)
+	set_sprites(t_cub *cub)
 {
 	int i;
 	int j;
@@ -1191,16 +1191,16 @@ int
 
 	i = 0;
 	num = 0;
-	while (i < mlx->conf.map_y)
+	while (i < cub->conf.map_y)
 	{
 		j = 0;
-		while (j < mlx->conf.map_x && num < mlx->sprite_num)
+		while (j < cub->conf.map_x && num < cub->sprite_num)
 		{
-			if ((mlx->conf.map)[i][j] == '2')
+			if ((cub->conf.map)[i][j] == '2')
 			{
-				mlx->sprite[num].sprite_y = i;
-				mlx->sprite[num].sprite_x = j;
-				mlx->sprite[num].visible = 0;
+				cub->sprite[num].sprite_y = i;
+				cub->sprite[num].sprite_x = j;
+				cub->sprite[num].visible = 0;
 				num++;
 			}
 			j++;
@@ -1211,58 +1211,58 @@ int
 }
 
 int
-	check_sprite_info(t_mlx *mlx)
+	check_sprite_info(t_cub *cub)
 {
 	int num;
 
-	count_sprite_num(mlx);
-	if (!(mlx->sprite = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1))))
+	count_sprite_num(cub);
+	if (!(cub->sprite = malloc(sizeof(t_sprites) * (cub->sprite_num + 1))))
 		return (FALSE);
-	ft_bzero(mlx->sprite, sizeof(t_sprites) * (mlx->sprite_num + 1));
-	if (!(mlx->tmp = malloc(sizeof(t_sprites) * (mlx->sprite_num + 1))))
+	ft_bzero(cub->sprite, sizeof(t_sprites) * (cub->sprite_num + 1));
+	if (!(cub->tmp = malloc(sizeof(t_sprites) * (cub->sprite_num + 1))))
 	{
-		free(mlx->sprite);
-		mlx->sprite = NULL;
+		free(cub->sprite);
+		cub->sprite = NULL;
 		return (FALSE);
 	}
-	num = set_sprites(mlx);
-	set_last_sprite(mlx, num);
+	num = set_sprites(cub);
+	set_last_sprite(cub, num);
 	return (TRUE);
 }
 
 int
-	initialize_window(t_mlx *mlx)
+	initialize_window(t_cub *cub)
 {
-	if (!(mlx->mlx_ptr = mlx_init()))
+	if (!(cub->cub_ptr = mlx_init()))
 		return (FALSE);
-	if (!(mlx->win = mlx_new_window(mlx->mlx_ptr, mlx->conf.win_w \
-								, mlx->conf.win_h, "cub3d_window")))
+	if (!(cub->win = mlx_new_window(cub->cub_ptr, cub->conf.win_w \
+								, cub->conf.win_h, "cub3d_window")))
 		return (FALSE);
 	return (TRUE);
 }
 
 int
-	key_release(int key, t_mlx *mlx)
+	key_release(int key, t_cub *cub)
 {
 	if (key == KEY_W)
-		mlx->player.walk_direction = 0;
+		cub->player.walk_direction = 0;
 	if (key == KEY_S)
-		mlx->player.walk_direction = 0;
+		cub->player.walk_direction = 0;
 	if (key == KEY_D)
-		mlx->player.side_direction = 0;
+		cub->player.side_direction = 0;
 	if (key == KEY_A)
-		mlx->player.side_direction = 0;
+		cub->player.side_direction = 0;
 	if (key == KEY_RIGHT)
-		mlx->player.turn_direction = 0;
+		cub->player.turn_direction = 0;
 	if (key == KEY_LEFT)
-		mlx->player.turn_direction = 0;
+		cub->player.turn_direction = 0;
 	return (TRUE);
 }
 
 int
-	get_ray_size(t_mlx *mlx)
+	get_ray_size(t_cub *cub)
 {
-	if (!(mlx->rays = malloc(sizeof(t_rays) * (mlx->conf.win_w + 1))))
+	if (!(cub->rays = malloc(sizeof(t_rays) * (cub->conf.win_w + 1))))
 		return (FALSE);
 	return (TRUE);
 }
@@ -1285,7 +1285,7 @@ int
 }
 
 int
-	pack_win_size(t_mlx *mlx, char *line)
+	pack_win_size(t_cub *cub, char *line)
 {
 	char	**strs;
 	int		num;
@@ -1300,15 +1300,15 @@ int
 		return (free_strs(strs, num, FALSE));
 	if (!is_all_digit(strs[1]) || !is_all_digit(strs[2]))
 		return (free_strs(strs, num, FALSE));
-	mlx->conf.win_w = ft_atoi(strs[1]);
-	mlx->conf.win_h = ft_atoi(strs[2]);
-	if (mlx->conf.win_w <= 0 || mlx->conf.win_h <= 0)
+	cub->conf.win_w = ft_atoi(strs[1]);
+	cub->conf.win_h = ft_atoi(strs[2]);
+	if (cub->conf.win_w <= 0 || cub->conf.win_h <= 0)
 		return (free_strs(strs, num, FALSE));
-	mlx->conf.win_w = mlx->conf.win_w > mlx->conf.win_max_w ? \
-								mlx->conf.win_max_w : mlx->conf.win_w;
-	mlx->conf.win_h = mlx->conf.win_h > mlx->conf.win_max_h ? \
-								mlx->conf.win_max_h : mlx->conf.win_h;
-	if (get_ray_size(mlx) == FALSE)
+	cub->conf.win_w = cub->conf.win_w > cub->conf.win_max_w ? \
+								cub->conf.win_max_w : cub->conf.win_w;
+	cub->conf.win_h = cub->conf.win_h > cub->conf.win_max_h ? \
+								cub->conf.win_max_h : cub->conf.win_h;
+	if (get_ray_size(cub) == FALSE)
 		return (free_strs(strs, num, FALSE));
 	free_str_safe(line);
 	return (free_strs(strs, num, TRUE));
@@ -1328,7 +1328,7 @@ int
 }
 
 int
-	pack_path(t_mlx *mlx, char *line)
+	pack_path(t_cub *cub, char *line)
 {
 	char	**strs;
 	int		len;
@@ -1343,22 +1343,22 @@ int
 	if (strs[1])
 	{
 		if (ft_strnstr(strs[0], "NO", 2))
-			mlx->conf.path_no = ft_substr(strs[1], 0, len);
+			cub->conf.path_no = ft_substr(strs[1], 0, len);
 		else if (ft_strnstr(strs[0], "SO", 2))
-			mlx->conf.path_so = ft_substr(strs[1], 0, len);
+			cub->conf.path_so = ft_substr(strs[1], 0, len);
 		else if (ft_strnstr(strs[0], "EA", 2))
-			mlx->conf.path_ea = ft_substr(strs[1], 0, len);
+			cub->conf.path_ea = ft_substr(strs[1], 0, len);
 		else if (ft_strnstr(strs[0], "WE", 2))
-			mlx->conf.path_we = ft_substr(strs[1], 0, len);
+			cub->conf.path_we = ft_substr(strs[1], 0, len);
 		else if (ft_strnstr(strs[0], "S", 1))
-			mlx->conf.path_sp = ft_substr(strs[1], 0, len);
+			cub->conf.path_sp = ft_substr(strs[1], 0, len);
 	}
 	free_str_safe(line);
 	return (free_strs(strs, 2, TRUE));
 }
 
 int
-	check_rgb_available(char **strs, t_mlx *mlx)
+	check_rgb_available(char **strs, t_cub *cub)
 {
 	int i;
 	int j;
@@ -1379,8 +1379,8 @@ int
 	i = 0;
 	while (i < 3)
 	{
-		if (mlx->conf.floor_colors[i] < 0 || mlx->conf.floor_colors[i] > 255 \
-			|| mlx->conf.ceil_colors[i] < 0 || mlx->conf.ceil_colors[i] > 255)
+		if (cub->conf.floor_colors[i] < 0 || cub->conf.floor_colors[i] > 255 \
+			|| cub->conf.ceil_colors[i] < 0 || cub->conf.ceil_colors[i] > 255)
 			return (FALSE);
 		i++;
 	}
@@ -1388,18 +1388,18 @@ int
 }
 
 void
-	add_color(t_mlx *mlx)
+	add_color(t_cub *cub)
 {
-	mlx->conf.floor_c = mlx->conf.floor_colors[0];
-	mlx->conf.floor_c = mlx->conf.floor_c << 8;
-	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[1];
-	mlx->conf.floor_c = mlx->conf.floor_c << 8;
-	mlx->conf.floor_c = mlx->conf.floor_c | mlx->conf.floor_colors[2];
-	mlx->conf.ceil_c = mlx->conf.ceil_colors[0];
-	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
-	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[1];
-	mlx->conf.ceil_c = mlx->conf.ceil_c << 8;
-	mlx->conf.ceil_c = mlx->conf.ceil_c | mlx->conf.ceil_colors[2];
+	cub->conf.floor_c = cub->conf.floor_colors[0];
+	cub->conf.floor_c = cub->conf.floor_c << 8;
+	cub->conf.floor_c = cub->conf.floor_c | cub->conf.floor_colors[1];
+	cub->conf.floor_c = cub->conf.floor_c << 8;
+	cub->conf.floor_c = cub->conf.floor_c | cub->conf.floor_colors[2];
+	cub->conf.ceil_c = cub->conf.ceil_colors[0];
+	cub->conf.ceil_c = cub->conf.ceil_c << 8;
+	cub->conf.ceil_c = cub->conf.ceil_c | cub->conf.ceil_colors[1];
+	cub->conf.ceil_c = cub->conf.ceil_c << 8;
+	cub->conf.ceil_c = cub->conf.ceil_c | cub->conf.ceil_colors[2];
 }
 
 int
@@ -1410,24 +1410,24 @@ int
 }
 
 void
-	pack_rgb_atoi(char c, t_mlx *mlx, char **strs)
+	pack_rgb_atoi(char c, t_cub *cub, char **strs)
 {
 	if (c == 'F')
 	{
-		mlx->conf.floor_colors[0] = ft_atoi(strs[0]);
-		mlx->conf.floor_colors[1] = ft_atoi(strs[1]);
-		mlx->conf.floor_colors[2] = ft_atoi(strs[2]);
+		cub->conf.floor_colors[0] = ft_atoi(strs[0]);
+		cub->conf.floor_colors[1] = ft_atoi(strs[1]);
+		cub->conf.floor_colors[2] = ft_atoi(strs[2]);
 	}
 	if (c == 'C')
 	{
-		mlx->conf.ceil_colors[0] = ft_atoi(strs[0]);
-		mlx->conf.ceil_colors[1] = ft_atoi(strs[1]);
-		mlx->conf.ceil_colors[2] = ft_atoi(strs[2]);
+		cub->conf.ceil_colors[0] = ft_atoi(strs[0]);
+		cub->conf.ceil_colors[1] = ft_atoi(strs[1]);
+		cub->conf.ceil_colors[2] = ft_atoi(strs[2]);
 	}
 }
 
 int
-	pack_rgb(t_mlx *mlx, char *line)
+	pack_rgb(t_cub *cub, char *line)
 {
 	char	**sub_strs;
 	char	**strs;
@@ -1439,15 +1439,15 @@ int
 	if (count_strs(strs, 0) != 3)
 		return (free_for_pack_rgb(sub_strs, strs, count_strs(strs, 0), FALSE));
 	if (ft_strnstr(sub_strs[0], "F", 1) && ft_strlen(sub_strs[0]) == 1)
-		pack_rgb_atoi('F', mlx, strs);
+		pack_rgb_atoi('F', cub, strs);
 	else if (ft_strnstr(sub_strs[0], "C", 1) && ft_strlen(sub_strs[0]) == 1)
-		pack_rgb_atoi('C', mlx, strs);
+		pack_rgb_atoi('C', cub, strs);
 	else
 		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
-	if ((mlx->conf.cub_flag[6] || mlx->conf.cub_flag[7]) \
-			&& !check_rgb_available(strs, mlx))
+	if ((cub->conf.cub_flag[6] || cub->conf.cub_flag[7]) \
+			&& !check_rgb_available(strs, cub))
 		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
-	add_color(mlx);
+	add_color(cub);
 	free_str_safe(line);
 	return (free_for_pack_rgb(sub_strs, strs, 3, TRUE));
 }
@@ -1462,40 +1462,40 @@ int
 }
 
 int
-	pack_map_str(t_mlx *mlx, char *line)
+	pack_map_str(t_cub *cub, char *line)
 {
 	char *tmp;
 	int len;
 
-	if (mlx->conf.cub_flag[8] == 1)
+	if (cub->conf.cub_flag[8] == 1)
 	{
-		if (!(mlx->conf.map_str = malloc(sizeof(char))))
+		if (!(cub->conf.map_str = malloc(sizeof(char))))
 			return (error_mes("Error\n could not malloc for map_str\n"\
 			, FALSE));
-		*(mlx->conf.map_str) = '\0';
+		*(cub->conf.map_str) = '\0';
 	}
-	mlx->conf.cub_flag[8]++;
+	cub->conf.cub_flag[8]++;
 	len = ft_strlen(line);
-	mlx->conf.map_x = max_len(mlx->conf.map_x, len);
-	tmp = mlx->conf.map_str;
-	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, line);
+	cub->conf.map_x = max_len(cub->conf.map_x, len);
+	tmp = cub->conf.map_str;
+	cub->conf.map_str = ft_strjoin(cub->conf.map_str, line);
 	free_str_safe(tmp);
-	tmp = mlx->conf.map_str;
-	mlx->conf.map_str = ft_strjoin(mlx->conf.map_str, "\n");
-	mlx->conf.map_y++;
+	tmp = cub->conf.map_str;
+	cub->conf.map_str = ft_strjoin(cub->conf.map_str, "\n");
+	cub->conf.map_y++;
 	free_str_safe(tmp);
 	return (TRUE);
 }
 
 int
-	conf_fill_checker(t_mlx *mlx)
+	conf_fill_checker(t_cub *cub)
 {
 	int i;
 
 	i = 0;
 	while (i < 8)
 	{
-		if (mlx->conf.cub_flag[i++] == 0)
+		if (cub->conf.cub_flag[i++] == 0)
 			return (FALSE);
 	}
 	return (TRUE);
@@ -1534,18 +1534,18 @@ int
 }
 
 void
-	fill_map_space(t_mlx *mlx)
+	fill_map_space(t_cub *cub)
 {
 	int index;
 	char *tmp;
 
 	index = 0;
-	while (index < mlx->conf.map_y)
+	while (index < cub->conf.map_y)
 	{
-		while ((int)ft_strlen((mlx->conf.map)[index]) < mlx->conf.map_x)
+		while ((int)ft_strlen((cub->conf.map)[index]) < cub->conf.map_x)
 		{
-			tmp = mlx->conf.map[index];
-			(mlx->conf.map)[index] = ft_strjoin((mlx->conf.map)[index], " ");
+			tmp = cub->conf.map[index];
+			(cub->conf.map)[index] = ft_strjoin((cub->conf.map)[index], " ");
 			free_str_safe(tmp);
 		}
 		index++;
@@ -1560,10 +1560,10 @@ int
 }
 
 int
-	check_pack_map_str(t_mlx *mlx, int *flag, char *line)
+	check_pack_map_str(t_cub *cub, int *flag, char *line)
 {
-	if ((mlx->conf.cub_flag[8] == 0 \
-				&& conf_fill_checker(mlx) == FALSE) || *flag == 10)
+	if ((cub->conf.cub_flag[8] == 0 \
+				&& conf_fill_checker(cub) == FALSE) || *flag == 10)
 		return (free_line_ret_mes(line));
 	if (check_is_map(line) == FALSE)
 	{
@@ -1571,8 +1571,8 @@ int
 		return (error_mes("Error\n map is not made by map element\n", FALSE));
 	}
 	*flag = 9;
-	mlx->conf.cub_flag[8]++;
-	if (pack_map_str(mlx, line) == FALSE)
+	cub->conf.cub_flag[8]++;
+	if (pack_map_str(cub, line) == FALSE)
 	{
 		free_str_safe(line);
 		return (FALSE);
@@ -1582,22 +1582,22 @@ int
 }
 
 int
-	pack_path_update_flag(t_mlx *mlx, char *line, int *flag, int index)
+	pack_path_update_flag(t_cub *cub, char *line, int *flag, int index)
 {
-	if (pack_path(mlx, line) == FALSE)
+	if (pack_path(cub, line) == FALSE)
 		return (free_line_ret_mes(line));
 	(*flag)++;
-	mlx->conf.cub_flag[index] = 1;
+	cub->conf.cub_flag[index] = 1;
 	return (TRUE);
 }
 
 int
-	pack_rgb_update_flag(t_mlx *mlx, char *line, int *flag, int index)
+	pack_rgb_update_flag(t_cub *cub, char *line, int *flag, int index)
 {
-	if (pack_rgb(mlx, line) == FALSE)
+	if (pack_rgb(cub, line) == FALSE)
 		return (free_line_ret_mes(line));
 	(*flag)++;
-	mlx->conf.cub_flag[index] = 1;
+	cub->conf.cub_flag[index] = 1;
 	return (TRUE);
 }
 
@@ -1636,38 +1636,38 @@ void
 }
 
 int
-	pack_wsize_update_flag(t_mlx *mlx, char *line, int *flag)
+	pack_wsize_update_flag(t_cub *cub, char *line, int *flag)
 {
-		if (pack_win_size(mlx, line) == FALSE)
+		if (pack_win_size(cub, line) == FALSE)
 			return (free_line_ret_mes(line));
 		(*flag)++;
-		mlx->conf.cub_flag[0] = 1;
+		cub->conf.cub_flag[0] = 1;
 		return (TRUE);
 }
 
 int
-	pack_line_each_info(t_mlx *mlx, int *flag, char *line, int *index)
+	pack_line_each_info(t_cub *cub, int *flag, char *line, int *index)
 {
 	if (!*line)
 		pass_empty_line(line, flag);
 	else if (*flag >= 8)
 	{
-		if (check_pack_map_str(mlx, flag, line) == FALSE)
+		if (check_pack_map_str(cub, flag, line) == FALSE)
 			return (FALSE);
 	}
 	else if (ft_strnstr(line, "R", 1))
 	{
-		if (pack_wsize_update_flag(mlx, line, flag) == FALSE)
+		if (pack_wsize_update_flag(cub, line, flag) == FALSE)
 			return (FALSE);
 	}
 	else if ((*index = check_texture_line(line)) != FALSE )
 	{
-		if (pack_path_update_flag(mlx, line, flag, *index) == FALSE)
+		if (pack_path_update_flag(cub, line, flag, *index) == FALSE)
 			return (FALSE);
 	}
 	else if ((*index = check_rgb_line(line)) != FALSE )
 	{
-		if (pack_rgb_update_flag(mlx, line, flag, *index) == FALSE)
+		if (pack_rgb_update_flag(cub, line, flag, *index) == FALSE)
 			return (FALSE);
 	}
 	else
@@ -1676,7 +1676,7 @@ int
 }
 
 int
-	get_conf(t_mlx *mlx, char *file_name)
+	get_conf(t_cub *cub, char *file_name)
 {
 	int fd;
 	int res;
@@ -1691,11 +1691,11 @@ int
 	{
 		if (res == -1)
 			return (error_mes("Error\n some error while gnl working\n", FALSE));
-		if (pack_line_each_info(mlx, &flag, line, &index) == FALSE)
+		if (pack_line_each_info(cub, &flag, line, &index) == FALSE)
 			return (FALSE);
 	}
-	mlx->conf.map = ft_split(mlx->conf.map_str, '\n');
-	fill_map_space(mlx);
+	cub->conf.map = ft_split(cub->conf.map_str, '\n');
+	fill_map_space(cub);
 	free_str_safe(line);
 	return (TRUE);
 }
@@ -1721,50 +1721,50 @@ void
 }
 
 void
-	check_fill(char *map_p, int p_y, int p_x, t_mlx *mlx)
+	check_fill(char *map_p, int p_y, int p_x, t_cub *cub)
 {
-	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'p' \
-			|| map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '1' \
-			|| map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '3' \
-			|| mlx->conf.map_check_flag == 1)
+	if (map_p[p_y * (cub->conf.map_x + 2) + p_x] == 'p' \
+			|| map_p[p_y * (cub->conf.map_x + 2) + p_x] == '1' \
+			|| map_p[p_y * (cub->conf.map_x + 2) + p_x] == '3' \
+			|| cub->conf.map_check_flag == 1)
 		return ;
-	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 'X')
+	if (map_p[p_y * (cub->conf.map_x + 2) + p_x] == 'X')
 	{
-		mlx->conf.map_check_flag = 1;
+		cub->conf.map_check_flag = 1;
 		return ;
 	}
-	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '0' \
-			|| map_p[p_y * (mlx->conf.map_x + 2) + p_x] == 's')
-		map_p[p_y * (mlx->conf.map_x + 2) + p_x] = 'p';
-	if (map_p[p_y * (mlx->conf.map_x + 2) + p_x] == '2')
-		map_p[p_y * (mlx->conf.map_x + 2) + p_x] = '3';
-	check_fill(map_p, p_y - 1, p_x, mlx);
-	check_fill(map_p, p_y, p_x + 1, mlx);
-	check_fill(map_p, p_y + 1, p_x, mlx);
-	check_fill(map_p, p_y, p_x - 1, mlx);
+	if (map_p[p_y * (cub->conf.map_x + 2) + p_x] == '0' \
+			|| map_p[p_y * (cub->conf.map_x + 2) + p_x] == 's')
+		map_p[p_y * (cub->conf.map_x + 2) + p_x] = 'p';
+	if (map_p[p_y * (cub->conf.map_x + 2) + p_x] == '2')
+		map_p[p_y * (cub->conf.map_x + 2) + p_x] = '3';
+	check_fill(map_p, p_y - 1, p_x, cub);
+	check_fill(map_p, p_y, p_x + 1, cub);
+	check_fill(map_p, p_y + 1, p_x, cub);
+	check_fill(map_p, p_y, p_x - 1, cub);
 }
 
 void
-	put_grid_to_container(t_mlx *mlx, char *cont_p)
+	put_grid_to_container(t_cub *cub, char *cont_p)
 {
 	int i;
 	int j;
 
 	i = 0;
-	while (i < mlx->conf.map_y + 2)
+	while (i < cub->conf.map_y + 2)
 	{
 		j = 0;
-		while (j < mlx->conf.map_x + 2)
+		while (j < cub->conf.map_x + 2)
 		{
-			if (i == 0 || i == mlx->conf.map_y + 1 || j == 0 \
-					|| j == mlx->conf.map_x + 1)
-				cont_p[i * (mlx->conf.map_x + 2) + j] = 'X';
-			else if (i > mlx->conf.map_y || j > mlx->conf.map_x \
-					|| (mlx->conf.map)[i - 1][j - 1] == ' ')
-				cont_p[i * (mlx->conf.map_x + 2) + j] = 's';
+			if (i == 0 || i == cub->conf.map_y + 1 || j == 0 \
+					|| j == cub->conf.map_x + 1)
+				cont_p[i * (cub->conf.map_x + 2) + j] = 'X';
+			else if (i > cub->conf.map_y || j > cub->conf.map_x \
+					|| (cub->conf.map)[i - 1][j - 1] == ' ')
+				cont_p[i * (cub->conf.map_x + 2) + j] = 's';
 			else
-				cont_p[i * (mlx->conf.map_x + 2) + j] \
-					= (mlx->conf.map)[i - 1][j - 1];
+				cont_p[i * (cub->conf.map_x + 2) + j] \
+					= (cub->conf.map)[i - 1][j - 1];
 			j++;
 		}
 		i++;
@@ -1772,39 +1772,39 @@ void
 }
 
 int
-	check_player_exist(char spot, t_mlx *mlx)
+	check_player_exist(char spot, t_cub *cub)
 {
 	if (spot == 'N' || spot == 'S' || spot == 'E' || spot == 'W')
 	{
 		if (spot == 'N')
-			mlx->player.rotation_angle = 270 * (PI / 180);
+			cub->player.rotation_angle = 270 * (PI / 180);
 		else if (spot == 'S')
-			mlx->player.rotation_angle = 90 * (PI / 180);
+			cub->player.rotation_angle = 90 * (PI / 180);
 		else if (spot == 'E')
-			mlx->player.rotation_angle = 0 * (PI / 180);
+			cub->player.rotation_angle = 0 * (PI / 180);
 		else if (spot == 'W')
-			mlx->player.rotation_angle = 180 * (PI / 180);
-		mlx->conf.pl_counter++;
+			cub->player.rotation_angle = 180 * (PI / 180);
+		cub->conf.pl_counter++;
 		return (TRUE);
 	}
 	return (FALSE);
 }
 
 int
-	pick_player_pl(char *cont_p, int *player_y, int *player_x, t_mlx *mlx)
+	pick_player_pl(char *cont_p, int *player_y, int *player_x, t_cub *cub)
 {
 	int i;
 	int j;
 	int x;
 
-	x = mlx->conf.map_x + 2;
+	x = cub->conf.map_x + 2;
 	i = 0;
-	while (i < mlx->conf.map_y + 2)
+	while (i < cub->conf.map_y + 2)
 	{
 		j = 0;
 		while (j < x)
 		{
-			if (check_player_exist(cont_p[i * x + j], mlx) == TRUE)
+			if (check_player_exist(cont_p[i * x + j], cub) == TRUE)
 			{
 				*player_y = i;
 				*player_x = j;
@@ -1813,37 +1813,37 @@ int
 		}
 		i++;
 	}
-	if (mlx->conf.pl_counter == 1)
+	if (cub->conf.pl_counter == 1)
 		return (TRUE);
 	free_str_safe(cont_p);
 	return (FALSE);
 }
 
 int
-	check_map(t_mlx *mlx)
+	check_map(t_cub *cub)
 {
 	int player_x;
 	int player_y;
 	char *cont_p;
 
 	cont_p = malloc(sizeof(char) \
-		* (mlx->conf.map_y + 2) * (mlx->conf.map_x + 2));
-	put_grid_to_container(mlx, cont_p);
-	if (!pick_player_pl(cont_p, &player_y, &player_x, mlx))
+		* (cub->conf.map_y + 2) * (cub->conf.map_x + 2));
+	put_grid_to_container(cub, cont_p);
+	if (!pick_player_pl(cont_p, &player_y, &player_x, cub))
 	{
-		free_mlx_map(mlx);
+		free_cub_map(cub);
 		return (error_mes("Error\n No player or more than 2 players\n" \
 			, FALSE));
 	}
-	check_fill(cont_p, player_y, player_x, mlx);
-	if (mlx->conf.map_check_flag == 1)
+	check_fill(cont_p, player_y, player_x, cub);
+	if (cub->conf.map_check_flag == 1)
 	{
-		free_mlx_map(mlx);
+		free_cub_map(cub);
 		free_str_safe(cont_p);
 		return (error_mes("Error\n Map is not sorrounded by wall.\n", FALSE));
 	}
-	mlx->conf.pl_y = player_y - 1;
-	mlx->conf.pl_x = player_x - 1;
+	cub->conf.pl_y = player_y - 1;
+	cub->conf.pl_x = player_x - 1;
 	free_str_safe(cont_p);
 	return (TRUE);
 }
@@ -1880,30 +1880,30 @@ int
 }
 
 void
-	init_vars(t_mlx *mlx)
+	init_vars(t_cub *cub)
 {
 	int i;
 
-	ft_bzero(mlx, sizeof(t_mlx));
+	ft_bzero(cub, sizeof(t_cub));
 	i = 0;
 	while (i < 9)
-		ft_bzero(&(mlx->conf.cub_flag[i++]), sizeof(int));
+		ft_bzero(&(cub->conf.cub_flag[i++]), sizeof(int));
 }
 
 void
-	make_img(t_mlx *mlx, int fd)
+	make_img(t_cub *cub, int fd)
 {
 	int	x;
 	int	y;
 	int	color;
 
-	y = mlx->conf.win_h - 1;
+	y = cub->conf.win_h - 1;
 	while (y >= 0)
 	{
 		x = 0;
-		while (x < mlx->conf.win_w)
+		while (x < cub->conf.win_w)
 		{
-			color = mlx->window.data[((mlx->window.size_l / 4) * y) + x];
+			color = cub->window.data[((cub->window.size_l / 4) * y) + x];
 			write(fd, &color, 4);
 			x++;
 		}
@@ -1912,7 +1912,7 @@ void
 }
 
 void
-	make_header(t_mlx *mlx, int fd, unsigned int header_size \
+	make_header(t_cub *cub, int fd, unsigned int header_size \
 			, unsigned int img_size)
 {
 	unsigned int	file_header_size;
@@ -1927,73 +1927,73 @@ void
 	file_header_size += write(fd, &header_size, 4);
 	info_header_size = header_size - file_header_size;
 	write(fd, &info_header_size, 4);
-	write(fd, &(mlx->conf.win_w), 4);
-	write(fd, &(mlx->conf.win_h), 4);
+	write(fd, &(cub->conf.win_w), 4);
+	write(fd, &(cub->conf.win_h), 4);
 	plane = 1;
 	write(fd, &plane, 2);
-	write(fd, &(mlx->window.bpp), 2);
+	write(fd, &(cub->window.bpp), 2);
 	write(fd, "\0\0\0\0", 4);
 	write(fd, &img_size, 4);
 	write(fd, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16);
 }
 
 int
-	create_bmp(t_mlx *mlx)
+	create_bmp(t_cub *cub)
 {
 	int	fd;
 	unsigned int	img_size;
 	unsigned int	header_size;
 
-	rendering_for_bmp(mlx);
+	rendering_for_bmp(cub);
 	if ((fd = open("image.bmp", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU)) == -1)
 	{
 		close(fd);
-		free_mlx_map(mlx);
+		free_cub_map(cub);
 		return (FALSE);
 	}
-	img_size = (unsigned int)(mlx->conf.win_w * mlx->conf.win_h) \
-		* (mlx->window.bpp / 8);
+	img_size = (unsigned int)(cub->conf.win_w * cub->conf.win_h) \
+		* (cub->window.bpp / 8);
 	header_size = 54;
-	make_header(mlx, fd, header_size, img_size);
-	make_img(mlx, fd);
-	free_mlx_map(mlx);
-	free_mlx(mlx, TRUE);
+	make_header(cub, fd, header_size, img_size);
+	make_img(cub, fd);
+	free_cub_map(cub);
+	free_cub(cub, TRUE);
 	exit (0);
 }
 
 int
 	main(int ac, char **av)
 {
-	t_mlx	mlx;
+	t_cub	cub;
 
 	if (ac <= 1 || ac > 3)
 		return (error_mes("Error\n few args or too many args\n", ERROR));
 	if ((ac == 3 && !save_checker(av[2])) || (ac == 3 && !save_checker(av[2])))
 		return (error_mes("Error\n invalid args\n", ERROR));
-	init_vars(&mlx);
-	mlx_get_screen_size(mlx.mlx_ptr \
-		, &(mlx.conf.win_max_w), &(mlx.conf.win_max_h));
-	if (get_conf(&mlx, av[1]) == FALSE || check_map(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
-	mlx_conf(&mlx);
-	if (!(initialize_window(&mlx)) || setting_img(&mlx) == FALSE \
-		|| setting_window(&mlx) == FALSE)
-		return (free_mlx(&mlx, ERROR));
+	init_vars(&cub);
+	mlx_get_screen_size(cub.cub_ptr \
+		, &(cub.conf.win_max_w), &(cub.conf.win_max_h));
+	if (get_conf(&cub, av[1]) == FALSE || check_map(&cub) == FALSE)
+		return (free_cub(&cub, ERROR));
+	cub_conf(&cub);
+	if (!(initialize_window(&cub)) || setting_img(&cub) == FALSE \
+		|| setting_window(&cub) == FALSE)
+		return (free_cub(&cub, ERROR));
 /*
-//	if (setting_map(&mlx) == FALSE)
-//		return (free_mlx(&mlx, ERROR));
-//	if (setting_player(&mlx) == FALSE)
-//		return (free_mlx(&mlx, ERROR));
-//	if (setting_ray_point(&mlx) == FALSE)
-//		return (free_mlx(&mlx, ERROR));
+//	if (setting_map(&cub) == FALSE)
+//		return (free_cub(&cub, ERROR));
+//	if (setting_player(&cub) == FALSE)
+//		return (free_cub(&cub, ERROR));
+//	if (setting_ray_point(&cub) == FALSE)
+//		return (free_cub(&cub, ERROR));
 */
-	if (check_sprite_info(&mlx) == FALSE \
-			|| (ac == 3 && create_bmp(&mlx) == FALSE))
-		return (free_mlx(&mlx, ERROR));
-	mlx_hook(mlx.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &mlx);
-	mlx_hook(mlx.win, 17, 1 << 17, &close_button_press, &mlx);
-	mlx_hook(mlx.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &mlx);
-	mlx_loop_hook(mlx.mlx_ptr, &rendering_loop, &mlx);
-	mlx_loop(mlx.mlx_ptr);
+	if (check_sprite_info(&cub) == FALSE \
+			|| (ac == 3 && create_bmp(&cub) == FALSE))
+		return (free_cub(&cub, ERROR));
+	mlx_hook(cub.win, X_EVENT_KEY_PRESS, 1L<<0, &key_press, &cub);
+	mlx_hook(cub.win, 17, 1 << 17, &close_button_press, &cub);
+	mlx_hook(cub.win, X_EVENT_KEY_RELEASE, 1L<<1, &key_release, &cub);
+	mlx_loop_hook(cub.cub_ptr, &rendering_loop, &cub);
+	mlx_loop(cub.cub_ptr);
 	return (TRUE);
 }

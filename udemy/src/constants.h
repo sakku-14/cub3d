@@ -196,9 +196,9 @@ typedef	struct	s_castinfo
 	float	vert_hit_distance;
 }				t_castinfo;
 
-typedef struct	s_mlx
+typedef struct	s_cub
 {
-	void		*mlx_ptr;
+	void		*cub_ptr;
 	void		*win;
 	t_player	player;
 	t_window	window;
@@ -210,4 +210,4 @@ typedef struct	s_mlx
 	t_conf		conf;
 	int			sprite_num;
 	t_tex		tex[5];
-}				t_mlx;
+}				t_cub;
