@@ -168,6 +168,34 @@ typedef struct	s_conf
 	int		rays_free_flag;
 }				t_conf;
 
+typedef	struct	s_castinfo
+{
+	int		is_ray_facing_down;
+	int		is_ray_facing_up;
+	int		is_ray_facing_right;
+	int		is_ray_facing_left;
+	float	x_intercept;
+	float	y_intercept;
+	float	x_step;
+	float	y_step;
+	int		found_horz_wall_hit;
+	float	horz_wall_hit_x;
+	float	horz_wall_hit_y;
+	char	horz_wall_content;
+	float	next_horz_touch_x;
+	float	next_horz_touch_y;
+	float	x_to_check;
+	float	y_to_check;
+	int		found_vert_wall_hit;
+	float	vert_wall_hit_x;
+	float	vert_wall_hit_y;
+	char	vert_wall_content;
+	float	next_vert_touch_x;
+	float	next_vert_touch_y;
+	float	horz_hit_distance;
+	float	vert_hit_distance;
+}				t_castinfo;
+
 typedef struct	s_mlx
 {
 	void		*mlx_ptr;
@@ -176,6 +204,7 @@ typedef struct	s_mlx
 	t_window	window;
 	t_map		map;
 	t_rays		*rays;
+	t_castinfo	cast;
 	t_sprites	*sprite;
 	t_sprites	*tmp;
 	t_conf		conf;
