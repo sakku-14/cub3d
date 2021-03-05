@@ -1967,8 +1967,8 @@ int
 	t_cub	cub;
 
 	if (ac <= 1 || ac > 3)
-		return (error_mes("Error\n few args or too many args\n", ERROR));
-	if ((ac == 3 && !save_checker(av[2])) || (ac == 3 && !save_checker(av[2])))
+		return (error_mes("Error\n few or too many args\n", ERROR));
+	if ((ac == 3 && !save_checker(av[2])) || (!cub_checker(av[1])))
 		return (error_mes("Error\n invalid args\n", ERROR));
 	init_vars(&cub);
 	mlx_get_screen_size(cub.cub_ptr \
