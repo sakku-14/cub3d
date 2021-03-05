@@ -323,6 +323,52 @@ void
 	mlx->cast.next_horz_touch_y = mlx->cast.y_intercept;
 }
 
+int
+	check_horz_wall_set(t_mlx *mlx, float x_to_check, float y_to_check)
+{
+	if (map_has_wall_at(mlx, x_to_check, y_to_check))
+	{
+		mlx->cast.horz_wall_hit_x = mlx->cast.next_horz_touch_x;
+		mlx->cast.horz_wall_hit_y = mlx->cast.next_horz_touch_y;
+		if (!((int)floor(y_to_check / TILE_SIZE) < 0 \
+			|| (int)floor(x_to_check / TILE_SIZE) < 0 \
+			||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y \
+			|| (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
+			mlx->cast.horz_wall_content = \
+				(mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)]\
+				[(int)floor(x_to_check / TILE_SIZE)];
+		else
+			mlx->cast.horz_wall_content = '1';
+		mlx->cast.found_horz_wall_hit = TRUE;
+		return (TRUE);
+	}
+	else
+	{
+		mlx->cast.next_horz_touch_x += mlx->cast.x_step;
+		mlx->cast.next_horz_touch_y += mlx->cast.y_step;
+		return (FALSE);
+	}
+}
+
+void
+	set_horz_wall_hit(t_mlx *mlx)
+{
+	float x_to_check;
+	float y_to_check;
+
+	while (mlx->cast.next_horz_touch_x >= 0 \
+			&& mlx->cast.next_horz_touch_x <= mlx->conf.map_x * TILE_SIZE \
+			&& mlx->cast.next_horz_touch_y >= 0 \
+			&& mlx->cast.next_horz_touch_y <= mlx->conf.map_y * TILE_SIZE)
+	{
+		x_to_check = mlx->cast.next_horz_touch_x;
+		y_to_check = mlx->cast.next_horz_touch_y + (mlx->cast.is_ray_facing_up ? -1 : 0);
+		map_has_sprite_at(x_to_check, y_to_check, mlx);
+		if (check_horz_wall_set(mlx, x_to_check, y_to_check) == TRUE)
+			break ;
+	}
+}
+
 // TODO: make short
 //  should do later
 void 
@@ -337,30 +383,7 @@ void
 	init_horz_wall_hit(mlx);
 	set_horz_intercept_step(mlx, ray_angle);
 	set_horz_next_touch(mlx);
-
-	while (mlx->cast.next_horz_touch_x >= 0 && mlx->cast.next_horz_touch_x <= mlx->conf.map_x * TILE_SIZE && mlx->cast.next_horz_touch_y >= 0 && mlx->cast.next_horz_touch_y <= mlx->conf.map_y * TILE_SIZE)
-	{
-		float x_to_check = mlx->cast.next_horz_touch_x;
-		float y_to_check = mlx->cast.next_horz_touch_y + (mlx->cast.is_ray_facing_up ? -1 : 0);
-		map_has_sprite_at(x_to_check, y_to_check, mlx);
-		if (map_has_wall_at(mlx, x_to_check, y_to_check))
-		{
-			mlx->cast.horz_wall_hit_x = mlx->cast.next_horz_touch_x;
-			mlx->cast.horz_wall_hit_y = mlx->cast.next_horz_touch_y;
-			if (!((int)floor(y_to_check / TILE_SIZE) < 0 || (int)floor(x_to_check / TILE_SIZE) < 0 ||(int)floor(y_to_check / TILE_SIZE) >= mlx->conf.map_y || (int)floor(x_to_check / TILE_SIZE) >= mlx->conf.map_x))
-				mlx->cast.horz_wall_content = (mlx->conf.map)[(int)floor(y_to_check / TILE_SIZE)][(int)floor(x_to_check / TILE_SIZE)];
-			else
-				mlx->cast.horz_wall_content = '1';
-			mlx->cast.found_horz_wall_hit = TRUE;
-			break;
-		}
-		else
-		{
-			mlx->cast.next_horz_touch_x += mlx->cast.x_step;
-			mlx->cast.next_horz_touch_y += mlx->cast.y_step;
-		}
-	}
-
+	set_horz_wall_hit(mlx);
 	///////////////////////////////////////////
 	// vertical ray_grid intersection code
 	///////////////////////////////////////////
