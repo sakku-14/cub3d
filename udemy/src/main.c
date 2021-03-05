@@ -453,10 +453,12 @@ void
 	set_hit_distance(t_mlx *mlx)
 {
 	mlx->cast.horz_hit_distance = mlx->cast.found_horz_wall_hit
-		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, mlx->cast.horz_wall_hit_x, mlx->cast.horz_wall_hit_y)
+		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y\
+			, mlx->cast.horz_wall_hit_x, mlx->cast.horz_wall_hit_y)
 		: FLT_MAX;
 	mlx->cast.vert_hit_distance = mlx->cast.found_vert_wall_hit
-		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, mlx->cast.vert_wall_hit_x, mlx->cast.vert_wall_hit_y)
+		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y\
+			, mlx->cast.vert_wall_hit_x, mlx->cast.vert_wall_hit_y)
 		: FLT_MAX;
 }
 
@@ -502,9 +504,7 @@ void
 	set_vert_intercept_step(mlx, ray_angle);
 	set_vert_next_touch(mlx);
 	set_vert_wall_hit(mlx);
-
 	set_hit_distance(mlx);
-
 	set_ray_info(mlx, strip_id, ray_angle);
 }
 
@@ -870,6 +870,20 @@ void
 }
 
 void
+	set_color_for_sprite(t_mlx *mlx, int j, int y, int x)
+{
+	if ((mlx->tex[4].data[((mlx->tex[4].size_l / 4) \
+		* mlx->sprite[j].texture_offset_y) \
+		+ mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
+	{
+		mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
+			mlx->tex[4].data[((mlx->tex[4].size_l / 4) \
+			* mlx->sprite[j].texture_offset_y) \
+			+ mlx->sprite[j].texture_offset_x];
+	}
+}
+
+void
 	describe_sprite(t_mlx *mlx, int i, int x)
 {
 	int y;
@@ -885,13 +899,7 @@ void
 			while (y < mlx->sprite[j].sprite_bottom_pixel)
 			{
 				set_vars_for_sprite(mlx, j, y);
-				if ((mlx->tex[4].data[((mlx->tex[4].size_l / 4) * mlx->sprite[j].texture_offset_y) + mlx->sprite[j].texture_offset_x] & 0xffffff) != 0 )
-				{
-					mlx->window.data[((mlx->window.size_l / 4) * y) + x] = \
-						mlx->tex[4].data[((mlx->tex[4].size_l / 4) \
-						* mlx->sprite[j].texture_offset_y) \
-						+ mlx->sprite[j].texture_offset_x];
-				}
+				set_color_for_sprite(mlx, j, y, x);
 				y++;
 			}
 		}
