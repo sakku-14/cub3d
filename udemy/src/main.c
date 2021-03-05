@@ -449,8 +449,43 @@ void
 	}
 }
 
-// TODO: make short
-//  should do later
+void
+	set_hit_distance(t_mlx *mlx)
+{
+	mlx->cast.horz_hit_distance = mlx->cast.found_horz_wall_hit
+		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, mlx->cast.horz_wall_hit_x, mlx->cast.horz_wall_hit_y)
+		: FLT_MAX;
+	mlx->cast.vert_hit_distance = mlx->cast.found_vert_wall_hit
+		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, mlx->cast.vert_wall_hit_x, mlx->cast.vert_wall_hit_y)
+		: FLT_MAX;
+}
+
+void
+	set_ray_info(t_mlx *mlx, int strip_id, float ray_angle)
+{
+	if (mlx->cast.vert_hit_distance < mlx->cast.horz_hit_distance)
+	{
+		mlx->rays[strip_id].distance = mlx->cast.vert_hit_distance;
+		mlx->rays[strip_id].wall_hit_x = mlx->cast.vert_wall_hit_x;
+		mlx->rays[strip_id].wall_hit_y = mlx->cast.vert_wall_hit_y;
+		mlx->rays[strip_id].wall_hit_content = mlx->cast.vert_wall_content;
+		mlx->rays[strip_id].was_hit_vertical = TRUE;
+	}
+	else
+	{
+		mlx->rays[strip_id].distance = mlx->cast.horz_hit_distance;
+		mlx->rays[strip_id].wall_hit_x = mlx->cast.horz_wall_hit_x;
+		mlx->rays[strip_id].wall_hit_y = mlx->cast.horz_wall_hit_y;
+		mlx->rays[strip_id].wall_hit_content = mlx->cast.horz_wall_content;
+		mlx->rays[strip_id].was_hit_vertical = FALSE;
+	}
+	mlx->rays[strip_id].ray_angle = ray_angle;
+	mlx->rays[strip_id].is_ray_facing_down = mlx->cast.is_ray_facing_down;
+	mlx->rays[strip_id].is_ray_facing_up = mlx->cast.is_ray_facing_up;
+	mlx->rays[strip_id].is_ray_facing_left = mlx->cast.is_ray_facing_left;
+	mlx->rays[strip_id].is_ray_facing_right = mlx->cast.is_ray_facing_right;
+}
+
 void 
 	cast_ray(float ray_angle, int strip_id, t_mlx *mlx)
 {
@@ -467,32 +502,10 @@ void
 	set_vert_intercept_step(mlx, ray_angle);
 	set_vert_next_touch(mlx);
 	set_vert_wall_hit(mlx);
-	float horz_hit_distance = mlx->cast.found_horz_wall_hit
-		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, mlx->cast.horz_wall_hit_x, mlx->cast.horz_wall_hit_y)
-		: FLT_MAX;
-	float vert_hit_distance = mlx->cast.found_vert_wall_hit
-		? dist_between_points(mlx->conf.pl_x, mlx->conf.pl_y, mlx->cast.vert_wall_hit_x, mlx->cast.vert_wall_hit_y)
-		: FLT_MAX;
 
-	if (vert_hit_distance < horz_hit_distance)
-	{
-		mlx->rays[strip_id].distance = vert_hit_distance;
-		mlx->rays[strip_id].wall_hit_x = mlx->cast.vert_wall_hit_x;
-		mlx->rays[strip_id].wall_hit_y = mlx->cast.vert_wall_hit_y;
-		mlx->rays[strip_id].wall_hit_content = mlx->cast.vert_wall_content;
-		mlx->rays[strip_id].was_hit_vertical = TRUE;
-	} else {
-		mlx->rays[strip_id].distance = horz_hit_distance;
-		mlx->rays[strip_id].wall_hit_x = mlx->cast.horz_wall_hit_x;
-		mlx->rays[strip_id].wall_hit_y = mlx->cast.horz_wall_hit_y;
-		mlx->rays[strip_id].wall_hit_content = mlx->cast.horz_wall_content;
-		mlx->rays[strip_id].was_hit_vertical = FALSE;
-	}
-	mlx->rays[strip_id].ray_angle = ray_angle;
-	mlx->rays[strip_id].is_ray_facing_down = mlx->cast.is_ray_facing_down;
-	mlx->rays[strip_id].is_ray_facing_up = mlx->cast.is_ray_facing_up;
-	mlx->rays[strip_id].is_ray_facing_left = mlx->cast.is_ray_facing_left;
-	mlx->rays[strip_id].is_ray_facing_right = mlx->cast.is_ray_facing_right;
+	set_hit_distance(mlx);
+
+	set_ray_info(mlx, strip_id, ray_angle);
 }
 
 void
