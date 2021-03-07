@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:48:08 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:48:36 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/07 15:35:16 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void
 	float	y_to_check;
 	int		index;
 
-	// TODO: ここでエラー処理必要か確認
 	if (x < 0 || x >= cub->conf.map_x * TILE_SIZE \
 			|| y < 0 || y > cub->conf.map_y * TILE_SIZE)
 		return ;

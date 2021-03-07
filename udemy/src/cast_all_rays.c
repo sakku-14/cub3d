@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 15:51:07 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:48:47 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/07 15:38:24 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,10 @@ void
 {
 	ray_angle = normalize_angle(ray_angle);
 	set_ray_facing(cub, ray_angle);
-	// horizontal ray_grid intersection code
 	init_horz_wall_hit(cub);
 	set_horz_intercept_step(cub, ray_angle);
 	set_horz_next_touch(cub);
 	set_horz_wall_hit(cub);
-	// vertical ray_grid intersection code
 	init_vert_wall_hit(cub);
 	set_vert_intercept_step(cub, ray_angle);
 	set_vert_next_touch(cub);

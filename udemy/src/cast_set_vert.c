@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:43:15 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:45:59 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/07 15:37:38 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ void
 			&& cub->cast.next_vert_touch_y >= 0 \
 			&& cub->cast.next_vert_touch_y <= cub->conf.map_y * TILE_SIZE)
 	{
-		x_to_check = cub->cast.next_vert_touch_x + (cub->cast.is_ray_facing_left ? -1 : 0);
+		x_to_check = cub->cast.next_vert_touch_x \
+			+ (cub->cast.is_ray_facing_left ? -1 : 0);
 		y_to_check = cub->cast.next_vert_touch_y;
 		map_has_sprite_at(x_to_check, y_to_check, cub);
 		if (check_vert_wall_set(cub, x_to_check, y_to_check) == TRUE)

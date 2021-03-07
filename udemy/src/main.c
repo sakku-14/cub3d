@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:44:31 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:48:07 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/07 15:38:07 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void    end()
     system("leaks cub3D");
 }
 */
-//main.c from here
 int
 	cub_checker(char *av)
 {
@@ -91,14 +90,6 @@ int
 	if (!(initialize_window(&cub)) || setting_img(&cub) == FALSE \
 		|| setting_window(&cub) == FALSE)
 		return (free_cub(&cub, ERROR));
-/*
-//	if (setting_map(&cub) == FALSE)
-//		return (free_cub(&cub, ERROR));
-//	if (setting_player(&cub) == FALSE)
-//		return (free_cub(&cub, ERROR));
-//	if (setting_ray_point(&cub) == FALSE)
-//		return (free_cub(&cub, ERROR));
-*/
 	if (check_sprite_info(&cub) == FALSE \
 			|| (ac == 3 && create_bmp(&cub) == FALSE))
 		return (free_cub(&cub, ERROR));
