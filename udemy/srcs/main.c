@@ -6,19 +6,18 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:44:31 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 15:38:07 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/08 20:55:59 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "constants.h"
 
-/*
 __attribute__((destructor))
 void    end()
 {
     system("leaks cub3D");
 }
-*/
+
 int
 	cub_checker(char *av)
 {
@@ -89,14 +88,13 @@ int
 	cub_conf(&cub);
 	if (!(initialize_window(&cub)) || setting_img(&cub) == FALSE \
 		|| setting_window(&cub) == FALSE)
-		return (free_cub(&cub, ERROR));
+		exit_game(&cub, ERROR);
 	if (check_sprite_info(&cub) == FALSE \
 			|| (ac == 3 && create_bmp(&cub) == FALSE))
-		return (free_cub(&cub, ERROR));
+		exit_game(&cub, ERROR);
 	mlx_hook(cub.win, X_EVENT_KEY_PRESS, 1L << 0, &key_press, &cub);
 	mlx_hook(cub.win, 17, 1 << 17, &close_button_press, &cub);
 	mlx_hook(cub.win, X_EVENT_KEY_RELEASE, 1L << 1, &key_release, &cub);
 	mlx_loop_hook(cub.cub_ptr, &rendering_loop, &cub);
 	mlx_loop(cub.cub_ptr);
-	return (TRUE);
 }

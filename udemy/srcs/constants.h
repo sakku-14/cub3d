@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:32:38 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 12:24:08 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/08 20:56:25 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,5 +338,6 @@ void			set_last_sprite(t_cub *cub, int k);
 void			count_sprite_num(t_cub *cub);
 int				set_sprites(t_cub *cub);
 int				check_sprite_info(t_cub *cub);
+void			exit_game(t_cub *cub, int ret);
 
 #endif
