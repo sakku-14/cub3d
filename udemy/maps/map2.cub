@@ -3,7 +3,7 @@ NO ./textures/mossy.xpm
 SO ./textures/wood.xpm
 WE ./textures/purplestone.xpm
 EA ./textures/eagle.xpm
-S ./textures/barrel2.xpm
+S ./textures/barrel.xpm
 F 25,25,112
 C 135,206,235
 
