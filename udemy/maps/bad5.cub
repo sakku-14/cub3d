@@ -1,4 +1,5 @@
-R 2147483648 500
+G 3000 3
+R 500 500
 NO ./textures/mossy.xpm
 SO ./textures/wood.xpm
 WE ./textures/purplestone.xpm
