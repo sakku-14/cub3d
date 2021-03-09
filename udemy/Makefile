@@ -6,7 +6,7 @@
 #    By: ysakuma <ysakuma@student.42tokyo.j>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/09 12:55:15 by ysakuma           #+#    #+#              #
-#    Updated: 2021/03/09 14:56:50 by ysakuma          ###   ########.fr        #
+#    Updated: 2021/03/09 15:52:43 by ysakuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,7 +76,7 @@ $(NAME):			$(CUBOBJS) $(GNLOBJS)
 					cp libft/libft.a ./
 					$(MAKE) -C $(MLXDIR)
 					cp minilibx_mms_20200219/libmlx.dylib ./
-					${CC} ${CFLAGS} ${FRAMEWORK} ${LIBFT} ${MLX} -o ${NAME} ${CUBOBJS} ${GNLOBJS} -L${CUBINCDIR} -L${GNLINCDIR}
+					${CC} ${CFLAGS} ${FRAMEWORK} ${LIBFT} ${MLX} -o ${NAME} ${CUBOBJS} ${GNLOBJS}
 
 
 clean:
