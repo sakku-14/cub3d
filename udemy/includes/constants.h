@@ -53,15 +53,6 @@
 
 typedef struct	s_player
 {
-	void		*img_ptr;
-	int			*data;
-	int			size_l;
-	int			bpp;
-	int			endian;
-	float		player_x;
-	float		player_y;
-	int			width;
-	int			height;
 	float		rotation_angle;
 	int			turn_direction;
 	int			walk_direction;
@@ -69,15 +60,6 @@ typedef struct	s_player
 	float		walk_speed;
 	float		turn_speed;
 }				t_player;
-
-typedef struct	s_line
-{
-	void		*img_ptr;
-	int			*data;
-	int			size_l;
-	int			bpp;
-	int			endian;
-}				t_line;
 
 typedef struct	s_window
 {
@@ -98,24 +80,8 @@ typedef struct	s_window
 	int			texture_offset_y;
 }				t_window;
 
-typedef struct	s_map
-{
-	void		*img_ptr;
-	int			*data;
-	int			size_l;
-	int			bpp;
-	int			endian;
-	int			tile_x;
-	int			tile_y;
-}				t_map;
-
 typedef struct	s_rays
 {
-	void		*img_ptr;
-	int			*data;
-	int			size_l;
-	int			bpp;
-	int			endian;
 	float		ray_angle;
 	float		wall_hit_x;
 	float		wall_hit_y;
@@ -217,7 +183,6 @@ typedef struct	s_cub
 	void		*win;
 	t_player	player;
 	t_window	window;
-	t_map		map;
 	t_rays		*rays;
 	t_castinfo	cast;
 	t_sprites	*sprite;

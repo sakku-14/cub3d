@@ -17,8 +17,6 @@ void
 {
 	cub->conf.pl_x = (cub->conf.pl_x + 0.501) * TILE_SIZE;
 	cub->conf.pl_y = (cub->conf.pl_y + 0.501) * TILE_SIZE;
-	cub->player.width = 4;
-	cub->player.height = 4;
 	cub->player.walk_speed = 3;
 	cub->player.turn_speed = 4 * (PI / 180);
 }
