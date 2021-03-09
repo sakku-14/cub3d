@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:38:01 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:38:27 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:36:19 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	check_rgb_line(char *line)

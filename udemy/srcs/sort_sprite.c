@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:17:46 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:17:47 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:39:21 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	copy_sprite_first_half(t_cub *cub, int mid, int i)

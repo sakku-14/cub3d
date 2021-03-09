@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:06:10 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:32:46 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:34:43 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	check_fill(char *map_p, int p_y, int p_x, t_cub *cub)

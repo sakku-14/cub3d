@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:15:24 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:48:52 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:48 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	map_has_wall_at(t_cub *cub, float x, float y)

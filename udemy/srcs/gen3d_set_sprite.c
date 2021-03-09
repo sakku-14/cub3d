@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:09:08 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:11:55 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:12 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	set_sprite_var(t_cub *cub, int j)

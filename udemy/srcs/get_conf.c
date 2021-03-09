@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:14:11 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:38:43 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:26 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	fill_map_space(t_cub *cub)

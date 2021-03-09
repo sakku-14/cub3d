@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:37:18 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:37:53 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:29 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	add_color(t_cub *cub)

@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:16:22 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 15:38:43 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:52 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	reset_sprite_info(t_cub *cub)

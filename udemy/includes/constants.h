@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:32:38 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/08 20:56:25 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 14:48:03 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 # include <limits.h>
 # include <float.h>
 # include <math.h>
-# include "../../minilibx_mms_20200219/mlx.h"
-# include "../../minilibx_opengl_20191021/mlx.h"
+# include "../minilibx_mms_20200219/mlx.h"
 # include "../get_next_line/get_next_line.h"
 # include "../libft/libft.h"
 

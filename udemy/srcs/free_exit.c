@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:08:05 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/08 20:41:14 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:36:59 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	free_str_safe(char *str)

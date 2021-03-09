@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:43:15 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 15:37:38 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:34:35 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	init_vert_wall_hit(t_cub *cub)

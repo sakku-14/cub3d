@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:07:06 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:33:59 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:36:28 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 float
 	dist_between_points(float x1, float y1, float x2, float y2)

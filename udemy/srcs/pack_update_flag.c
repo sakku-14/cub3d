@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:33:41 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:34:55 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:34 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	pack_wsize_update_flag(t_cub *cub, char *line, int *flag)

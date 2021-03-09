@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:16:02 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 11:04:02 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:57 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	set_new_player_x(t_cub *cub, float *new_player_x)

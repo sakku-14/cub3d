@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 15:51:07 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 15:38:24 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:34:00 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	set_hit_distance(t_cub *cub)

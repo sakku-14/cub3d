@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:42:33 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 15:36:44 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:34:27 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	init_horz_wall_hit(t_cub *cub)

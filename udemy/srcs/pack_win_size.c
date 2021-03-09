@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:35:30 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:35:57 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:41 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	get_ray_size(t_cub *cub)

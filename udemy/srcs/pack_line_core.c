@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:19:15 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:22:48 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:14 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	pass_empty_line(char *line, int *flag)

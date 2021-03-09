@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:46:47 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:47:06 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:59 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	set_ray_facing(t_cub *cub, float ray_angle)

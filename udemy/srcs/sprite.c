@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:18:19 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 11:31:15 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:39:28 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	set_last_sprite(t_cub *cub, int k)

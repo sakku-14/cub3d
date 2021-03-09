@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:06:54 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:11:37 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:06 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	describe_ceil(t_cub *cub, int x)

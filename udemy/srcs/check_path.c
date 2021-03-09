@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:06:23 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:06:25 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:36:11 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	check_path_available(t_cub *cub)

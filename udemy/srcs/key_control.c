@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:15:00 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:15:01 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:37 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	close_button_press(t_cub *cub)

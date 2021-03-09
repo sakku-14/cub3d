@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:16:59 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 11:28:28 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:39:08 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	free_map_ret_error(t_cub *cub, char *str, int ret)

@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:36:24 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 13:36:54 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:38:23 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	check_texture_line(char *line)

@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 20:53:18 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/08 20:55:11 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:36:42 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	exit_game(t_cub *cub, int ret)

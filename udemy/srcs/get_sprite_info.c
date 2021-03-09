@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:14:31 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/05 19:43:36 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:37:32 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 void
 	add_some_pi(t_cub *cub, float base, float height, int i)

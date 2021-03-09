@@ -6,11 +6,11 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:17:15 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/07 11:30:14 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 12:39:14 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "constants.h"
+#include "../includes/constants.h"
 
 int
 	setting_window(t_cub *cub)
