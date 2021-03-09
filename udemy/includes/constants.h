@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:32:38 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/09 14:48:03 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 17:38:11 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,6 +255,7 @@ int				pack_map_str(t_cub *cub, char *line);
 int				check_pack_map_str(t_cub *cub, int *flag, char *line);
 int				get_ray_size(t_cub *cub);
 int				is_all_digit(char *str);
+int				pack_win_error(int num, char **strs);
 int				pack_win_size(t_cub *cub, char *line);
 int				pack_wsize_update_flag(t_cub *cub, char *line, int *flag);
 int				check_texture_line(char *line);

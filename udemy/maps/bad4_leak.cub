@@ -1,4 +1,5 @@
-R 1 1
+R 500 500
+NO ./textures/mossy.xpm
 NO ./textures/mossy.xpm
 SO ./textures/wood.xpm
 WE ./textures/purplestone.xpm

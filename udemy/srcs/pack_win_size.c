@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:35:30 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/09 12:38:41 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/09 17:38:34 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,18 @@ int
 }
 
 int
+	pack_win_error(int num, char **strs)
+{
+	if (num != 3)
+		return (FALSE);
+	if (ft_strlen(strs[0]) != 1)
+		return (FALSE);
+	if (!is_all_digit(strs[1]) || !is_all_digit(strs[2]))
+		return (FALSE);
+	return (TRUE);
+}
+
+int
 	pack_win_size(t_cub *cub, char *line)
 {
 	char	**strs;
@@ -47,11 +59,7 @@ int
 	num = 0;
 	while (strs[num])
 		num++;
-	if (num != 3)
-		return (free_strs(strs, num, FALSE));
-	if (ft_strlen(strs[0]) != 1)
-		return (free_strs(strs, num, FALSE));
-	if (!is_all_digit(strs[1]) || !is_all_digit(strs[2]))
+	if (pack_win_error(num, strs) == FALSE)
 		return (free_strs(strs, num, FALSE));
 	cub->conf.win_w = ft_atoi(strs[1]);
 	cub->conf.win_h = ft_atoi(strs[2]);
