@@ -6,16 +6,14 @@
 #    By: ysakuma <ysakuma@student.42tokyo.j>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/09 12:55:15 by ysakuma           #+#    #+#              #
-#    Updated: 2021/03/09 18:25:06 by ysakuma          ###   ########.fr        #
+#    Updated: 2021/03/10 14:26:12 by ysakuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			= cub3D
 CC				= gcc
 CFLAGS			= -Wall -Wextra -Werror
-AR				= ar rc
 RM				= rm -f
-CUBINCDIR		= ./includes/
 CUBSRCDIR		= ./srcs/
 GNLINCDIR		= ./get_next_line/
 CUBSRCNAME		= bmp.c \
@@ -66,17 +64,14 @@ LIBFT			= ./libft.a
 MLXDIR			= ./minilibx_mms_20200219
 MLX				= ./libmlx.dylib
 
-all:				$(NAME)
-
-.c.o:
-					${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
-
 $(NAME):			$(CUBOBJS) $(GNLOBJS)
 					$(MAKE) -C $(LIBFTDIR)
 					cp libft/libft.a ./
 					$(MAKE) -C $(MLXDIR)
 					cp minilibx_mms_20200219/libmlx.dylib ./
 					${CC} ${CFLAGS} ${FRAMEWORK} ${LIBFT} ${MLX} -o ${NAME} ${CUBOBJS} ${GNLOBJS}
+
+all:				$(NAME)
 
 clean:
 					$(MAKE) -C $(LIBFTDIR) clean

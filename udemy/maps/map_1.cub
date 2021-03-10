@@ -1,5 +1,5 @@
 R 1000 500
-NO ./textures/mossy.xpm
+NO ./textures/wood.xpm
 SO ./textures/wood.xpm
 WE ./textures/purplestone.xpm
 EA ./textures/eagle.xpm

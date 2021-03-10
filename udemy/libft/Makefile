@@ -1,18 +1,18 @@
-NAME	=	libft.a
+NAME	= libft.a
 
 CC	= gcc
 
-CFLAGS	= -Wall	-Wextra	-Werror
+CFLAGS	= -Wall -Wextra -Werror
 
-AR		=	ar rc
+AR		= ar rc
 
-RM		=	rm -f
+RM		= rm -f
 
-INCDIR	=	./
+INCDIR	= ./
 
-SRCDIR	=	./
+SRCDIR	= ./
 
-SRCNAME	=	ft_memset.c \
+SRCNAME	= ft_memset.c \
 			ft_bzero.c \
 			ft_memcpy.c \
 			ft_memccpy.c \
@@ -48,7 +48,7 @@ SRCNAME	=	ft_memset.c \
 			ft_putendl_fd.c \
 			ft_putnbr_fd.c \
 
-B_SNAME	=	${SRCNAME} \
+B_SNAME	= ${SRCNAME} \
 			ft_lstnew.c \
 			ft_lstadd_front.c \
 			ft_lstsize.c \
@@ -59,24 +59,24 @@ B_SNAME	=	${SRCNAME} \
 			ft_lstiter.c \
 			ft_lstmap.c
 
-SRCS	=	${addprefix ${SRCDIR}, ${SRCNAME}}
+SRCS	= ${addprefix ${SRCDIR}, ${SRCNAME}}
 
-B_SRCS	=	${addprefix ${SRCDIR}, ${B_SNAME}}
+B_SRCS	= ${addprefix ${SRCDIR}, ${B_SNAME}}
 
-OBJS	=	${SRCS:.c=.o}
+OBJS	= ${SRCS:.c=.o}
 
-B_OBJS	=	${B_SRCS:.c=.o}
+B_OBJS	= ${B_SRCS:.c=.o}
 
 .c.o:
-			${CC} ${CFLAGS}	-I ${INCDIR} -c $< -o ${<:.c=.o}
+			${CC} ${CFLAGS} -I ${INCDIR} -c $< -o ${<:.c=.o}
 
 $(NAME):	${OBJS}
-			${AR}	${NAME}	${OBJS}
+			${AR} ${NAME} ${OBJS}
 
 all:		${NAME}
 
 bonus:		${B_OBJS}
-			${AR}	${NAME}	${B_OBJS}
+			${AR} ${NAME} ${B_OBJS}
 
 clean:
 			${RM} ${OBJS} ${B_OBJS}
