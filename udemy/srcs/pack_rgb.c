@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:37:18 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/11 10:47:22 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/11 11:19:33 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,7 @@ int
 		pack_rgb_atoi('C', cub, strs);
 	else
 		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
-	if ((cub->conf.cub_flag[6] || cub->conf.cub_flag[7]) \
-			|| !check_rgb_available(strs, cub))
+	if (check_rgb_available(strs, cub) == FALSE)
 		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
 	add_color(cub);
 	free_str_safe(line);
