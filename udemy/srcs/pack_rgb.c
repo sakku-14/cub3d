@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:37:18 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/09 12:38:29 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/11 10:47:22 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int
 	else
 		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
 	if ((cub->conf.cub_flag[6] || cub->conf.cub_flag[7]) \
-			&& !check_rgb_available(strs, cub))
+			|| !check_rgb_available(strs, cub))
 		return (free_for_pack_rgb(sub_strs, strs, 3, FALSE));
 	add_color(cub);
 	free_str_safe(line);

@@ -6,15 +6,38 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:38:01 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/09 12:36:19 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/11 10:47:24 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/constants.h"
 
 int
+	check_comma(char *line)
+{
+	int i;
+	int len;
+	int counter;
+
+	len = ft_strlen(line);
+	i = 0;
+	counter = 0;
+	while (i < len)
+	{
+		if (line[i] == ',')
+			counter++;
+		i++;
+	}
+	if (counter == 2)
+		return (TRUE);
+	return (FALSE);
+}
+
+int
 	check_rgb_line(char *line)
 {
+	if (check_comma(line) == FALSE)
+		return (FALSE);
 	if (ft_strnstr(line, "F", 1))
 		return (6);
 	else if (ft_strnstr(line, "C", 1))
