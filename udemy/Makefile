@@ -6,13 +6,13 @@
 #    By: ysakuma <ysakuma@student.42tokyo.j>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/09 12:55:15 by ysakuma           #+#    #+#              #
-#    Updated: 2021/03/10 14:26:12 by ysakuma          ###   ########.fr        #
+#    Updated: 2021/03/12 10:05:08 by ysakuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			= cub3D
 CC				= gcc
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -O3 -Wall -Wextra -Werror
 RM				= rm -f
 CUBSRCDIR		= ./srcs/
 GNLINCDIR		= ./get_next_line/
