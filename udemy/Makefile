@@ -6,7 +6,7 @@
 #    By: ysakuma <ysakuma@student.42tokyo.j>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/09 12:55:15 by ysakuma           #+#    #+#              #
-#    Updated: 2021/03/12 10:21:19 by ysakuma          ###   ########.fr        #
+#    Updated: 2021/03/12 11:50:10 by ysakuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CC				= gcc
 CFLAGS			= -Wall -Wextra -Werror
 RM				= rm -f
 CUBSRCDIR		= ./srcs/
+CUBINCDIR		= ./includes/
 GNLINCDIR		= ./get_next_line/
 CUBSRCNAME		= bmp.c \
 					exit_game.c \
@@ -63,6 +64,9 @@ LIBFTDIR		= ./libft
 LIBFT			= ./libft.a
 MLXDIR			= ./minilibx_mms_20200219
 MLX				= ./libmlx.dylib
+
+.c.o:
+					${CC} ${CFLAGS} -I ${CUBINCDIR} -I ${GNLINCDIR} -c $< -o ${<:.c=.o}
 
 $(NAME):			$(CUBOBJS) $(GNLOBJS)
 					$(MAKE) -C $(LIBFTDIR)
