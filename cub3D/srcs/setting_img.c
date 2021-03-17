@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:16:59 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/15 19:45:14 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/17 09:18:18 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ int
 	height = TEXTURE_HEIGHT;
 	flag = 0;
 	if (!(cub->tex[0].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr, \
-		cub->conf.path_no, &width, &height)))
-		flag = 1;
-	if (!(cub->tex[1].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr, \
 		cub->conf.path_so, &width, &height)))
 		flag = 1;
+	if (!(cub->tex[1].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr, \
+		cub->conf.path_no, &width, &height)))
+		flag = 1;
 	if (!(cub->tex[2].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr, \
-		cub->conf.path_ea, &width, &height)))
+		cub->conf.path_we, &width, &height)))
 		flag = 1;
 	if (!(cub->tex[3].img_ptr = mlx_xpm_file_to_image(cub->cub_ptr, \
-		cub->conf.path_we, &width, &height)))
+		cub->conf.path_ea, &width, &height)))
 		flag = 1;
 	if (flag == 1)
 	{
