@@ -6,11 +6,17 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:44:31 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/17 10:55:59 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/17 11:03:34 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/constants.h"
+
+__attribute__((destructor))
+void    end()
+{
+    system("leaks cub3D");
+}
 
 int
 	cub_checker(char *av)

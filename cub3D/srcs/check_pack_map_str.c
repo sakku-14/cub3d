@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:28:27 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/15 19:44:33 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/17 12:35:00 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,23 @@ int
 	cub->conf.map_str = ft_strjoin(cub->conf.map_str, "\n");
 	cub->conf.map_y++;
 	free_str_safe(tmp);
+	if (cub->conf.map_y > 200)
+		return (error_mes("Error\n map is too long\n", FALSE));
+	return (TRUE);
+}
+
+static int
+	check_map_width(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (i > 200)
+			return (FALSE);
+		i++;
+	}
 	return (TRUE);
 }
 
@@ -65,6 +82,11 @@ int
 	{
 		free_str_safe(line);
 		return (error_mes("Error\n map is not made by map element\n", FALSE));
+	}
+	if (check_map_width(line) == FALSE)
+	{
+		free_str_safe(line);
+		return (error_mes("Error\n map is too wide\n", FALSE));
 	}
 	*flag = 9;
 	cub->conf.cub_flag[8]++;
