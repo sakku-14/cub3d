@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 11:32:38 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/15 19:42:36 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/17 10:12:43 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ typedef struct	s_cub
 	t_sprites	*tmp;
 	t_conf		conf;
 	int			sprite_num;
+	int			save_flag;
 	t_tex		tex[5];
 }				t_cub;
 

@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 19:44:31 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/15 19:44:57 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/17 10:55:59 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,15 @@ int
 }
 
 int
-	save_checker(char *av)
+	save_checker(char *av, t_cub *cub)
 {
 	if (av && *av)
 	{
 		if (ft_strncmp(av, "--save", 6) || !(ft_strlen(av) == 6))
+		{
 			return (FALSE);
+		}
+		cub->save_flag = 1;
 	}
 	return (TRUE);
 }
@@ -70,11 +73,11 @@ int
 {
 	t_cub	cub;
 
+	init_vars(&cub);
 	if (ac <= 1 || ac > 3)
 		return (error_mes("Error\n few or too many args\n", ERROR));
-	if ((ac == 3 && !save_checker(av[2])) || (!cub_checker(av[1])))
+	if ((ac == 3 && !save_checker(av[2], &cub)) || (!cub_checker(av[1])))
 		return (error_mes("Error\n invalid args\n", ERROR));
-	init_vars(&cub);
 	mlx_get_screen_size(cub.cub_ptr \
 		, &(cub.conf.win_max_w), &(cub.conf.win_max_h));
 	if (get_conf(&cub, av[1]) == FALSE || check_map(&cub) == FALSE)
