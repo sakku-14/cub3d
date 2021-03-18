@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/07 13:35:30 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/17 10:18:01 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/18 11:12:13 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,24 @@ int
 	return (TRUE);
 }
 
+static int
+	pack_check_winsize(t_cub *cub)
+{
+	if (cub->save_flag != 1)
+	{
+		cub->conf.win_w = cub->conf.win_w > cub->conf.win_max_w ? \
+									cub->conf.win_max_w : cub->conf.win_w;
+		cub->conf.win_h = cub->conf.win_h > cub->conf.win_max_h ? \
+									cub->conf.win_max_h : cub->conf.win_h;
+	}
+	else
+	{
+		if (cub->conf.win_w > 5000 || cub->conf.win_h > 5000)
+			return (FALSE);
+	}
+	return (TRUE);
+}
+
 int
 	pack_win_size(t_cub *cub, char *line)
 {
@@ -65,13 +83,8 @@ int
 	cub->conf.win_h = ft_atoi(strs[2]);
 	if (cub->conf.win_w <= 0 || cub->conf.win_h <= 0)
 		return (free_strs(strs, num, FALSE));
-	if (cub->save_flag != 1)
-	{
-		cub->conf.win_w = cub->conf.win_w > cub->conf.win_max_w ? \
-									cub->conf.win_max_w : cub->conf.win_w;
-		cub->conf.win_h = cub->conf.win_h > cub->conf.win_max_h ? \
-									cub->conf.win_max_h : cub->conf.win_h;
-	}
+	if (pack_check_winsize(cub) == FALSE)
+		return (free_strs(strs, num, FALSE));
 	if (get_ray_size(cub) == FALSE)
 		return (free_strs(strs, num, FALSE));
 	free_str_safe(line);

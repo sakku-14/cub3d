@@ -6,7 +6,7 @@
 /*   By: ysakuma <ysakuma@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/05 15:49:15 by ysakuma           #+#    #+#             */
-/*   Updated: 2021/03/17 10:55:10 by ysakuma          ###   ########.fr       */
+/*   Updated: 2021/03/18 11:17:33 by ysakuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,6 @@ int
 	return (TRUE);
 }
 
-static int
-	check_size(t_cub *cub)
-{
-	if (cub->conf.win_w > 5000 || cub->conf.win_h > 5000)
-	{
-		return (error_mes("Error\n huge image size\n", FALSE));
-	}
-	return (TRUE);
-}
-
 int
 	create_bmp(t_cub *cub)
 {
@@ -89,11 +79,6 @@ int
 	unsigned int	header_size;
 
 	rendering_for_bmp(cub);
-	if (check_size(cub) == FALSE)
-	{
-		free_cub_map(cub);
-		return (FALSE);
-	}
 	if ((fd = open("image.bmp", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU)) == -1)
 	{
 		close(fd);
