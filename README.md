@@ -69,7 +69,7 @@ There are 9 elements in .cub file.
 
 Example of .cub file:
 
-![map image](https://github.com/sakku-14/cub3d/pic/map_img.png)
+![map](https://github.com/sakku-14/image_repo/blob/master/cub3d/map_img.png)
 
 ## Note
 
