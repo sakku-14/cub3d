@@ -68,7 +68,8 @@ There are 9 elements in .cub file.
   - Space is validated but any other characters are forbidden.
 
 Example of .cub file:
-picture here.......................
+
+![map image](https://github.com/sakku-14/cub3d/pic/map_img.png)
 
 ## Note
 
