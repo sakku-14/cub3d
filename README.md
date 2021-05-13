@@ -34,11 +34,42 @@ Run ***cub3d***:
 ```
 
 You can also edit ***map.cub*** or create other ***.cub files***:
-| TH1 | TH2 |
-----|---- 
-| TD1 | TD3 |
-| TD2 | TD4 |
 
+There are 9 elements in .cub file.
+- ***Resolution***
+  - Identifier: ***R***
+  - Has two num of x and y render size
+- ***North texture***
+  - Identifier: ***NO***
+  - Has path to the north texture
+- ***South texture***
+  - Identifier: ***SO***
+  - Has path to the south texture
+- ***West texture***
+  - Identifier: ***WE***
+  - Has path to the west texture
+- ***East texture***
+  - Identifier: ***EA***
+  - Has path to the east texture
+- ***Sprite texture***
+  - Identifier: ***S***
+  - Has path to the sprite texture
+- ***Floor color***
+  - Identifier: ***F***
+  - Has R,G,B colors number(0-255): ex) 0, 255, 255 
+- ***Ceilling color***
+  - Identifier: ***C***
+  - Has R,G,B colors number(0-255): ex) 0, 255, 255
+- ***Map***
+  - Identifier: None
+  - 0: Floor
+  - 1: Wall
+  - 2: Sprite
+  - N,S,W,E: player(place and looking the direction of North, South, West, East)
+  - Space is validated but any other characters are forbidden.
+
+Example of .cub file:
+picture here.......................
 
 ## Note
 
