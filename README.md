@@ -66,12 +66,20 @@ There are 9 elements in .cub file.
   - 2: Sprite
   - N,S,W,E: player(place and looking the direction of North, South, West, East)
   - Space is validated but any other characters are forbidden.
+  - Must be sorrounded by wall.
 
 Example of .cub file:
 
 ![map](https://github.com/sakku-14/image_repo/blob/master/cub3d/map_img.png)
 
 ## Note
+
+You can create map and move around in the maze freely.
+
+The following is image of what you can do on this program:
+
+................MOVIE HERE......................
+
 
 ## Author
 - Yuki Sakuma
