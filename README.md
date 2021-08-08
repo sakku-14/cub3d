@@ -79,6 +79,7 @@ You can create map and move around in the maze freely.
 The following is image of what you can do on this program:
 
 ................MOVIE HERE......................
+https://user-images.githubusercontent.com/65479630/128629087-29af9734-c29a-4246-b12e-8294a7afff37.gif
 
 
 ## Author
